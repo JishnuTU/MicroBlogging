@@ -1,0 +1,44 @@
+<div class="container"  ng-controller="RegisterCtrl">
+  <h2>Sign Up</h2>
+  <form class="form-horizontal" ng-submit="validate()" method="post">
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="email">Email:</label>
+      <div class="col-sm-10">
+        <input type="email" class="form-control" id="email" ng-model="register.email" placeholder="Enter Email" required="true" name="email">
+      </div>
+    </div>
+
+     <div class="form-group">
+      <label class="control-label col-sm-2" for="email">Username:</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="name" ng-model="register.username" placeholder="Enter Username" required="true" name="username">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="email">Name:</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="name" ng-model="register.name" placeholder="Enter Name" required="true" name="name">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="pwd">Password:</label>
+      <div class="col-sm-10">          
+        <input type="password" class="form-control" id="password" ng-model="register.password" placeholder="Enter password" required="true" name="password">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="pwd">Retype Password:</label>
+      <div class="col-sm-10">          
+        <input type="password" class="form-control" id="rpassword" ng-model="rpassword" placeholder="Enter password Again" required="true" name="rpassword">
+      </div>
+    </div>
+    <div class="form-group">        
+      <div class="col-sm-offset-2 col-sm-10">
+      <a  ui-sref="app" class="btn btn-info" role="button">Go to Login</a> &nbsp &nbsp &nbsp
+       &nbsp
+        <button type="submit" class="btn btn-default">Submit</button>
+
+      </div>
+    </div>
+  </form>
+</div>

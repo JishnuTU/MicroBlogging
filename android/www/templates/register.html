@@ -1,0 +1,36 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Sign Up</h1>
+    <div class="buttons">
+      <button class="button button-clear button-positive" ng-click="closeRegister()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form ng-submit="doRegister()">
+      <div class="list">
+      <label class="item item-input item-stacked-label">
+    <span class="input-label">Email</span>
+    <input type="email" placeholder="john@suhr.com" ng-model="registerdata.email" required="true" >
+  </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Username</span>
+    <input type="text" placeholder="Username" ng-model="registerdata.username" required="true">
+  </label>
+  <label class="item item-input item-stacked-label">
+    <span class="input-label">Name</span>
+    <input type="text" placeholder="John" ng-model="registerdata.name" required="true">
+  </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Password</span>
+    <input type="password" placeholder="Password" ng-model="registerdata.password" required="true">
+  </label>
+      <label class="item item-input item-stacked-label">
+    <span class="input-label">Re-Type Password</span>
+    <input type="password" placeholder="Re-Type Password" ng-model="rpassword.ch" required="true">
+  </label>
+</div>
+
+          <button class="button button-block button-positive" type="submit">Create Account</button>
+    </form>
+  </ion-content>
+</ion-modal-view>

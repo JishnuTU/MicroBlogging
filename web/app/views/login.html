@@ -1,0 +1,27 @@
+<div class="container-fluid" id ="login"  ng-controller="LoginCtrl">
+  <div class="row">
+    
+    <div class="col-sm-4 col-sm-offset-4 ">
+      <div class="panel panel-info" >
+        <div class="panel-heading"> <h2>Login</h2></div>
+        <div class="panel-body">
+          <form ng-submit="loginEntry()" method="post">
+                <div class="form-group">
+                  <label for="email">Email / Username:</label>
+                  <input type="text" class="form-control" ng-model="login.username" id="email" placeholder="Enter Email or Username" name="email" required="true">
+                </div>
+
+                <div class="form-group">
+                  <label for="pwd">Password:</label>
+                  <input type="password" class="form-control" ng-model="login.password" id="pwd" placeholder="Enter password" name="pwd" required="true">
+                </div>
+    
+            <a  ui-sref="app.register" class="btn btn-info" role="button">Register Here</a>
+            &nbsp &nbsp &nbsp
+            <button type="submit" class="btn btn-default">Submit</button> 
+          </form>
+      </div>
+    </div>
+  </div>  
+  </div>
+</div>

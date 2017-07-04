@@ -1,0 +1,22 @@
+doctype html
+html(lang='en')
+  head
+    title Microblogging
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+  body
+    .container
+      .page-header
+        .jumbotron
+          h1 Microblogging
+          p
+            | A social networking service where users can post , follow other user and can view post of followers. Registered users can post, like, dislike, comment against the post of followers.
+      .row
+        .col-sm-4.col-sm-offset-4
+          .panel.panel-success
+            .panel-heading #{message}
+            .panel-body 
+                a.btn.btn-info(href='https://localhost:3443/', role='button') Visit Website
