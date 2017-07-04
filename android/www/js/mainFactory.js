@@ -21,7 +21,7 @@ angular.module('mobileApp.mainFactory',[])
         getObject: function (key, defaultValue) {
             return JSON.parse($window.localStorage[key] || defaultValue);
         }
-    }
+    } 
 
 	}])
 
@@ -65,7 +65,7 @@ angular.module('mobileApp.mainFactory',[])
 	    $localStorage.remove(TOKEN_KEY);
 	  }
 	     
-	    authFac.login = function(loginData) {
+	   authFac.login = function(loginData){
 	        var load = $ionicPopup.show({
     				title: 'Please Wait ...'});
 
@@ -75,49 +75,68 @@ angular.module('mobileApp.mainFactory',[])
   					data: loginData
 					}).then(function success(response) {
 							load.close();
-      						alert($scope.data);
-      						if(response.success)
+							console.log(response);
+      						if(response.data.success)
 	           					{
 	              				storeUserCredentials({username:loginData.username,
-	              							userId:response.userId,
-	              							token: response.token});
-
+	              							userId:response.data.userId,
+	              							token: response.data.token});
 	              				$rootScope.$broadcast('login:Successful');	 
-	              				$state.go('home');   
-
-      			
+	              				$state.go('app.home');   
 	           					}
-	           		else{
-	           		ngDialog.open({template:'\
-	                <div class="ngdialog-message">\
-	                <div><h3>'+response.message+'</h3></div>',plain: 'true', showClose: true});
+	           		else {
+
+	           			$ionicPopup.alert({
+     								title: 'Alert ',
+     								template: '<h3>'+response.data.message+'</h3>'
+  									});
 	           		}
+
   					}, function error(response) {
+  						load.close();
+ 	           			$ionicPopup.alert({
+     								title: 'Server not Responding'
+  									});
+ 	           			console.log("failure");
+	           		});
 
-      							console.log("failure");
-  					});
-
-	    };
+	    }; 
 	    
 	    authFac.logout = function() {
-	        $resource(baseURL + "logout").get(function(response){
-	        	console.log(response.status)
-	        });
+	        $http({
+	        		method: 'GET',
+	        		url: baseURL + "logout"})
+	        	.then(function(response){
+	        		console.log(response.status)
+	       	 	});
 	        destroyUserCredentials();
+	        console.log("response.status")
+
 	    };
 	    
 	    authFac.register = function(registerData) {
 	    		var load = $ionicPopup.show({
-    				template: 'Please Wait....',
-    				title: 'Registration'});
+    				title: 'Please Wait....'});
+
 	    		$http({
   					method: 'POST',
   					url: baseURL+'register',
   					data: registerData
 					})
 	    		.then(function success(response){
-	    			
-	    		})
+	    				console.log(response);
+	    				load.close();
+	           			$ionicPopup.alert({
+     								title: response.data.message
+  									});
+	    		},
+	    		function error(response){
+	    			  	load.close();
+ 	           			$ionicPopup.alert({
+     								title: 'Server not Responding',
+  									});
+ 	           			console.log("failure");
+	    		});
 	    };
 	    
 	    authFac.isAuthenticated = function() {
@@ -142,17 +161,6 @@ angular.module('mobileApp.mainFactory',[])
 	}])
 
 	
-	.factory('NavFactory',['$resource','$rootScope','baseURL','AuthFactory','ngDialog',function($resource,$rootScope,baseURL,AuthFactory,ngDialog){
-		var navFac = {};
-		navFac.search= function(name){
-			$resource(baseURL + "home/search").save({"followerId":AuthFactory.getUserId(), "name":name},function(response){
-	        	$rootScope.$emit('searchresult',response);
-	        	console.log(response);
-			});
-		};
-		return navFac;
-	}])
-
 	.factory('socket', ['$rootScope', function($rootScope) {
 		  var socket = io.connect('http://localhost:3000/');
 

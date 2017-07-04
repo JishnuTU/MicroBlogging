@@ -20,7 +20,7 @@ angular.module('mobileApp', ['ionic', 'mobileApp.controllers','mobileApp.mainFac
       StatusBar.styleDefault();
     }
   });
-})
+}) 
 
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider

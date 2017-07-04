@@ -6,7 +6,8 @@ var passport = require('passport')
 var bcrypt =require('bcrypt-nodejs');
 const knex =require('../knex');
 var Verify    = require('./verify');
-
+var bodyParser = require('body-parser');
+router.use(bodyParser.json());
         
 passport.use(new LocalStrategy(
   function(username, password, done) {
@@ -69,7 +70,7 @@ passport.deserializeUser(function(id, done) {
 router.post('/login', function(req, res, next) {
    passport.authenticate('local', function(err, user, info) {
     if (err) { return next(err); }
-    
+
     if (!user) {return res.json({success: false ,message:info.message}); }
 
         req.logIn(user, function(err) {

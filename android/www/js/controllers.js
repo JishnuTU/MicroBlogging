@@ -1,6 +1,6 @@
 angular.module('mobileApp.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal,$ionicPopup, $timeout,AuthFactory) {
+.controller('AppCtrl', function($timeout,$scope, $ionicModal,$ionicPopup, $timeout,AuthFactory) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -9,9 +9,12 @@ angular.module('mobileApp.controllers', [])
   //$scope.$on('$ionicView.enter', function(e) {
   //});
 
-  // Form data for the login modal
-  $scope.loginData = {};
 
+  // Form data for the login modal
+  $scope.loginData = {
+      "username":"",
+      "password" :""
+    };
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/logIn.html', {
     scope: $scope
@@ -45,8 +48,11 @@ angular.module('mobileApp.controllers', [])
 
   // Open the login modal
   $scope.openLogin = function() {
-    $scope.loginmodal.show();
+    $timeout(function(){
+    $scope.loginmodal.show(); 
+},0);
   };
+
   $scope.registerdata={
     "userId" : "",
     "email" : "",
@@ -55,6 +61,8 @@ angular.module('mobileApp.controllers', [])
     "state" : "",
     "name" : ""
     };
+
+
   $scope.rpassword={"ch":""};
 
     function generateUUID() {
@@ -94,27 +102,47 @@ angular.module('mobileApp.controllers', [])
 
   }
 
+
+
+  $scope.logout =function(){
+    AuthFactory.logout();
+    $scope.openLogin();
+  }
+
   // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
     console.log('Doing login', $scope.loginData);
-
+    AuthFactory.login($scope.loginData);
     // Simulate a login delay. Remove this and replace with your login
     // code if using a login system
     $timeout(function() {
       $scope.closeLogin();
     }, 1000);
   };
+
+  $scope.$on("$ionicView.beforeEnter", function(event, data){
+   // handle event
+   console.log("State Params:"+AuthFactory.isAuthenticated());
+   if(!AuthFactory.isAuthenticated())
+        $scope.openLogin();
+    });
 })
 
-.controller('HomeCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
+.controller('HomeCtrl', function($scope,$rootScope,socket,AuthFactory) {
+  /* Search section */
+  $scope.searchFor =function(searchname){
+    console.log(searchname);
+    socket.emit('search',{userId:AuthFactory.getUserId(),
+                      token:AuthFactory.getToken(),
+                      name :searchname });
+    socket.on('searchresult',function(result){
+        //  myService.setServe(result);
+        console.log(result);
+
+      });
+  };
+  /* end Search section */
+
 })
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
