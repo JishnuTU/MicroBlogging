@@ -122,27 +122,54 @@ angular.module('mobileApp.controllers', [])
 
   $scope.$on("$ionicView.beforeEnter", function(event, data){
    // handle event
-   console.log("State Params:"+AuthFactory.isAuthenticated());
    if(!AuthFactory.isAuthenticated())
         $scope.openLogin();
     });
 })
 
-.controller('HomeCtrl', function($scope,$rootScope,socket,AuthFactory) {
+.controller('HomeCtrl', function($scope,$rootScope,socket,AuthFactory,$ionicModal) {
   /* Search section */
+  $scope.SR={};
+  $ionicModal.fromTemplateUrl('templates/search.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.searchmodal = modal;
+  });
+
   $scope.searchFor =function(searchname){
-    console.log(searchname);
     socket.emit('search',{userId:AuthFactory.getUserId(),
                       token:AuthFactory.getToken(),
                       name :searchname });
-    socket.on('searchresult',function(result){
-        //  myService.setServe(result);
-        console.log(result);
 
-      });
+    socket.on('searchresult',function(result){
+         // myService.setServe(result);
+         console.log(result);
+          $scope.SR=result;
+          $scope.searchmodal.show();
+      }); 
+
   };
   /* end Search section */
 
+
+  /* following section */
+  $scope.followHim =function(him){
+        console.log(him);
+       socket.emit('follow',{followerId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          followingId :him });
+
+    };
+     $scope.unFollowHim =function(him){
+        console.log(him);
+        socket.emit('unfollow',{followerId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          followingId :him });
+    };
+
+
+  /* following section end */
+  
 })
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {

@@ -1,0 +1,37 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Search Result</h1>
+    <div class="buttons">
+      <button class="button button-clear button-positive" ng-click="searchmodal.hide()">close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+
+
+<ul class="list" ng-repeat ="x in SR">
+
+    <li class="item">
+    <div class ="row">
+        <div clas ="col col-90">
+        <h3>{{x.name}}</h3>
+        <h4>{{x.email}}</h4>
+        </div>
+
+        <div class="col col-10">
+            <button class="button button-small button-balanced" ng-click="x.follow=1; followHim(x.userId);" ng-if="!x.follow" >
+             Follow
+            </button>
+
+            <button class="button button-small button-assertive" ng-click="x.follow=0; unFollowHim(x.userId)"  ng-if="x.follow">
+              Unfollow
+            </button>
+        </div>
+    </div>
+ </li>
+
+
+</ul>
+
+
+  </ion-content>
+</ion-modal-view>
