@@ -1,4 +1,4 @@
-<ion-view view-title="Timeline">
+<ion-view cache-view="false" view-title="Timeline">
 <ion-content>
 
   <div class="item-input-inset" style="padding-top:10px">
@@ -24,7 +24,7 @@
 
 
 <!-- Post template -->
-<div ng-repeat="bg in BD">
+<div ng-repeat="bg in BD | orderBy : '-createdAt'">
   <div class="card">
     <div class="item item-divider ">
       <div class="row">
@@ -55,7 +55,7 @@
                          ng-style="bg.interest === 0 && {'color': 'red'} ||
                   bg.interest=== 1 && {'color': 'black'} ||
                   bg.interest=== 2 && {'color': 'black'}"></a>
-            <a class="button button-icon icon ion-android-warning"></a>
+            <a class="button button-icon icon ion-android-warning" ng-click="reportPost(bg.postId)"></a>
           </p>
       </div>
 
@@ -64,15 +64,15 @@
         <label class="item-input-wrapper">
           <input type="text" placeholder="comment here" ng-model="newComment" required="true">
         </label>
-          <button class="button button-small  button-calm icon ion-wand" ng-click="submitComment(bg.postId)"></button>
+          <button class="button button-small  button-calm icon ion-wand" ng-click="submitComment(bg.postId,newComment); newComment='';"></button>
       </div>
 
 
       <div class="list list-inset" style=" max-height: 100px; overflow-y:scroll;">
 
-          <div class="item">
-            <p><font size="2pt">Raiders of the Lost Ark</font></p> 
-            <p><font size="2pt" color="green">Username</font><font size="1pt">-Nov 05, 1955</font></p>
+          <div class="item" ng-repeat="cmt in bg.comments  | orderBy : '-createdAt'">
+            <p><font size="2pt">{{cmt.comment}}</font></p> 
+            <p><font size="2pt" color="green">{{cmt.username}}</font><font size="1pt">-{{cmt.createdAt | date:'dd/MM/yyyy @ h:mma'}}</font></p>
           </div>
 
       </div>

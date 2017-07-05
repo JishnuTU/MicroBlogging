@@ -1,6 +1,6 @@
 angular.module('mobileApp.controllers', [])
 
-.controller('AppCtrl', function($timeout,$scope, $ionicModal,$ionicPopup, $timeout,AuthFactory,socket,PostBlogFac,PostGathFac) {
+.controller('AppCtrl', function($state,$ionicHistory,$timeout,$scope, $ionicModal,$ionicPopup, $timeout,AuthFactory,socket,PostBlogFac,PostGathFac) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -120,19 +120,26 @@ angular.module('mobileApp.controllers', [])
 
 
   $scope.logout =function(){
-    AuthFactory.logout();
+         $timeout(function () {
+          $ionicHistory.clearCache();
+          $ionicHistory.clearHistory();
+      },100) 
+    AuthFactory.logout();  
     $scope.openLogin();
   }
 
   // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
     console.log('Doing login', $scope.loginData);
-    AuthFactory.login($scope.loginData);
-    // Simulate a login delay. Remove this and replace with your login
-    // code if using a login system
-    $timeout(function() {
-      $scope.closeLogin();
-    }, 1000);
+    AuthFactory.login($scope.loginData,function(){
+          if(AuthFactory.isAuthenticated()){
+            $scope.closeLogin();
+            $state.go('app.home'); 
+          }
+    });
+
+
+             
   };
 
   $scope.$on("$ionicView.beforeEnter", function(event, data){
@@ -142,12 +149,20 @@ angular.module('mobileApp.controllers', [])
     });
 })
 
-.controller('HomeCtrl', function($scope,$rootScope,AuthFactory,$ionicModal,SearchFollowFac,PostBlogFac,$ionicPopup) {
+.controller('HomeCtrl', function($scope,$rootScope,AuthFactory,$ionicModal,SearchFollowFac,PostBlogFac,$ionicPopup,LikeDislikeFac,CommentPostFac,ReportPostFac) {
   /* Post section */
   $scope.postb={
       title: "",
       body : ""
     };
+/* before enter homectrl */
+  $scope.$on("$ionicView.loaded", function(event, data){
+   // handle event
+   if(!AuthFactory.isAuthenticated())
+        $scope.openLogin();
+      console.log("before enter the homectrl");
+    });
+/* before enter homectrl  ends here*/
 
   $ionicModal.fromTemplateUrl('templates/postpanel.html', {
     scope: $scope
@@ -162,7 +177,7 @@ angular.module('mobileApp.controllers', [])
           $ionicPopup.alert({
                 title: 'Blog Posted'
               });
-        $scope.postmodal.hide();
+       // $scope.postmodal.hide();
       });
 
   /*End  Post section */
@@ -206,7 +221,7 @@ angular.module('mobileApp.controllers', [])
 
 
   /* Display post Section */
-   $scope.BD={};
+   $scope.BD=[];
 
    $scope.$on("GatheredPost", function (evt, data) {
         $scope.BD =  data;
@@ -220,56 +235,65 @@ angular.module('mobileApp.controllers', [])
       if(from==1)
           {
             if(state==2){
-        /*      socket.emit('interestInsert',{userId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          postId:id,
-                          interest:1 }); */
-              return 1; // null->liked  :insert 
+              LikeDislikeFac.emitInterest('interestInsert',id,1);
+                return 1; // null->liked  :insert 
             }
             if(state==0){
-       /*       socket.emit('interestUpdate',{userId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          postId:id,
-                          interest:1 }); */
-              return 1; // disliked ->liked update
+               LikeDislikeFac.emitInterest('interestUpdate',id,1);
+                return 1; // disliked ->liked update
             }
             if(state==1){ 
-  /*              socket.emit('interestDelete',{userId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          postId:id
-                          }); */
-              return 2;
+               LikeDislikeFac.emitInterest('interestDelete',id,1);
+                return 2
             } //liked -> null delete
           }
        if(from==0)
           {
             if(state==2){
-       /*        socket.emit('interestInsert',{userId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          postId:id,
-                          interest:0 }); */
-              return 0; // null -> dislike insert
+               LikeDislikeFac.emitInterest('interestInsert',id,0);
+                return 0; // null -> dislike insert
             }
             if(state==1){
-    /*          socket.emit('interestUpdate',{userId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          postId:id,
-                          interest:0 }); */
-              return 0; //like -> dislike update
+               LikeDislikeFac.emitInterest('interestUpdate',id,0);
+                return 0; //like -> dislike update
             }
             if(state==0){
-       /*        socket.emit('interestDelete',{userId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          postId:id
-                          }); */
-              return 2; //dislike ->null delete
+               LikeDislikeFac.emitInterest('interestDelete',id,0);
+                return 2; //dislike ->null delete
             }
           }
       
     }
     /* like and dislike ends here */
 
-  
+
+    /* comment section */
+
+    $scope.submitComment = function(pId,newComment) {
+      console.log(newComment);
+         CommentPostFac.postComment(pId,newComment);
+
+    };
+    /* comment section ends here */
+
+  /* report section */
+  $scope.reportPost=function(postId){
+
+    $ionicPopup.prompt({
+              title: 'Report Blog',
+              template: 'Reason',
+              inputType: 'text',
+              inputPlaceholder: 'Your Reason'
+        })
+    .then(function(res) {
+         ReportPostFac.reportBlog(postId,res);
+      });
+     
+
+  }
+
+
+  /* report section ends here */
 })
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {

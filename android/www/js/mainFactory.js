@@ -65,7 +65,7 @@ angular.module('mobileApp.mainFactory',[])
 	    $localStorage.remove(TOKEN_KEY);
 	  }
 	     
-	   authFac.login = function(loginData){
+	   authFac.login = function(loginData,callback){
 	        var load = $ionicPopup.show({
     				title: 'Please Wait ...'});
 
@@ -81,9 +81,7 @@ angular.module('mobileApp.mainFactory',[])
 	              				storeUserCredentials({username:loginData.username,
 	              							userId:response.data.userId,
 	              							token: response.data.token});
-	              				$rootScope.$broadcast('login:Successful');	
-
-	              				$state.go('app.home');   
+	              				return callback();
 	           					}
 	           		else {
 
@@ -100,6 +98,7 @@ angular.module('mobileApp.mainFactory',[])
   									});
  	           			console.log("failure");
 	           		});
+	        return callback();
 
 	    }; 
 	    
@@ -278,5 +277,57 @@ angular.module('mobileApp.mainFactory',[])
 
      	return PG;
 
+	}])
+
+	.factory('LikeDislikeFac',['socket','AuthFactory',function(socket,AuthFactory){
+
+		var LD={};
+
+		LD.emitInterest =function(event,id,intrst){
+
+			socket.emit(event,{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          postId:id,
+                          interest:intrst });
+		}
+
+		return LD;
+	}])
+
+	.factory('CommentPostFac',['socket','AuthFactory','$rootScope',function(socket,AuthFactory,$rootScope){
+		var CP={};
+
+		CP.postComment =function(pid,commt){
+			console.log(pid+commt);
+			    socket.emit('NewComment',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          postId:pid,
+                          comment:commt });
+
+		}
+
+		 	socket.on('ReplyComment',function(msg){
+         		$rootScope.$broadcast("CommentBlog",msg);
+        		});
+		return CP;
+	}])
+
+
+	.factory('ReportPostFac',['socket','AuthFactory','$rootScope',function(socket,AuthFactory,$rootScope){
+		var RP={};
+
+		RP.reportBlog =function(pid,reson ){
+
+      			socket.emit('reportPost',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          postId:pid,
+                          reason:reson});
+
+		}
+			socket.on('ReplyReport',function(msg){
+          			$rootScope.$broadcast("ReportBlog",msg);
+        		});
+
+		return RP;
 	}])
 ;

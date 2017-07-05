@@ -109,7 +109,7 @@ postgathering =function(user,callback){ // function to get all required post for
 
 
 exports.postpacking =function(user,callback){ // function to append all details to the post gathered
-	finalPosts={};
+	finalPosts=[];
 	var index=0
 
 	postgathering(user,function(error,allPost){
@@ -136,9 +136,9 @@ exports.postpacking =function(user,callback){ // function to append all details 
 							else
 								post.interest=2;
 
-							finalPosts[post.postId]=post;
+							finalPosts.push(post);
 
-							if(Object.keys(finalPosts).length==allPost.length)
+							if(finalPosts.length==allPost.length)
 								return callback(false,finalPosts);
 						})
 						.catch(function(){

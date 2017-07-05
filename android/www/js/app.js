@@ -33,6 +33,7 @@ angular.module('mobileApp', ['ionic', 'mobileApp.controllers','mobileApp.mainFac
   })
 
     .state('app.home', {
+      cache: false,
       url: '/home',
       views: {
         'menuContent': {
