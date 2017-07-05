@@ -26,7 +26,7 @@ angular.module('mobileApp.mainFactory',[])
 	}])
 
 
-	.factory('AuthFactory', ['$http', '$localStorage', '$rootScope', '$window', '$state', 'baseURL', '$ionicPopup', function($http, $localStorage, $rootScope, $window, $state, baseURL, $ionicPopup){
+	.factory('AuthFactory', ['$http', '$localStorage', '$rootScope', '$window', '$state', 'baseURL', '$ionicPopup','socket', function($http, $localStorage, $rootScope, $window, $state, baseURL, $ionicPopup,socket){
     
 	    var authFac = {};
 	    var TOKEN_KEY = 'Token';
@@ -81,7 +81,8 @@ angular.module('mobileApp.mainFactory',[])
 	              				storeUserCredentials({username:loginData.username,
 	              							userId:response.data.userId,
 	              							token: response.data.token});
-	              				$rootScope.$broadcast('login:Successful');	 
+	              				$rootScope.$broadcast('login:Successful');	
+
 	              				$state.go('app.home');   
 	           					}
 	           		else {
@@ -153,7 +154,7 @@ angular.module('mobileApp.mainFactory',[])
 	    authFac.getToken = function() {
 	        return authToken;  
 	    };
-	    	
+
 	    loadUserCredentials();
 	    
 	    return authFac;
@@ -243,14 +244,39 @@ angular.module('mobileApp.mainFactory',[])
 
 			}
 
+
+
+
+
 			socket.on('replypost',function(message){
        			console.log(AuthFactory.getUsername()+"posted");
        			$ionicLoading.hide();
        			$rootScope.$broadcast("ReplyPost",message);
 
       		});
+
+
+
+
+	    	
 		return PB;
 
 	}])
 
+	.factory('PostGathFac',['socket','AuthFactory','$rootScope',function(socket,AuthFactory,$rootScope){
+		var PG ={};
+
+
+		PG.refreshPost =function(){
+			socket.emit('gatherposts',{userId: AuthFactory.getUserId(),
+           					token: AuthFactory.getToken() });
+			}
+			
+	 		socket.on('gatheredpost',function(data){
+	 		$rootScope.$broadcast("GatheredPost",data);
+     		});
+
+     	return PG;
+
+	}])
 ;

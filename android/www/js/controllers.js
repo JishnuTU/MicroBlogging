@@ -1,6 +1,6 @@
 angular.module('mobileApp.controllers', [])
 
-.controller('AppCtrl', function($timeout,$scope, $ionicModal,$ionicPopup, $timeout,AuthFactory) {
+.controller('AppCtrl', function($timeout,$scope, $ionicModal,$ionicPopup, $timeout,AuthFactory,socket,PostBlogFac,PostGathFac) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -44,6 +44,11 @@ angular.module('mobileApp.controllers', [])
   // Open the register modal
   $scope.openRegister = function() {
     $scope.registermodal.show();
+  };
+
+  $scope.timeLine =function(){
+    console.log("function called");
+    PostGathFac.refreshPost();
   };
 
   // Open the login modal
@@ -101,7 +106,17 @@ angular.module('mobileApp.controllers', [])
     }
 
   }
-
+      /* access checking */
+        socket.on('AuthorizationFailed',function(message){
+           
+           $ionicPopup.alert({
+                title: 'You are not Logged In'
+            })
+           .then(function(res) {
+                $scope.openLogin();
+            });
+        });
+      /* access checking */   
 
 
   $scope.logout =function(){
@@ -168,6 +183,7 @@ angular.module('mobileApp.controllers', [])
 
   $scope.$on("SearchResult", function (evt, data) {
         $scope.SR =  data;
+        console.log($scope.SR);
         if(Object.keys($scope.SR).length==0)
             $scope.SR=false;
         $scope.searchmodal.show();
@@ -190,9 +206,68 @@ angular.module('mobileApp.controllers', [])
 
 
   /* Display post Section */
+   $scope.BD={};
+
+   $scope.$on("GatheredPost", function (evt, data) {
+        $scope.BD =  data;
+        console.log($scope.BD)
+    });
+
   /* Display post Section  Ends*/
 
-
+/* Like and dislike */
+ $scope.changestate=function(id,state,from){
+      if(from==1)
+          {
+            if(state==2){
+        /*      socket.emit('interestInsert',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          postId:id,
+                          interest:1 }); */
+              return 1; // null->liked  :insert 
+            }
+            if(state==0){
+       /*       socket.emit('interestUpdate',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          postId:id,
+                          interest:1 }); */
+              return 1; // disliked ->liked update
+            }
+            if(state==1){ 
+  /*              socket.emit('interestDelete',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          postId:id
+                          }); */
+              return 2;
+            } //liked -> null delete
+          }
+       if(from==0)
+          {
+            if(state==2){
+       /*        socket.emit('interestInsert',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          postId:id,
+                          interest:0 }); */
+              return 0; // null -> dislike insert
+            }
+            if(state==1){
+    /*          socket.emit('interestUpdate',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          postId:id,
+                          interest:0 }); */
+              return 0; //like -> dislike update
+            }
+            if(state==0){
+       /*        socket.emit('interestDelete',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          postId:id
+                          }); */
+              return 2; //dislike ->null delete
+            }
+          }
+      
+    }
+    /* like and dislike ends here */
 
   
 })

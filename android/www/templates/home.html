@@ -4,17 +4,17 @@
   <div class="item-input-inset" style="padding-top:10px">
   <div class="row">
     <div class="col col-10">
-      <h3> <i class="ion-wand" ng-click="postmodal.show();"></i> </h3>
+      <h3> <i class="icon ion-android-create" ng-click="postmodal.show();"></i> </h3>
     </div>
-    <div class="col col-60">
+    <div class="col col-65">
     <label class="item-input-wrapper">
       <i class="icon ion-ios-search placeholder-icon"></i>
       <input type="search" required="true" ng-model="searchname" placeholder="Search">
     </label>
     </div>
       
-    <div class="col col-25">
-    <button class="button button-small button-calm" ng-click="searchFor(searchname)">Search</button>
+    <div class="col col-10">
+     <h3><i class="icon ion-ios-search" ng-click="searchFor(searchname)"></i></h3>
     </div>
     <div class="col col-15">
     <h3> <i class="ion-android-notifications-none"></i> </h3>
@@ -24,39 +24,49 @@
 
 
 <!-- Post template -->
+<div ng-repeat="bg in BD">
   <div class="card">
     <div class="item item-divider ">
       <div class="row">
-          Our Lipsmacking Culinary Creations 
+         {{bg.title}}
       </div>
       
       <div class="row"> 
         <div class="col col-70">
-          <h2><font color="green">Marty McFly</font></h2>
+          <h2><font color="green">{{bg.name}}</font></h2>
         </div>
         
         <div class="col col-3 0">
-          <p><font size="2pt">Nov 05, 1955</font></p>
+          <p><font size="2pt">{{bg.createdAt | date:'dd/MM/yyyy @ h:mma'}}</font></p>
         </div>
       </div>
 
       <div class="item  item-text-wrap">
           <div class="item item-input-inset">
-            <h2>Hello</h2>
+            <h2>{{bg.body}}</h2>
           </div>
-          <p>
-            <a href="#" class="subdued"><font color="blue">25 Like</font></a>
-            <a href="#" class="subdued"><font color="blue">7 Disike</font></a>
-            <a href="#" class="subdued"><font size="2pt" color="red">Report</font></a>
+           <p>
+            <a class="button button-icon icon ion-thumbsup" ng-click="bg.interest=changestate(bg.postId,bg.interest,1);" id="{{bg.postId}}like" 
+                        ng-style="bg.interest === 0 && {'color': 'black'} ||
+                  bg.interest=== 1 && {'color': 'red'}||
+                  bg.interest=== 2 && {'color': 'black'}"></a>
+
+            <a class="button button-icon icon ion-thumbsdown" ng-click="bg.interest=changestate(bg.postId,bg.interest,0);" id="{{bg.postId}}dislike" 
+                         ng-style="bg.interest === 0 && {'color': 'red'} ||
+                  bg.interest=== 1 && {'color': 'black'} ||
+                  bg.interest=== 2 && {'color': 'black'}"></a>
+            <a class="button button-icon icon ion-android-warning"></a>
           </p>
       </div>
 
+
       <div class="item item-input-inset">
         <label class="item-input-wrapper">
-          <input type="text" placeholder="comment here">
+          <input type="text" placeholder="comment here" ng-model="newComment" required="true">
         </label>
-          <button class="button  button-small button-positive">Submit</button>
+          <button class="button button-small  button-calm icon ion-wand" ng-click="submitComment(bg.postId)"></button>
       </div>
+
 
       <div class="list list-inset" style=" max-height: 100px; overflow-y:scroll;">
 
@@ -69,7 +79,7 @@
     
     </div>
   </div>
-
+</div>
 <!--end Post template -->
 
 
