@@ -193,4 +193,64 @@ angular.module('mobileApp.mainFactory',[])
 
 }])
 
+	.factory('SearchFollowFac',['socket','AuthFactory','$rootScope',function(socket,AuthFactory,$rootScope){
+
+		var	SF={};
+
+		SF.search =function(sname){
+			    socket.emit('search',{userId:AuthFactory.getUserId(),
+                      token:AuthFactory.getToken(),
+                      name :sname });
+		}
+
+		socket.on('searchresult',function(result){
+         	$rootScope.$broadcast("SearchResult", result);
+      		}); 
+
+		SF.follow =function(him){
+       		socket.emit('follow',{followerId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          followingId :him });
+
+    	};
+     	
+     	SF.unFollow =function(him){
+        	socket.emit('unfollow',{followerId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          followingId :him });
+    	};
+
+		return SF;
+
+	}])
+
+
+	.factory('PostBlogFac',['socket','AuthFactory','$rootScope', '$ionicLoading',function(socket,AuthFactory,$rootScope, $ionicLoading){
+		var PB ={};
+
+		PB.post = function(title,body)
+			{
+				$ionicLoading.show({
+      				template: '<ion-spinner icon="bubbles"></ion-spinner>',
+    				})
+				socket.emit('postblog',{ ownerId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          title :title,
+                          body :body
+        		});
+
+        		
+
+			}
+
+			socket.on('replypost',function(message){
+       			console.log(AuthFactory.getUsername()+"posted");
+       			$ionicLoading.hide();
+       			$rootScope.$broadcast("ReplyPost",message);
+
+      		});
+		return PB;
+
+	}])
+
 ;

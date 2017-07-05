@@ -127,48 +127,73 @@ angular.module('mobileApp.controllers', [])
     });
 })
 
-.controller('HomeCtrl', function($scope,$rootScope,socket,AuthFactory,$ionicModal) {
+.controller('HomeCtrl', function($scope,$rootScope,AuthFactory,$ionicModal,SearchFollowFac,PostBlogFac,$ionicPopup) {
+  /* Post section */
+  $scope.postb={
+      title: "",
+      body : ""
+    };
+
+  $ionicModal.fromTemplateUrl('templates/postpanel.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.postmodal = modal;
+  });
+
+  $scope.postBlog =function(){
+      PostBlogFac.post($scope.postb.title,$scope.postb.body);
+    };
+    $scope.$on("ReplyPost", function (evt, data) {
+          $ionicPopup.alert({
+                title: 'Blog Posted'
+              });
+        $scope.postmodal.hide();
+      });
+
+  /*End  Post section */
+
   /* Search section */
-  $scope.SR={};
+
   $ionicModal.fromTemplateUrl('templates/search.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.searchmodal = modal;
   });
 
+  $scope.SR={};
+
   $scope.searchFor =function(searchname){
-    socket.emit('search',{userId:AuthFactory.getUserId(),
-                      token:AuthFactory.getToken(),
-                      name :searchname });
+      SearchFollowFac.search(searchname);
+    };
 
-    socket.on('searchresult',function(result){
-         // myService.setServe(result);
-         console.log(result);
-          $scope.SR=result;
-          $scope.searchmodal.show();
-      }); 
+  $scope.$on("SearchResult", function (evt, data) {
+        $scope.SR =  data;
+        if(Object.keys($scope.SR).length==0)
+            $scope.SR=false;
+        $scope.searchmodal.show();
+      });
 
-  };
   /* end Search section */
 
 
   /* following section */
   $scope.followHim =function(him){
-        console.log(him);
-       socket.emit('follow',{followerId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          followingId :him });
-
-    };
-     $scope.unFollowHim =function(him){
-        console.log(him);
-        socket.emit('unfollow',{followerId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          followingId :him });
+        SearchFollowFac.follow(him);
     };
 
+  $scope.unFollowHim =function(him){
+        SearchFollowFac.unFollow(him);
+    };
 
   /* following section end */
+
+
+
+  /* Display post Section */
+  /* Display post Section  Ends*/
+
+
+
   
 })
 
