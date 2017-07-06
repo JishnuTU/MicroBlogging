@@ -86,17 +86,17 @@ postgathering =function(user,callback){ // function to get all required post for
 	knex('followingLink')
 		.where('followerId',user)
 		.then(function(followinguser){  // all followers of user
-			var fnumber =0;
-			followinguser.forEach(function(fuser){
-				++fnumber;
+			followinguser.forEach(function(fuser,indexf){
+
 				knex('blogPost')
 					.join('bloggingUsers', 'blogPost.ownerId', '=', 'bloggingUsers.userId')
 					.select('blogPost.postId', 'blogPost.ownerId', 'bloggingUsers.name', 'blogPost.title','blogPost.body','blogPost.noLikes','blogPost.noDislikes','blogPost.createdAt')
 					.where('ownerId',fuser.followingId)
 					.then(function(posts){
+							//console.log('checking the posts',posts);
 							allposts=allposts.concat(posts);	 // posts are joined for the user to display
-
-						if(followinguser.length==fnumber) // return when all post are gathered
+							//console.log('in stage',allposts);
+						if(followinguser.length-1==indexf) // return when all post are gathered
 							{ return callback(false,allposts); }
 					})
 					.catch(function(){
@@ -112,12 +112,11 @@ postgathering =function(user,callback){ // function to get all required post for
 
 exports.postpacking =function(user,callback){ // function to append all details to the post gathered
 	finalPosts=[];
-	var index=0
-
+	var index=0;
 	postgathering(user,function(error,allPost){
+		console.log('in okay stage',allPost);
 		if(error)
 			return callback(true,null);
-		console.log(allPost);
 		allPost.forEach(function(post){
 			knex('postComment')
 				.join('bloggingUsers', 'postComment.cmtById', '=', 'bloggingUsers.userId')

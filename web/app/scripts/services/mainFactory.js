@@ -208,4 +208,22 @@ angular.module('webApp')
 
 }])
 
+	.factory('ActivityFac',['$rootScope','socket','AuthFactory',function($rootScope,socket,AuthFactory){
+
+		var RA={};
+		RA.gatherActivity=function(){
+			socket.emit('recentActivity',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken()
+                           });
+		}
+
+
+			socket.on('ReplyActivity',function(data){
+				console.log(data);
+			});
+
+			
+		return RA;
+	}])
+
 ;

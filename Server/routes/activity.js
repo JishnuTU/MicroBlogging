@@ -1,4 +1,5 @@
  var activityController = require('../controller/activityController');
+ var notificationController =  require('../controller/notificationController');
 var Verify    = require('./verify');
 
  module.exports = function(socket,io){
@@ -145,6 +146,24 @@ var Verify    = require('./verify');
         }
       });
     });
+
+//recent activty
+
+  
+      socket.on('recentActivity',function(data){
+      Verify.verifySocketUser(data.token,function(procced){
+        if(procced){
+                notificationController.getRecentActivity(data.userId,function(activty){
+                    return io.to(socket.id).emit("ReplyActivity",activty);
+                });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
+
 
 
 

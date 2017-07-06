@@ -253,4 +253,11 @@ angular.module('webApp')
     }
 
   }])
+
+
+  .controller('ActivityCtrl',['$scope','ActivityFac',function($scope,ActivityFac){
+
+    ActivityFac.gatherActivity();
+    
+  }])
 ;
