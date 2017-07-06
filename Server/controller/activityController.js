@@ -114,7 +114,7 @@ exports.postpacking =function(user,callback){ // function to append all details 
 	finalPosts=[];
 	var index=0;
 	postgathering(user,function(error,allPost){
-		console.log('in okay stage',allPost);
+		//console.log('in okay stage',allPost);
 		if(error)
 			return callback(true,null);
 		allPost.forEach(function(post){
@@ -161,8 +161,12 @@ exports.deleteInterest=function(uId,pId){
 		.where({'intOfId':pId,'intById':uId})
 		.del()
 		.then(function(){
+		/*	knex('postBlog')
+				.where('postId',pId)
+				.update('', 1) */
 			console.log("mail deleted the alert");
 		});
+
 }
 
 exports.insertInterest =function(uId,pId,interest){

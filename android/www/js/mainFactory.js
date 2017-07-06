@@ -1,4 +1,4 @@
-'use strict';
+ 'use strict';
 
 angular.module('mobileApp.mainFactory',[])
 	.constant("baseURL","https://localhost:3443/")

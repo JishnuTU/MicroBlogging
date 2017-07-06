@@ -21,6 +21,7 @@ var flagfollower=false,flagpost=false,flagcomment=false,flaginterest=false;
 					.select('bloggingUsers.name','blogPost.title','blogPost.createdAt')
 					.where('ownerId',follower.followingId) // all post by a follower
 					.then(function(posts){
+						activityCollection1=[];
 						posts.forEach(function(post,indexpost){
 							actmsg={};
 							actmsg.byUser=post.name;
@@ -42,9 +43,10 @@ var flagfollower=false,flagpost=false,flagcomment=false,flaginterest=false;
 					.select('postComment.cmtById','blogPost.title','postComment.createdAt')
 					.where('blogPost.ownerId',userId)
 					.then(function(comments){
+						activityCollection2=[];
 						comments.forEach(function(comment,indexcomment){
-							actmsg={};
 							getName(comment.cmtById,function(name){
+								actmsg={};
 								actmsg.byUser=name;
 								actmsg.action="commented on your blog :";
 								actmsg.title=comment.title;
@@ -65,9 +67,10 @@ var flagfollower=false,flagpost=false,flagcomment=false,flaginterest=false;
 					//.select('postInterest.intById','postInterest.interest','blogPost.title','postInterest.createdAt')
 					.where('blogPost.ownerId',userId)
 					.then(function(interests){
+						activityCollection3=[];
 						interests.forEach(function(interest,indexinterest){
-							actmsg={};
 							getName(interest.intById,function(name){
+								actmsg={};
 								actmsg.byUser=name;
 								if(interest.interest==1)
 									actmsg.action="liked your blog :";
@@ -104,6 +107,7 @@ var flagfollower=false,flagpost=false,flagcomment=false,flaginterest=false;
 
 
 getName = function(id,callback){
+
 	knex('bloggingUsers')
 		.select('name')
 		.where('userId',id)

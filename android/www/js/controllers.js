@@ -1,6 +1,6 @@
 angular.module('mobileApp.controllers', [])
 
-.controller('AppCtrl', function($state,$ionicHistory,$timeout,$scope, $ionicModal,$ionicPopup, $timeout,AuthFactory,socket,PostBlogFac,PostGathFac) {
+.controller('AppCtrl', function($rootScope,$state,$ionicHistory,$timeout,$scope, $ionicModal,$ionicPopup, $timeout,AuthFactory,socket,PostBlogFac,PostGathFac) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -8,7 +8,15 @@ angular.module('mobileApp.controllers', [])
   // listen for the $ionicView.enter event:
   //$scope.$on('$ionicView.enter', function(e) {
   //});
+ /* filtering section */
+ $rootScope.filterOn =function(){
+  $rootScope.$broadcast('FilterMe',"filtering");
+ }
+  $rootScope.filterOff =function(){
+  $rootScope.$broadcast('FilterNotMe',"filtering");
+ }
 
+ /*filtering section ends here */
 
   // Form data for the login modal
   $scope.loginData = {
@@ -47,6 +55,7 @@ angular.module('mobileApp.controllers', [])
 
   $scope.timeLine =function(){
     console.log("function called");
+    $rootScope.$broadcast('FilterOff',"filtering");
     PostGathFac.refreshPost();
   };
 
@@ -155,6 +164,24 @@ angular.module('mobileApp.controllers', [])
 })
 
 .controller('HomeCtrl', function($scope,$rootScope,AuthFactory,$ionicModal,SearchFollowFac,PostBlogFac,$ionicPopup,LikeDislikeFac,CommentPostFac,ReportPostFac) {
+  /* filtering section */
+
+    $scope.filterObject="";
+    $scope.$on("FilterMe",function(evt,data){
+      $scope.filterObject=AuthFactory.getUserId();
+    });
+    $scope.$on("FilterNotMe",function(evt,data){
+      $scope.filterObject='!'+AuthFactory.getUserId();
+    });
+    $scope.$on("FilterOff",function(evt,data){
+      $scope.filterObject='';
+    });
+
+  /*filtering section ends here */
+
+
+
+
   /* Post section */
   $scope.postb={
       title: "",

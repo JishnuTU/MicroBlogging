@@ -258,6 +258,14 @@ angular.module('webApp')
   .controller('ActivityCtrl',['$scope','ActivityFac',function($scope,ActivityFac){
 
     ActivityFac.gatherActivity();
-    
+    $scope.RAlist=[];
+    $scope.$on("RActiviyResult",function(evt,data){
+              $scope.$applyAsync(function () {
+      $scope.RAlist=$scope.RAlist.concat(data);
+    });
+     // console.log($scope.RAlist);
+    });
+
+
   }])
 ;

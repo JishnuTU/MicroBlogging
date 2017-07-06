@@ -219,10 +219,11 @@ angular.module('webApp')
 
 
 			socket.on('ReplyActivity',function(data){
-				console.log(data);
+				//console.log(data);
+				$rootScope.$broadcast("RActiviyResult",data);
 			});
 
-			
+
 		return RA;
 	}])
 
