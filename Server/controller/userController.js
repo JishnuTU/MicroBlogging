@@ -21,18 +21,26 @@ exports.userRegister=function(user,callback){
 					user.password=bcrypt.hashSync(user.password);
 					knex('bloggingUsers').insert(user,'*')
 										.then(function() {
- 		 											callback("Account Created Successfully");
+													knex('followingLink').insert({followerId:user.userId,
+														followingId:user.userId})
+													.then(function(){
+														return callback("Account Created Successfully");
+													})
+													.catch(function(){
+														return callback("Account Creation failed");
+													});
+ 		 											
  	 											})
 	  									.catch(function() {
- 		 											callback("Account Creation failed");
- 	 								})
+ 		 									return callback("Account Creation failed");
+ 	 								});
 				}
 				else
-					callback("Account Creation failed (Email doesn't exists)");
+					return callback("Account Creation failed (Email doesn't exists)");
 			});
 		}
 		else
-			callback("Username Taken");
+			return callback("Username Taken");
 	})
 		
 }

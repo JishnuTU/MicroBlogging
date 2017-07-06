@@ -29,7 +29,6 @@ angular.module('mobileApp.controllers', [])
     $scope.registermodal = modal;
   });
 
-
   // Triggered in the register modal to close it
   $scope.closeRegister = function() {
     $scope.registermodal.hide();
@@ -57,6 +56,8 @@ angular.module('mobileApp.controllers', [])
     $scope.loginmodal.show(); 
 },0);
   };
+
+  $scope.openLogin();
 
   $scope.registerdata={
     "userId" : "",
@@ -134,13 +135,17 @@ angular.module('mobileApp.controllers', [])
     AuthFactory.login($scope.loginData,function(){
           if(AuthFactory.isAuthenticated()){
             $scope.closeLogin();
+            PostGathFac.refreshPost();
             $state.go('app.home'); 
           }
     });
 
-
-             
   };
+
+  $scope.$on("NotLoggedIn",function(evt,data){
+    console.log("before enter the ctrl");
+       $scope.openLogin();
+  });
 
   $scope.$on("$ionicView.beforeEnter", function(event, data){
    // handle event
@@ -156,10 +161,10 @@ angular.module('mobileApp.controllers', [])
       body : ""
     };
 /* before enter homectrl */
-  $scope.$on("$ionicView.loaded", function(event, data){
+  $scope.$on("$ionicView.beforeEnter", function(event, data){
    // handle event
    if(!AuthFactory.isAuthenticated())
-        $scope.openLogin();
+        $rootScope.$broadcast("NotLoggedIn","openlogin");
       console.log("before enter the homectrl");
     });
 /* before enter homectrl  ends here*/

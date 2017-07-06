@@ -108,7 +108,7 @@ angular.module('webApp')
 	    };
 	    
 	    authFac.logout = function() {
-	        $resource(baseURL + "logout").get(function(response){
+	        $resource(baseURL + "logout").save({'userId':userId},function(response){
 	        	console.log(response.status)
 	        });
 	        destroyUserCredentials();

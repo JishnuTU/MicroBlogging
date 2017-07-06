@@ -104,7 +104,8 @@ angular.module('mobileApp.mainFactory',[])
 	    
 	    authFac.logout = function() {
 	        $http({
-	        		method: 'GET',
+	        		method: 'POST',
+	        		data:{'userId':userId},
 	        		url: baseURL + "logout"})
 	        	.then(function(response){
 	        		console.log(response.status)

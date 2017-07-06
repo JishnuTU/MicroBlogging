@@ -130,7 +130,7 @@ angular.module('webApp')
 
 
   .controller('BlogDCtrl',['$scope','myService','socket','AuthFactory','ngDialog',function($scope,myService,socket,AuthFactory,ngDialog){
-    $scope.BD={};
+    $scope.BD=[];
     socket.emit('gatherposts',{userId:AuthFactory.getUserId(),
            token:AuthFactory.getToken() });
 
@@ -205,17 +205,32 @@ angular.module('webApp')
   }])
 
   .controller('CommentCtrl',['$state','$scope','socket','AuthFactory','ngDialog',function($state,$scope,socket,AuthFactory,ngDialog){
-    $scope.newComment="";
+    
+    $scope.newComment={ 'comment':"",
+                        'username':AuthFactory.getUsername(),
+                        'createdAt':""};
+    $scope.showcomment=false;
 
-    $scope.submitComment = function(pId) {
+    $scope.submitComment = function(pId,obj) {
       console.log("i am called");
 
         socket.emit('NewComment',{userId:AuthFactory.getUserId(),
                           token:AuthFactory.getToken(),
                           postId:pId,
-                          comment:$scope.newComment });
+                          comment:$scope.newComment.comment });
+        console.log($scope.BD.indexOf(obj));
+        $scope.newComment.createdAt=Date.now();
+
+        console.log($scope.newComment);
+        $scope.ind =$scope.BD.indexOf(obj);
+        console.log($scope.BD[$scope.ind]);
+
+        $scope.BD[$scope.ind].comments.push($scope.newComment);
+
+
         socket.on('ReplyComment',function(msg){
-          $state.go($state.current, {}, {reload: true});
+          
+          //$state.go($state.current, {}, {reload: true});
         });
 
     };

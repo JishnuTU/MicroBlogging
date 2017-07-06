@@ -30,7 +30,14 @@ passport.use(new LocalStrategy(
                 bcrypt.compare(password,user[0].password, function(err, res) {
                       if(res)
                       {
-                        return done(null, user[0],{ message: 'User authencated' });//password is correct procced
+                        knex('bloggingUsers').where('userId',user[0].userId).update('state', 1)
+                        .then(function(){
+                              return done(null, user[0],{ message: 'User authencated' });//password is correct procced
+                          })
+                        .catch(function(){
+                            return done(null, false, { message: 'Server Error.' });//password is Incorrect
+                        });
+                        
                       }
                       else
                       {
@@ -88,11 +95,21 @@ router.post('/login', function(req, res, next) {
 
 });
 
-router.get('/logout', function(req, res) {
-    req.logout();
-  res.status(200).json({
-    status: true
-  });
+router.post('/logout', function(req, res) {
+  console.log(req.body.userId);
+    knex('bloggingUsers').where('userId',req.body.userId).update({'state': 0,'activityAt':knex.fn.now()})
+    .then(function(){
+          req.logout();
+          res.status(200).json({
+          status: true
+        });
+    })
+    .catch(function(){
+          res.status(500).json({
+          status: false
+        });
+    });
+
 });
 
 router.post('/register', function(req, res, next) {

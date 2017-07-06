@@ -16,7 +16,7 @@
 
       </div>
     </div>
-
+ 
 </div>
 
 <div class="col-sm-8" ng-controller="BlogDCtrl">
@@ -65,9 +65,9 @@
                     </div>
                     <div class="form-group">
                         <label for="email">Comment:</label>
-                        <input type="text" ng-model="newComment" required="true" class="form-control" id="email" placeholder="Enter comment" name="email">
+                        <input type="text" ng-model="newComment.comment" required="true" class="form-control" id="email" placeholder="Enter comment" name="email">
                     </div>
-                    <button ng-click="submitComment(bg.postId)" class="btn btn-default">Submit</button>
+                    <button ng-click="submitComment(bg.postId,bg)" class="btn btn-default">Submit</button>
                 </form>
             </div>           
         </div>

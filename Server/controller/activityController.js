@@ -10,7 +10,9 @@ exports.searchFor=function(followerId,name,callback){
 	
 	knex.column('userId', 'email', 'name').select().from('bloggingUsers')
 		.where('name', 'like', '%'+name+'%')
+		.andWhereNot('userId',followerId)
 		.orWhere('email','like','%'+name+'%')
+		.andWhereNot('userId',followerId)
 		.then(function(row){
 			if(row.length==0)
 				return callback(searchResult);
