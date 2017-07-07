@@ -95,7 +95,7 @@ postgathering =function(user,callback){ // function to get all required post for
 					.then(function(posts){
 							//console.log('checking the posts',posts);
 							allposts=allposts.concat(posts);	 // posts are joined for the user to display
-							//console.log('in stage',allposts);
+							console.log('in stage',allposts);
 						if(followinguser.length-1==indexf) // return when all post are gathered
 							{ return callback(false,allposts); }
 					})

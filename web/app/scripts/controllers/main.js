@@ -268,4 +268,63 @@ angular.module('webApp')
 
 
   }])
+
+  
+  .controller('AdminCtrl',['$scope','AuthFactory','AdminFac',function($scope,AuthFactory,AdminFac){
+    AdminFac.gatherreportedPost();
+    $scope.RPlist=[];
+    $scope.RPuser=[];
+    $scope.$on("RAdminResult",function(evt,data){
+              $scope.$applyAsync(function () {
+              $scope.RPlist=data;
+              $scope.RPuser=[];
+              data.forEach(function(usr){
+                $scope.RPusr={};
+                $scope.RPusr.ofUser=usr.ofUser;
+                $scope.RPusr.userstate=usr.userstate;
+                $scope.RPuser.push($scope.RPusr);
+              });
+          });
+    });
+    $scope.Adminlogout = function(){
+      AuthFactory.logout();
+      };
+
+    $scope.removePost =function(pId){
+      $scope.RPlist.forEach(function(pt,index){
+          if(pt.postId==pId)
+            $scope.RPlist.splice(index,1);
+      });
+
+
+    }
+  }])
+
+  .filter('unique', function() {
+   // we will return a function which will take in a collection
+   // and a keyname
+   return function(collection, keyname) {
+      // we define our output and keys array;
+      var output = [], 
+          keys = [];
+      
+      // we utilize angular's foreach function
+      // this takes in our original collection and an iterator function
+      angular.forEach(collection, function(item) {
+          // we check to see whether our object exists
+          var key = item[keyname];
+          // if it's not already part of our keys array
+          if(keys.indexOf(key) === -1) {
+              // add it to our keys array
+              keys.push(key); 
+              // push this item to our final output array
+              output.push(item);
+          }
+      });
+      // return our array which should be devoid of
+      // any duplicates
+      return output;
+   };
+});
+
 ;

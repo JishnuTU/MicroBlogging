@@ -1,15 +1,15 @@
-
+<div ng-controller="AdminCtrl">
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" href="#">Microblogging</a>
     </div>
     <ul class="nav navbar-nav">
-      <li class="active"><a href="#">Home</a></li>
+      <li class="active"><a ui-sref="admin" >Home</a></li>
     </ul>
 
         <ul class="nav navbar-nav navbar-right">
-      <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+      <li><a ui-sref="app" ng-click="Adminlogout()"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
     </ul>
   </div>
 </nav>
@@ -21,44 +21,57 @@
 
 <div class="container">
 <div class="row">
-<div class="col-sm-9 col-sm-offset-2">
+<div class="col-sm-8">
+  <table class="table table-hover table-bordered table-responsive">
+    <thead ng-init="ordercol='' ">
+      <tr>
+        <th>Post Title <i ng-click="ordercol='postId'" class="fa  fa-sort"></i></th>
+        <th>Content</th>
+        <th>Reason <i ng-click="ordercol='reason'" class="fa  fa-sort"></i></th>
+        <th>Reported By <i ng-click="ordercol='byUser' " class="fa  fa-sort"></i></th>
+        <th>Post Owner <i ng-click="ordercol='ofUser'" class="fa  fa-sort"></i></th>
+        <th>Reported On</th>
+        <th>Remove Blog</th>
 
-  <ul class="list-group">
-    <li class="list-group-item">
-    	<div class="row">
-            <h3><div class="col-sm-4"> Title
-                    <span class="badge" style="background-color:#3a87ad" >Author</span> 
-                </div>
-                <div class="col-sm-2 col-sm-offset-6" >
-                    <span class="badge" style="background-color: #356635" >date</span>
-                </div>
-            </h3>
-        </div>
+        
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="rp in RPlist | orderBy: ordercol ">
+        <td>{{rp.title}}</td>
+        <td>{{rp.body}}</td>
+        <td>{{rp.reason}}</td>
+        <td>{{rp.byUser}}</td>
+        <td>{{rp.ofUser}}</td>
+        <td>{{rp.onDate  | date:'dd/MM/yyyy @ h:mma'}}</td>
+        <td><button type="button"  ng-click="removePost(rp.postId)" class="btn btn-warning">Remove</button></td>
+      </tr>
+      
+    </tbody>
+  </table>
+</div>
+<div class="col-sm-4">
+  <table class="table table-hover table-bordered table-responsive">
+    <thead>
+      <tr>
+        <th>Post Owner</th>
 
-        <br>
-
-        <div class="row">
-            <div class="col-sm-10 col-sm-offset-1">
-                <div class="well well-lg">
-                        <p>content</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-        	<div class="col-sm-10 col-sm-offset-1">
-        	<form>
-			<button type="submit" class="btn btn-warning">Remove Blog</button> &nbsp &nbsp
-			<button type="submit" class="btn btn-danger">Block User</button>
-			</form>
-			</div>
-        </div>
-
-
-    </li>
-  </ul>
-
+        <th>Block User</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="rp1 in RPuser | unique: 'ofUser' ">
+        <td>{{rp1.ofUser}}</td>
+        <td><button type="button" ng-click="rp1.userstate=3" ng-if="rp1.userstate!=3" class="btn btn-danger">Block</button>
+        <button type="button" ng-click="rp1.userstate=0" ng-if="rp1.userstate==3" class="btn btn-info">Unblock</button></td>
+      </tr>
+      
+    </tbody>
+  </table>
 </div>
 </div>
 </div>
+</div>
+
 

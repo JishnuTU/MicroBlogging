@@ -75,12 +75,18 @@ angular.module('webApp')
 	           		load.close();
 	           		if(response.success)
 	           		{
+
 	              	storeUserCredentials({username:loginData.username,
 	              		userId:response.userId,
 	              		token: response.token});
 
-	              	$rootScope.$broadcast('login:Successful');	 
-	              	$state.go('home');    
+	              	//$rootScope.$broadcast('login:Successful');
+	              	console.log(response.message);
+
+	              	if(response.message=='Administrator')
+	              		$state.go('admin');
+	              	else
+	              		$state.go('home');    
       			
 	           		}
 	           		else{
@@ -225,6 +231,24 @@ angular.module('webApp')
 
 
 		return RA;
+	}])
+
+	.factory('AdminFac',['$rootScope','socket','AuthFactory',function($rootScope,socket,AuthFactory){
+		var AP={};
+
+		AP.gatherreportedPost =function(){
+			socket.emit('ReportedPost',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken()
+                           });
+
+		}
+
+		socket.on('ReplyReportedPost',function(data){
+			console.log(data);
+			$rootScope.$broadcast("RAdminResult",data);
+		});
+
+		return AP;
 	}])
 
 ;

@@ -1,5 +1,6 @@
  var activityController = require('../controller/activityController');
  var notificationController =  require('../controller/notificationController');
+  var adminController =  require('../controller/adminController');
 var Verify    = require('./verify');
 
  module.exports = function(socket,io){
@@ -164,7 +165,21 @@ var Verify    = require('./verify');
       });
     });
 
-
+      socket.on('ReportedPost',function(data){
+        console.log("in here");
+      Verify.verifyAdmin(data.token,data.userId,function(procced){
+        if(procced){
+                adminController.gatherReports(function(err,allpost){
+                    return io.to(socket.id).emit("ReplyReportedPost",allpost);
+                });
+              }
+        else
+        {
+          console.log("in else part here");
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
 
 
    	socket.on('disconnect', function () {
