@@ -1,0 +1,85 @@
+<link href="./styles/blog.css" rel="stylesheet">
+<div class="container" ng-controller="BlogDCtrl" style="padding-top: 50px">
+  
+<!--blog template -->
+  <div class="modal-content" ng-repeat="bg in BD | orderBy : '-createdAt' " >
+  <br>
+  <br>
+    <div class="row">
+      <div class="col-md-8 col-md-offset-1">
+        <div class="testimonials">
+            <div class="pull-left">
+                <span class="testimonials-name"> <div class="comment-user"><i class="fa fa-user fa-3x"></i> {{bg.name}}</div></span>
+                <p></p>
+                <h3 align=center  style="color: blue">{{bg.title}}</h3>
+                <blockquote><p>{{bg.body}}</p></blockquote>
+
+            </div>
+          </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-8 col-md-offset-1">
+        <p></p>
+        <p>
+          <i class="fa fa-user fa-2x"></i> By <strong>John</strong>  &nbsp &nbsp
+          | &nbsp &nbsp <i class="fa fa-calendar"></i> {{bg.createdAt | date:'dd/MM/yyyy @ h:mma'}}  &nbsp &nbsp
+          | &nbsp &nbsp  <i ng-click="bg.interest=changestate(bg.postId,bg.interest,1);" id="{{bg.postId}}like" 
+                        ng-style="bg.interest === 0 && {'color': 'black'} ||
+                  bg.interest=== 1 && {'color': 'red'}||
+                  bg.interest=== 2 && {'color': 'black'}" 
+                  class="fa fa-thumbs-up fa-2x" ></i> Likes &nbsp &nbsp
+| &nbsp &nbsp
+                       <i ng-click="bg.interest=changestate(bg.postId,bg.interest,0);" id="{{bg.postId}}dislike" 
+                         ng-style="bg.interest === 0 && {'color': 'red'} ||
+                  bg.interest=== 1 && {'color': 'black'} ||
+                  bg.interest=== 2 && {'color': 'black'}"
+                  class="fa fa-thumbs-down fa-2x"></i> Dislikes &nbsp &nbsp
+
+          | &nbsp &nbsp <i ng-click="triggerreport(bg.postId)" class="fa fa-exclamation-triangle fa-lg"></i>Report Abuse
+            
+          <form class="form-inline" >
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-comment"></i></span>
+                <input type="text" class="form-control" required="true" ng-model="newComment.comment" placeholder="Your comments"></div>
+                <button type="submit"  ng-click="submitComment(bg.postId,bg)" name="sub" class="btn btn-info"><i class="fa fa-check"></i></button>
+          </form>
+        </p>
+        </div>
+      </div>
+      
+  <div class="row">
+  <div class="col-md-4">
+  <i class="fa fa-comments fa-5x" style="padding-left: 200px; padding-top: 40px" aria-hidden="true"></i>
+  </div>
+    <div class="col-md-6"  style=" max-height: 200px; overflow-y:scroll;" >
+        <section class="comment-list" ng-init="(_Array = []).length = bg.comments.length;">
+          <!-- First Comment -->
+          <article class="row" ng-repeat="i in _Array track by $index ">
+            <div class="col-md-2 col-sm-2 hidden-xs">
+            </div>
+            <div class="col-md-10 col-sm-10">
+              <div class="panel panel-default arrow left">
+                <div class="panel-body">
+                  <header class="text-left">
+                    <div class="comment-user"><i class="fa fa-user"></i>{{bg.comments[$index].username}}</div>
+                    <time class="comment-date" datetime="16-12-2014 01:05"><i class="fa fa-clock-o"></i>  {{bg.comments[$index].createdAt | date:'dd/MM/yyyy @ h:mma'}}</time>
+                  </header>
+                  <div class="comment-post">
+                    <p>
+                     {{bg.comments[$index].comment}}.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>  
+        </section>
+    </div>
+  </div>
+  <br>
+  <br>
+</div>
+</div>

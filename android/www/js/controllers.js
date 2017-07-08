@@ -15,7 +15,7 @@ angular.module('mobileApp.controllers', [])
   $rootScope.filterOff =function(){
   $rootScope.$broadcast('FilterNotMe',"filtering");
  }
-
+ 
  /*filtering section ends here */
 
   // Form data for the login modal

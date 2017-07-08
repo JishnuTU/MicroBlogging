@@ -5,7 +5,7 @@
  * @description
  * # MainCtrl
  * Controller of the webApp
- */
+ */ 
 angular.module('webApp')
   .controller('LoginCtrl',['$scope','AuthFactory',function ($scope,AuthFactory) {
     $scope.login = {
@@ -58,59 +58,81 @@ angular.module('webApp')
 
   }])
 
-  .controller('NavigationCtrl',['$scope','AuthFactory','socket','ngDialog','myService',function($scope,AuthFactory,socket,ngDialog,myService){
-    $scope.name="";
+  .controller('NavigationCtrl',['$scope','AuthFactory','SearchFollowFac','PostBlogFac','ngDialog',function($scope,AuthFactory,SearchFollowFac,PostBlogFac,ngDialog){
     $scope.displayname =AuthFactory.getUsername();
     $scope.logout= function(){
       AuthFactory.logout();
       };
-    socket.on('AuthorizationFailed',function(message){
-        ngDialog.open({template:'\
-                  <div class="ngdialog-message">\
-                  <div><h3>Unauthorized</h3></div>',plain: 'true'});
-    });
 
-    socket.on('searchresult',function(result){
-          myService.setServe(result);
-          var dialog = ngDialog.open({
-            template: '/views/search.html',
+
+  /* Search section */
+  //$scope.SR={};
+
+  $scope.searchFor =function(searchname){
+    console.log(searchname);
+      SearchFollowFac.search(searchname);
+    };
+
+
+  $scope.$on("SearchResult", function (evt, data) {
+        $scope.$applyAsync(function () {
+               $scope.SR =  data;
+                  console.log($scope.SR);
+              if(Object.keys($scope.SR).length==0)
+                  $scope.SR=false;
+                  var dialog = ngDialog.open({
+                  template: '/views/search.html',
+                  scope: $scope,
+                  controller:'NavigationCtrl',
+                  });
             });
-      }); 
+      });
 
+  /* end Search section */
 
-
-    $scope.search =function(){
-     socket.emit('search',{userId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          name :$scope.name });
-     
+  /* following section */
+  $scope.followHim =function(him){
+        SearchFollowFac.follow(him);
     };
-  }])
 
-  .controller('SearchCtrl',['$scope','$state','myService','AuthFactory','socket',function($scope,$state,myService,AuthFactory,socket){
-    $scope.SR=myService.getServe();
-  
-    
-    $scope.followHim =function(him){
-        console.log(him);
-       socket.emit('follow',{followerId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          followingId :him });
-
+  $scope.unFollowHim =function(him){
+        SearchFollowFac.unFollow(him);
     };
-     $scope.unFollowHim =function(him){
-        console.log(him);
-        socket.emit('unfollow',{followerId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          followingId :him });
-    };
-  }])
+       /* following section end */
 
-  .controller('PostCtrl',['$scope','AuthFactory','socket','ngDialog',function($scope,AuthFactory,socket,ngDialog){
+
+
+  /* blog section starts here*/
     $scope.postb={
       title: "",
       body : ""
     }
+
+    $scope.openPostBlog =function(){
+            $scope.postdialog = ngDialog.open({
+                  template: '/views/postpanel.html',
+                  scope: $scope,
+                  controller:'NavigationCtrl',
+                   showClose: false,
+                  });
+    };
+
+
+  $scope.postBlog =function(){
+      PostBlogFac.post($scope.postb.title,$scope.postb.body);
+    };
+    $scope.$on("ReplyPost", function (evt, data) {
+        $scope.postdialog.close();
+        ngDialog.open({template:'\
+                  <div class="ngdialog-message">\
+                  <div><h3>Yoor Blog Posted Successfully</h3></div>',plain: 'true',});
+      });
+
+  }])
+
+/*
+  .controller('PostCtrl',['$scope','AuthFactory','socket','ngDialog',function($scope,AuthFactory,socket,ngDialog){
+
       socket.on('replypost',function(message){
        console.log(AuthFactory.getUsername()+"posted");
       });
@@ -124,7 +146,7 @@ angular.module('webApp')
 
     };
 
-  }])
+  }]) */
 
 
 

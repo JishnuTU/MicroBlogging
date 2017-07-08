@@ -1,25 +1,8 @@
-  <div class="row row-content">
+  <div class="row row-content" style="padding-top: 50px">
 
-<div class="col-sm-3" ng-controller="PostCtrl">
-    <div class="panel panel-success" style="position: fixed;">
-      <div class="panel-heading">Post blog</div>
-      <div class="panel-body">
-            <form ng-submit="postBlog()">
-                    <div class="form-group">
-                          <label for="email">Title:</label>
-            <input type="text" class="form-control" id="email" ng-model="postb.title" placeholder="Enter title" name="email">
-                      <label for="email">Status:</label>
-                       <textarea class="form-control" ng-model="postb.body" rows="5" id="comment"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-default">Post</button>
-                  </form>
 
-      </div>
-    </div>
- 
-</div>
 
-<div class="col-sm-8" ng-controller="BlogDCtrl">
+<div class="col-sm-8 col-sm-offset-2" ng-controller="BlogDCtrl">
 <!--blog template -->
 <div class="panel panel-default" ng-repeat="bg in BD | orderBy : '-createdAt' ">
     <div class="panel-heading">           

@@ -41,7 +41,7 @@ angular.module('webApp', ['ui.router','ngResource','ngDialog'])
                         templateUrl : 'views/header.html',
                     },
                     'content': {
-                        templateUrl : 'views/home.html',
+                        templateUrl : 'views/blog.html',
                     },
                     'footer': {
                         templateUrl : 'views/footer.html',

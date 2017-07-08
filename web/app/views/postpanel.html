@@ -1,0 +1,33 @@
+<div class="modal-content" >
+      <div class="modal-header">
+
+        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-share-alt"></i> Share</h4>
+      </div>
+      <div class="modal-body">
+      
+        
+        <h2><i class="fa fa-pencil"></i> Create New Post</h2>
+                
+        
+                
+                <form ng-submit="postBlog()">
+                    <div class="input-group">
+  <span class="input-group-addon"><i class="fa fa-text-width"></i></span>
+  <input type="text" ng-model="postb.title"  class="form-control" placeholder="Your blog title">
+  </div>
+  <br>
+          <div class="input-group">
+                         <span class="input-group-addon"><i class="fa fa-quote-left"></i></span>
+                         <textarea class="form-control" required="true"  ng-model="postb.body" cols ="10" rows="7" ng-model="postb.body"  id="comment"></textarea>
+                          <span class="input-group-addon"><i class="fa fa-quote-right"></i></span>
+  
+  
+</div>
+                    <br />
+                    <button type="submit" value="sub" name="sub" class="btn btn-primary"><i class="fa fa-share"></i> Share it Now!</button>
+              </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="postdialog.close()">Close</button>
+      </div>
+    </div>
