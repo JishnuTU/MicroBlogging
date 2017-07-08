@@ -1,27 +1,39 @@
-<div class="container-fluid" id ="login"  ng-controller="LoginCtrl">
-  <div class="row">
-    
-    <div class="col-sm-4 col-sm-offset-4 ">
-      <div class="panel panel-info" >
-        <div class="panel-heading"> <h2>Login</h2></div>
-        <div class="panel-body">
-          <form ng-submit="loginEntry()" method="post">
-                <div class="form-group">
-                  <label for="email">Email / Username:</label>
-                  <input type="text" class="form-control" ng-model="login.username" id="email" placeholder="Enter Email or Username" name="email" required="true">
-                </div>
-
-                <div class="form-group">
-                  <label for="pwd">Password:</label>
-                  <input type="password" class="form-control" ng-model="login.password" id="pwd" placeholder="Enter password" name="pwd" required="true">
-                </div>
-    
-            <a  ui-sref="app.register" class="btn btn-info" role="button">Register Here</a>
-            &nbsp &nbsp &nbsp
-            <button type="submit" class="btn btn-default">Submit</button> 
-          </form>
+<link href='http://fonts.googleapis.com/css?family=Raleway:400,200' rel='stylesheet' type='text/css'>
+ <link href="./styles/login.css" rel="stylesheet">
+<div class="container">
+    <div class="row login_box">
+      <div class="col-md-12 col-xs-12" align="center">
+            <div class="line"><h3>Microblogging</h3></div>
+            <div class="outter"><img src="../images/logo.jpg" class="image-circle"/></div>   
+            <h1>Hi</h1>
       </div>
+
+        
+        <div class="col-md-12 col-xs-12 login_control">
+                
+                <div class="control">
+                    <div class="label"></div>
+                    <input type="text" class="form-control" ng-model="login.username"  placeholder="Username or Email"/>
+                </div>
+                
+                <div class="control">
+                     <div class="label"></div>
+                    <input type="password" ng-model="login.password" class="form-control" placeholder="Password"/>
+                </div>
+                <div align="center">
+                <a ui-sref="app.register"  ><span class="glyphicon glyphicon-log-in"></span> Logout</a>
+                     <button  ng-click="loginEntry()"  class="btn btn-orange">LOGIN</button>
+                </div>
+                
+        </div>
+        
+        
+            
     </div>
-  </div>  
-  </div>
 </div>
+
+
+
+ 
+
+  

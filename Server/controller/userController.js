@@ -100,12 +100,12 @@ function emailValidate(mail,token,username,callback){
    							text : "click here :"+"http://localhost:3000/verify/"+token+"/"+username
 							}
 			smtpTransport.sendMail(mailOptions, function(error, info){
-					console.log("success");
+					console.log("From : userController.emailvalidate : Mail send Successfully");
 					callback(true);
 			});
 			}
 		else	{
-			console.log("failed");
+			console.log("From : userController.emailValidate : Mail does not exist");
 			callback(false);		
 		}
 	});

@@ -1,44 +1,70 @@
-<div class="container"  ng-controller="RegisterCtrl">
-  <h2>Sign Up</h2>
-  <form class="form-horizontal" ng-submit="validate()" method="post">
-    <div class="form-group">
-      <label class="control-label col-sm-2" for="email">Email:</label>
-      <div class="col-sm-10">
-        <input type="email" class="form-control" id="email" ng-model="register.email" placeholder="Enter Email" required="true" name="email">
-      </div>
-    </div>
+<link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+ <link href="../styles/registerpage.css" rel="stylesheet">
+    <title>Admin</title>
+  </head>
+  <body>
+    <div class="container"  ng-controller="RegisterCtrl">
+      <div class="row main">
+        <div class="main-login main-center">
+        <h5>Sign up once and post Blogs...</h5>
+          <form class="">
+            
+            <div class="form-group">
+              <label for="name" class="cols-sm-2 control-label">Your Name</label>
+              <div class="cols-sm-10">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                  <input type="text" class="form-control" required="true" ng-model="register.name" name="name" id="name"  placeholder="Enter your Name"/>
+                </div>
+              </div>
+            </div>
 
-     <div class="form-group">
-      <label class="control-label col-sm-2" for="email">Username:</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" id="name" ng-model="register.username" placeholder="Enter Username" required="true" name="username">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="control-label col-sm-2" for="email">Name:</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" id="name" ng-model="register.name" placeholder="Enter Name" required="true" name="name">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="control-label col-sm-2" for="pwd">Password:</label>
-      <div class="col-sm-10">          
-        <input type="password" class="form-control" id="password" ng-model="register.password" placeholder="Enter password" required="true" name="password">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="control-label col-sm-2" for="pwd">Retype Password:</label>
-      <div class="col-sm-10">          
-        <input type="password" class="form-control" id="rpassword" ng-model="rpassword" placeholder="Enter password Again" required="true" name="rpassword">
-      </div>
-    </div>
-    <div class="form-group">        
-      <div class="col-sm-offset-2 col-sm-10">
-      <a  ui-sref="app" class="btn btn-info" role="button">Go to Login</a> &nbsp &nbsp &nbsp
-       &nbsp
-        <button type="submit" class="btn btn-default">Submit</button>
+            <div class="form-group">
+              <label for="email" class="cols-sm-2 control-label">Your Email</label>
+              <div class="cols-sm-10">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                  <input type="text" class="form-control" required="true" ng-model="register.email" name="email" id="email"  placeholder="Enter your Email"/>
+                </div>
+              </div>
+            </div>
 
+            <div class="form-group">
+              <label for="username" class="cols-sm-2 control-label">Username</label>
+              <div class="cols-sm-10">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-users fa" aria-hidden="true"></i></span>
+                  <input type="text" class="form-control" required="true" ng-model="register.username" name="username" id="username"  placeholder="Enter your Username"/>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="password" class="cols-sm-2 control-label">Password</label>
+              <div class="cols-sm-10">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+                  <input type="password" class="form-control" required="true" ng-model="register.password" name="password" id="password"  placeholder="Enter your Password"/>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="confirm" class="cols-sm-2 control-label">Confirm Password</label>
+              <div class="cols-sm-10">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+                  <input type="password" ng-model="rpassword" required="true" class="form-control" name="confirm" id="confirm"  placeholder="Confirm your Password"/>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group ">
+              <a ng-click="validate()"  type="button" id="button" class="btn btn-primary btn-lg btn-block login-button">Register</a>
+            </div>
+            
+          </form>
+        </div>
       </div>
     </div>
-  </form>
-</div>

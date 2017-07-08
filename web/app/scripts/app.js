@@ -16,15 +16,9 @@ angular.module('webApp', ['ui.router','ngResource','ngDialog'])
             .state('app', {
                 url:'/',
                 views: {
-                    'header': {
-                        templateUrl : 'views/fheader.html'
-                    },
                     'content': {
                         templateUrl : 'views/login.html',
                         controller  : 'LoginCtrl'
-                    },
-                    'footer': {
-                        templateUrl : 'views/footer.html',
                     }
                 }
 

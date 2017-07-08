@@ -1,5 +1,6 @@
 const knex =require('../knex');
 const uuidv4 = require('uuid/v4');
+var mailController =require('./mailController');
 
 exports.searchFor=function(followerId,name,callback){
 	var searchResult ={};
@@ -32,9 +33,15 @@ exports.searchFor=function(followerId,name,callback){
 						{
 							return callback(searchResult);
 						}
+				})
+				.catch(function(){
+					console.log("From : activityController.searchFor : Database Error in FollowingLink");
 				});
 		});
 
+	})
+	.catch(function(){
+		console.log("From : activityController.searchFor : Database Error in bloggingUsers");
 	}); 
 		//end of select
 }
@@ -44,7 +51,7 @@ exports.followHim =function(fId,fgId){
 	knex('followingLink').insert({followerId: fId,
 									followingId:fgId})
 		.then(function(){
-			console.log("inserted"+fId+fgId);
+			console.log("From : activityController.followHim :New link inserted");
 		});
 
 }
@@ -55,7 +62,7 @@ exports.unfollowHim =function(fId,fgId){
 				'followingId':fgId	})
 		.del()
 		.then(function(check){
-			console.log("deleted"+fId+fgId);
+			console.log("From : activityController.unfollowHim :link removed");
 		});
 }
 
@@ -67,7 +74,7 @@ exports.postblogs =function(oId,tle,bdy,callback){
 							'noLikes':0,
 							'noDislikes':0})
 		.then(function(){
-			console.log("inserted"+tle);
+			console.log("From : activityController.postblogs :New post inserted");
 			return callback("Posted Successfully");
 		})
 		.catch(function(){
@@ -95,7 +102,7 @@ postgathering =function(user,callback){ // function to get all required post for
 					.then(function(posts){
 							//console.log('checking the posts',posts);
 							allposts=allposts.concat(posts);	 // posts are joined for the user to display
-							console.log('in stage',allposts);
+							//console.log('in stage',allposts);
 						if(followinguser.length-1==indexf) // return when all post are gathered
 							{ return callback(false,allposts); }
 					})
@@ -156,15 +163,27 @@ exports.postpacking =function(user,callback){ // function to append all details 
 }
 
 
-exports.deleteInterest=function(uId,pId){
+exports.deleteInterest=function(uId,pId,interest){
 	knex('postInterest')
 		.where({'intOfId':pId,'intById':uId})
 		.del()
 		.then(function(){
-		/*	knex('postBlog')
+			if(interest==1){
+			knex('blogPost')
 				.where('postId',pId)
-				.update('', 1) */
-			console.log("mail deleted the alert");
+				.decrement('noLikes', 1)
+				.then(function(){
+
+				});
+			}
+			else{
+			knex('blogPost')
+				.where('postId',pId)
+				.decrement('noDislikes', 1)
+				.then(function(){
+
+				});
+			}
 		});
 
 }
@@ -176,7 +195,22 @@ exports.insertInterest =function(uId,pId,interest){
 					intById:uId,
 					interest:interest})
 			.then(function(){
-					console.log("mail inserted the alert");
+		if(interest==1){
+			knex('blogPost')
+				.where('postId',pId)
+				.increment('noLikes', 1)
+				.then(function(){
+					mailController.sendMail(pId,uId,"Liked");
+				});
+			}
+			else{
+			knex('blogPost')
+				.where('postId',pId)
+				.increment('noDislikes', 1)
+				.then(function(){
+					mailController.sendMail(pId,uId,"Disiked");
+				});
+			}
 				});
 
 }
@@ -189,7 +223,34 @@ exports.updateInterest=function(uId,pId,interest){
   				interest:interest
   				})
 		.then(function(){
-			console.log("mail updated the alert");
+		if(interest==1){
+			knex('blogPost')
+				.where('postId',pId)
+				.increment('noLikes', 1)
+				.then(function(){
+						knex('blogPost')
+							.where('postId',pId)
+							.decrement('noDislikes', 1)
+							.then(function(){
+								mailController.sendMail(pId,uId,"Liked");
+							});
+
+				});
+
+			}
+			else{
+			knex('blogPost')
+				.where('postId',pId)
+				.decrement('noLikes', 1)
+				.then(function(){
+					knex('blogPost')
+						.where('postId',pId)
+						.increment('noDislikes', 1)
+						.then(function(){
+							mailController.sendMail(pId,uId,"DisLiked");
+						});
+				});
+			}
 		});
 
 }
@@ -217,7 +278,7 @@ exports.reportPost=function(uId,pId,rson,callback){
 					ofPostId:pId,
 					reason:rson})
 			.then(function(){
-					console.log("user commented");
+					console.log("From : activityController.reportPost :New report issued");
 					return callback("Report Submitted")
 				})
 			.catch(function(){
