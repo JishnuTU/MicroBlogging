@@ -169,17 +169,79 @@ var Verify    = require('./verify');
         console.log("in here");
       Verify.verifyAdmin(data.token,data.userId,function(procced){
         if(procced){
-                adminController.gatherReports(function(err,allpost){
-                    return io.to(socket.id).emit("ReplyReportedPost",allpost);
+                adminController.gatherReports(function(err,allpost,allusers){
+                    return io.to(socket.id).emit("ReplyReportedPost",{'blogs':allpost,'users':allusers});
                 });
               }
         else
         {
-          console.log("in else part here");
           return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
         }
       });
     });
+
+
+      socket.on('UnblockUser',function(data){
+      Verify.verifyAdmin(data.token,data.userId,function(procced){
+        if(procced){
+                adminController.unblockUser(data.buserId,function(err){
+  
+                });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
+
+      socket.on('BlockUser',function(data){
+        console.log("From activity.blockUser");
+      Verify.verifyAdmin(data.token,data.userId,function(procced){
+        if(procced){
+                adminController.blockUser(data.buserId,function(err){
+                    
+                });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
+
+      socket.on('RemoveBlog',function(data){
+      Verify.verifyAdmin(data.token,data.userId,function(procced){
+        if(procced){
+                adminController.removeBlog(data.postId,function(){
+                   
+                });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
+
+
+// notification
+
+
+      socket.on('OnlineNotification',function(data){
+      Verify.verifySocketUser(data.token,function(procced){
+        if(procced){
+                notificationController.getOnlineNotify(data.userId,function(notify){
+                    return io.to(socket.id).emit("ReplyNotification",notify);
+                });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
+
 
 
    	socket.on('disconnect', function () {

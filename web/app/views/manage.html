@@ -1,3 +1,4 @@
+<link href="./styles/dropovermanage.css" rel="stylesheet">
 <div ng-controller="AdminCtrl">
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
@@ -16,17 +17,39 @@
 <br>
 <br>
 
+<style type="text/css">
 
+</style>
 
 
 <div class="container">
-<div class="row">
-<div class="col-sm-8">
-  <table class="table table-hover table-bordered table-responsive">
+
+<div class="row" style="padding-top: 50px">
+  <table class="table table-hover table-bordered table-responsive package-table">
+    <thead>
+      <tr>
+        <th>Post Owner</th>
+
+        <th>Take Action</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="rp1 in RPuser | unique: 'username' ">
+        <td>{{rp1.username}}</td>
+        <td><button type="button" ng-click="blockUser(rp1.username); rp1.state=3; " ng-if="rp1.state!=3" class="btn btn-danger">Block</button>
+        <button type="button" ng-click="rp1.state=0; unblockUser(rp1.username)" ng-if="rp1.state==3" class="btn btn-info">Unblock</button></td>
+      </tr>
+      
+    </tbody>
+  </table>
+</div>
+
+<div class="row" style="padding-top: 50px">
+  <table class="table table-hover table-bordered table-responsive package-table">
     <thead ng-init="ordercol='' ">
       <tr>
         <th>Post Title <i ng-click="ordercol='postId'" class="fa  fa-sort"></i></th>
-        <th>Content</th>
         <th>Reason <i ng-click="ordercol='reason'" class="fa  fa-sort"></i></th>
         <th>Reported By <i ng-click="ordercol='byUser' " class="fa  fa-sort"></i></th>
         <th>Post Owner <i ng-click="ordercol='ofUser'" class="fa  fa-sort"></i></th>
@@ -38,39 +61,25 @@
     </thead>
     <tbody>
       <tr ng-repeat="rp in RPlist | orderBy: ordercol ">
-        <td>{{rp.title}}</td>
-        <td>{{rp.body}}</td>
+        <td>
+        <div ng-dropover ng-dropover-options="{'targetId': 'dropOne' ,'triggerEvent':'click', 'verticalOffset': 10,'closeOnClickOff': true }">
+        {{rp.title}}
+        <div ng-dropover-contents class="arrowed">
+        {{rp.body}}
+        </div>
+        </div>
+        </td>
         <td>{{rp.reason}}</td>
         <td>{{rp.byUser}}</td>
         <td>{{rp.ofUser}}</td>
         <td>{{rp.onDate  | date:'dd/MM/yyyy @ h:mma'}}</td>
-        <td><button type="button"  ng-click="removePost(rp.postId)" class="btn btn-warning">Remove</button></td>
+        <td><a class="trash" ng-click="removePost(rp.postId)" ><span class="glyphicon glyphicon-trash"></span></a></td>
       </tr>
       
     </tbody>
   </table>
 </div>
-<div class="col-sm-4">
-  <table class="table table-hover table-bordered table-responsive">
-    <thead>
-      <tr>
-        <th>Post Owner</th>
 
-        <th>Block User</th>
-        
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="rp1 in RPuser | unique: 'ofUser' ">
-        <td>{{rp1.ofUser}}</td>
-        <td><button type="button" ng-click="rp1.userstate=3" ng-if="rp1.userstate!=3" class="btn btn-danger">Block</button>
-        <button type="button" ng-click="rp1.userstate=0" ng-if="rp1.userstate==3" class="btn btn-info">Unblock</button></td>
-      </tr>
-      
-    </tbody>
-  </table>
-</div>
-</div>
 </div>
 </div>
 

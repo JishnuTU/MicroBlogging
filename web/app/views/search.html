@@ -2,6 +2,7 @@
   <hr>
   <table class="table table-hover"  ng-controller="NavigationCtrl" >
     <tbody>
+    <div style=" max-height: 2px; overflow-y:scroll;">
     <p ng-if ="!SR" align="center"><strong>Your search did not match any Users</strong></p>
       <tr ng-repeat ="x in SR">
 
@@ -10,6 +11,7 @@
         <td><button type="submit" ng-click="x.follow=1; followHim(x.userId);" ng-if="!x.follow" class="btn btn-success btn-sm" id="{{x.userId}}" >Follow</button>
         <button type="submit"  ng-click="x.follow=0; unFollowHim(x.userId)"  ng-if="x.follow" class="btn btn-warning btn-sm" id="{{x.userId}}">Unfollow</button></td>
       </tr>
+      </div>
     </tbody>
 
   </table>

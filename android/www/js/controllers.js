@@ -1,4 +1,4 @@
-angular.module('mobileApp.controllers', [])
+angular.module('mobileApp.controllers', []) 
 
 .controller('AppCtrl', function($rootScope,$state,$ionicHistory,$timeout,$scope, $ionicModal,$ionicPopup, $timeout,AuthFactory,socket,PostBlogFac,PostGathFac) {
 

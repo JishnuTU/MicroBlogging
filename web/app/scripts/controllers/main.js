@@ -128,7 +128,22 @@ angular.module('webApp')
                   <div><h3>Yoor Blog Posted Successfully</h3></div>',plain: 'true',});
       });
 
+
+    /* blog section ends here */
+
+    /* notification starts here */
+
+      $scope.NAlist=[];
+    $scope.$on("RNotificationResult",function(evt,data){
+      $scope.$applyAsync(function () {
+            $scope.NAlist.push(data);
+            $scope.notificationCount=$scope.NAlist.length;
+        });
+    });
+    /*notification ends here */
+
   }])
+
 
 /*
   .controller('PostCtrl',['$scope','AuthFactory','socket','ngDialog',function($scope,AuthFactory,socket,ngDialog){
@@ -151,15 +166,16 @@ angular.module('webApp')
 
 
 
-  .controller('BlogDCtrl',['$scope','AuthFactory','ngDialog','LikeDislikeFac','CommentPostFac', 'ReportPostFac','PostGathFac', function($scope,AuthFactory,ngDialog,LikeDislikeFac,CommentPostFac,ReportPostFac,PostGathFac){
+  .controller('BlogDCtrl',['$scope','AuthFactory','ngDialog','LikeDislikeFac','CommentPostFac', 'ReportPostFac','PostGathFac','NotificationFac', function($scope,AuthFactory,ngDialog,LikeDislikeFac,CommentPostFac,ReportPostFac,PostGathFac,NotificationFac){
    $scope.BD=[];
 
    PostGathFac.refreshPost();
+   NotificationFac.gatherNotification();
 
    $scope.$on("GatheredPost", function (evt, data) {
      $scope.$applyAsync(function () {
         $scope.BD =  data;
-        console.log($scope.BD)
+        console.log("post are :",$scope.BD)
     });
       });
 
@@ -240,20 +256,10 @@ angular.module('webApp')
 
       /* report section */
 
+  $scope.reportPost=function(pId,res){
+          console.log(pId,res);
 
-    $scope.triggerreport =function(pId){
-        $scope.reportedPost=pId;
-        var dialog = ngDialog.open({
-            template: '/views/report.html',
-            controller:'BlogDCtrl'
-            });
-      }
-
-  $scope.reportPost=function(res){
-          console.log($scope.reportedPost,res);
-          ReportPostFac.reportBlog($scope.reportedPost,res);
-
-
+          ReportPostFac.reportBlog(pId,res);
   }
 
 
@@ -337,25 +343,32 @@ angular.module('webApp')
     $scope.RPuser=[];
     $scope.$on("RAdminResult",function(evt,data){
               $scope.$applyAsync(function () {
-              $scope.RPlist=data;
-              $scope.RPuser=[];
-              data.forEach(function(usr){
-                $scope.RPusr={};
-                $scope.RPusr.ofUser=usr.ofUser;
-                $scope.RPusr.userstate=usr.userstate;
-                $scope.RPuser.push($scope.RPusr);
-              });
+              $scope.RPlist=data.blogs;
+              $scope.RPuser=data.users;
           });
     });
     $scope.Adminlogout = function(){
       AuthFactory.logout();
       };
 
+    $scope.blockUser = function(unm){
+      console.log(unm);
+      AdminFac.blockUser(unm);
+    };
+
+    $scope.unblockUser=function(unm){
+      AdminFac.unblockUser(unm);
+    };
+
+
     $scope.removePost =function(pId){
+      AdminFac.removeBlog(pId);
+
       $scope.RPlist.forEach(function(pt,index){
           if(pt.postId==pId)
             $scope.RPlist.splice(index,1);
       });
+
 
 
     }
@@ -389,3 +402,4 @@ angular.module('webApp')
 });
 
 ;
+

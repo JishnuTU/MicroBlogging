@@ -12,10 +12,32 @@
                 <span class="testimonials-name"> <div class="comment-user"><i class="fa fa-user fa-3x"></i> {{bg.name}}</div></span>
                 <p></p>
                 <h3 align=center  style="color: blue">{{bg.title}}</h3>
-                <blockquote><p>{{bg.body}}</p></blockquote>
+                <blockquote readMore ><p> {{bg.body}}</p></blockquote>
 
             </div>
           </div>
+        </div>
+        <div class="col-md-2" ng-init="flag=true">
+
+        <div ng-dropover ng-dropover-options="{'targetId': 'dropOne' ,'triggerEvent':'click', 'verticalOffset': 10,'closeOnClickOff': true }">
+           <i class="fa fa-exclamation-triangle"></i> <font size="1pt" color="red"> Report Abuse</font> 
+
+              <div ng-dropover-contents class="arrowed">
+              <p ng-show="!flag">Abuse Reported</p>
+                     <form ng-submit="reportPost(bg.postId,resn); flag=false">
+    <div class="form-group">
+      <label ng-show="flag" for="comment">Reason:</label>
+      <textarea required ="true" ng-show="flag" class="form-control" rows="3" ng-model="resn"id="comment"></textarea>
+      <br>
+        
+          <button ng-show="flag" class="btn btn-default">Submit</button>
+
+    </div>
+  </form>
+              </div>
+        </div>
+
+
         </div>
     </div>
 
@@ -24,7 +46,7 @@
       <div class="col-md-8 col-md-offset-1">
         <p></p>
         <p>
-          <i class="fa fa-user fa-2x"></i> By <strong>John</strong>  &nbsp &nbsp
+          <i class="fa fa-user fa-2x"></i> By User : <strong>{{bg.username}}</strong>  &nbsp &nbsp
           | &nbsp &nbsp <i class="fa fa-calendar"></i> {{bg.createdAt | date:'dd/MM/yyyy @ h:mma'}}  &nbsp &nbsp
           | &nbsp &nbsp  <i ng-click="bg.interest=changestate(bg,bg.postId,bg.interest,1);" id="{{bg.postId}}like" 
                         ng-style="bg.interest === 0 && {'color': 'black'} ||
@@ -38,7 +60,10 @@
                   bg.interest=== 2 && {'color': 'black'}"
                   class="fa fa-thumbs-down fa-2x"></i> {{bg.noDislikes}} Dislikes &nbsp &nbsp
 
-          | &nbsp &nbsp <i ng-click="triggerreport(bg.postId)" class="fa fa-exclamation-triangle fa-lg"></i>Report Abuse
+
+
+
+
             
           <form class="form-inline" ng-submit="submitComment(bg.postId,bg)" >
             <div class="input-group">

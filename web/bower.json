@@ -19,7 +19,7 @@
     "bower_components",
     "test",
     "tests"
-  ], 
+  ],
   "dependencies": {
     "angular": "~1.5.5",
     "angular-ui-router": "~0.2.18",
@@ -28,7 +28,8 @@
     "angular-route": "~1.5.5",
     "bootstrap": "~3.3.6",
     "font-awesome": "fontawesome#~4.6.1",
-    "ng-dialog": "~0.6.0"
+    "ng-dialog": "~0.6.0",
+    "ngDropover": "ngdropover#^1.1.4"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.0"

@@ -1,5 +1,5 @@
 
-
+<link href="./styles/dropover.css" rel="stylesheet">
 <nav class="navbar navbar-default navbar-fixed-top" ng-controller="NavigationCtrl">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -20,9 +20,31 @@
         </div>
       </div>
     </form>
+
+
+        <div ng-dropover ng-dropover-options="{'triggerEvent':'click', 'verticalOffset': 10}">
+
+ <li><a><i style="padding-top: 15px" class="fa fa-bell fa-2x">{{notificationCount}}</i></a></li>
+
+
+              <div ng-dropover-contents class="arrowed">
+                    <ul class="list-group" ng-repeat="RA in NAlist | orderBy : '-onDate'">
+    <li class="list-group-item">
+    <p style="color:#3a87ad">{{RA.byUser}} <i class="fa fa-calendar"></i> {{RA.onDate | date:'dd/MM/yyyy @ h:mma' }} |  
+      {{RA.action}} {{RA.title}} </p>
+      
+    </li>
+  </ul>
+              </div>
+        </div>
         <ul class="nav navbar-nav navbar-right">
         <li><a ui-sref="home" ><strong>{{displayname}}</strong></a></li>
-        <li><a data-toggle="popover" data-placement="bottom" data-content="Content"><i class="fa fa-bell">(7)</i></a></li>
+
+
+
+
+
+       
       <li><a ui-sref="app" ng-click="logout()"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
     </ul>
   </div>
@@ -32,11 +54,7 @@
 
 
 
-<script>
-$(document).ready(function(){
-    $('[data-toggle="popover"]').popover();   
-});
-</script>
+
 
 
 

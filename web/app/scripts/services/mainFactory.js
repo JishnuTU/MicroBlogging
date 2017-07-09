@@ -245,6 +245,28 @@ angular.module('webApp')
 
 		}
 
+		AP.removeBlog =function(pId){
+			socket.emit('RemoveBlog',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          postId:pId
+                           });
+		}
+
+		AP.blockUser=function(uId){
+			socket.emit('BlockUser',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          buserId:uId
+                           });
+		}
+
+		AP.unblockUser=function(uId){
+			socket.emit('UnblockUser',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          buserId:uId
+                           });
+		}
+
+
 		socket.on('ReplyReportedPost',function(data){
 			console.log(data);
 			$rootScope.$broadcast("RAdminResult",data);

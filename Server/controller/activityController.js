@@ -10,9 +10,9 @@ exports.searchFor=function(followerId,name,callback){
 		return callback(searchResult);
 	
 	knex.column('userId', 'email', 'name').select().from('bloggingUsers')
-		.where('name', 'like', '%'+name+'%')
+		.where('name', 'ilike', '%'+name+'%')
 		.andWhereNot('userId',followerId)
-		.orWhere('email','like','%'+name+'%')
+		.orWhere('email','ilike','%'+name+'%')
 		.andWhereNot('userId',followerId)
 		.then(function(row){
 			if(row.length==0)
@@ -98,7 +98,7 @@ postgathering =function(user,callback){ // function to get all required post for
 
 				knex('blogPost')
 					.join('bloggingUsers', 'blogPost.ownerId', '=', 'bloggingUsers.userId')
-					.select('blogPost.postId', 'blogPost.ownerId', 'bloggingUsers.name', 'blogPost.title','blogPost.body','blogPost.noLikes','blogPost.noDislikes','blogPost.createdAt')
+					.select('blogPost.postId', 'blogPost.ownerId', 'bloggingUsers.name','bloggingUsers.username', 'blogPost.title','blogPost.body','blogPost.noLikes','blogPost.noDislikes','blogPost.createdAt')
 					.where('ownerId',fuser.followingId)
 					.then(function(posts){
 							//console.log('checking the posts',posts);
