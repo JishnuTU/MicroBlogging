@@ -67,6 +67,7 @@ exports.unfollowHim =function(fId,fgId){
 }
 
 exports.postblogs =function(oId,tle,bdy,callback){
+	console.log("From : activityController.postblogs :",oId,tle,bdy);
 	knex('blogPost').insert({'postId': uuidv4(),
 							'ownerId':oId,
 							'title':tle,
@@ -262,10 +263,11 @@ exports.insertComment=function(uId,pId,cmt,callback){
 					cmtById:uId,
 					comment:cmt})
 			.then(function(){
-					console.log("user commented");
+					console.log("From : activityController.insertComment :New comments inserted");
 					return callback("Comment submitted")
 				})
 			.catch(function(){
+				console.log("From : activityController.insertComment :New comments inserted failed");
 				return callback("Comment Not submitted")
 			});
 }

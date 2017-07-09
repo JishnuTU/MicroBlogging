@@ -1,4 +1,4 @@
-'use strict';
+ 'use strict';
 /**
  * @ngdoc function
  * @name webApp.controller:MainCtrl
@@ -151,82 +151,121 @@ angular.module('webApp')
 
 
 
-  .controller('BlogDCtrl',['$scope','myService','socket','AuthFactory','ngDialog',function($scope,myService,socket,AuthFactory,ngDialog){
-    $scope.BD=[];
-    socket.emit('gatherposts',{userId:AuthFactory.getUserId(),
-           token:AuthFactory.getToken() });
+  .controller('BlogDCtrl',['$scope','AuthFactory','ngDialog','LikeDislikeFac','CommentPostFac', 'ReportPostFac','PostGathFac', function($scope,AuthFactory,ngDialog,LikeDislikeFac,CommentPostFac,ReportPostFac,PostGathFac){
+   $scope.BD=[];
 
-    $scope.triggerreport =function(pId){
-        
-        var dialog = ngDialog.open({
-            template: '/views/report.html',
-            });
-        myService.setServe({'Id':pId,'dg':dialog});
-      }
+   PostGathFac.refreshPost();
+
+   $scope.$on("GatheredPost", function (evt, data) {
+     $scope.$applyAsync(function () {
+        $scope.BD =  data;
+        console.log($scope.BD)
+    });
+      });
 
 
-    $scope.changestate=function(id,state,from){
+    /* Like and dislike */
+ $scope.changestate=function(obj,id,state,from){
+      $scope.indexObj=$scope.BD.indexOf(obj);
+      
       if(from==1)
           {
             if(state==2){
-              socket.emit('interestInsert',{userId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          postId:id,
-                          interest:1 });
-              return 1; // null->liked  :insert 
+              LikeDislikeFac.emitInterest('interestInsert',id,1);
+               $scope.BD[$scope.indexObj].noLikes=$scope.BD[$scope.indexObj].noLikes+1;
+                return 1; // null->liked  :insert 
             }
             if(state==0){
-              socket.emit('interestUpdate',{userId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          postId:id,
-                          interest:1 });
-              return 1; // disliked ->liked update
+               LikeDislikeFac.emitInterest('interestUpdate',id,1);
+                $scope.BD[$scope.indexObj].noLikes=$scope.BD[$scope.indexObj].noLikes+1;
+                $scope.BD[$scope.indexObj].noDislikes=$scope.BD[$scope.indexObj].noDislikes-1;
+                return 1; // disliked ->liked update
             }
             if(state==1){ 
-                socket.emit('interestDelete',{userId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          postId:id
-                          });
-              return 2;
+               LikeDislikeFac.emitInterest('interestDelete',id,1);
+               $scope.BD[$scope.indexObj].noLikes=$scope.BD[$scope.indexObj].noLikes-1;
+                return 2
             } //liked -> null delete
           }
        if(from==0)
           {
             if(state==2){
-               socket.emit('interestInsert',{userId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          postId:id,
-                          interest:0 });
-              return 0; // null -> dislike insert
+               LikeDislikeFac.emitInterest('interestInsert',id,0);
+               $scope.BD[$scope.indexObj].noDislikes=$scope.BD[$scope.indexObj].noDislikes+1;
+                return 0; // null -> dislike insert
             }
             if(state==1){
-              socket.emit('interestUpdate',{userId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          postId:id,
-                          interest:0 });
-              return 0; //like -> dislike update
+               LikeDislikeFac.emitInterest('interestUpdate',id,0);
+               $scope.BD[$scope.indexObj].noLikes=$scope.BD[$scope.indexObj].noLikes-1;
+                $scope.BD[$scope.indexObj].noDislikes=$scope.BD[$scope.indexObj].noDislikes+1;
+                return 0; //like -> dislike update
             }
             if(state==0){
-               socket.emit('interestDelete',{userId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          postId:id
-                          });
-              return 2; //dislike ->null delete
+               LikeDislikeFac.emitInterest('interestDelete',id,0);
+               $scope.BD[$scope.indexObj].noDislikes=$scope.BD[$scope.indexObj].noDislikes-1;
+                return 2; //dislike ->null delete
             }
           }
       
     }
-    socket.on('gatheredpost',function(data){
-        $scope.$applyAsync(function () {
-               $scope.BD=data;
-              console.log($scope.BD);
-     });
+    /* like and dislike ends here */
 
-    });
+     /* comment section */
+      $scope.newComment={'comment':"",
+                        'username':AuthFactory.getUsername(),
+                        'createdAt':""};
+
+    $scope.submitComment = function(pId,obj) {
+
+           $scope.$applyAsync(function () {
+
+              $scope.indexCmt =$scope.BD.indexOf(obj);
+              $scope.newComment.createdAt=Date();
+
+              //$scope.newComment.createdAt="$scope.newComment.createdAt.toString();"
+              $scope.newComment.username=AuthFactory.getUsername();
+              $scope.BD[$scope.indexCmt].comments.push($scope.newComment);
+              $scope.newComment={};
+
+            
+            });
+
+          console.log(pId,$scope.newComment.comment);
+
+         CommentPostFac.postComment(pId,$scope.newComment.comment);
+
+    };
+    /* comment section ends here */
+
+
+      /* report section */
+
+
+    $scope.triggerreport =function(pId){
+        $scope.reportedPost=pId;
+        var dialog = ngDialog.open({
+            template: '/views/report.html',
+            controller:'BlogDCtrl'
+            });
+      }
+
+  $scope.reportPost=function(res){
+          console.log($scope.reportedPost,res);
+          ReportPostFac.reportBlog($scope.reportedPost,res);
+
+
+  }
+
+
+  /* report section ends here */
+
+
+
+  
 
   }])
 
-  .controller('CommentCtrl',['$state','$scope','socket','AuthFactory','ngDialog',function($state,$scope,socket,AuthFactory,ngDialog){
+  /*.controller('CommentCtrl',['$state','$scope','socket','AuthFactory','ngDialog',function($state,$scope,socket,AuthFactory,ngDialog){
     
     $scope.newComment={ 'comment':"",
                         'username':AuthFactory.getUsername(),
@@ -256,9 +295,9 @@ angular.module('webApp')
         });
 
     };
-  }])
+  }]) */
 
-  .controller('ReportCtrl',['$scope','socket','AuthFactory','myService',function($scope,socket,AuthFactory,myService){
+  /*.controller('ReportCtrl',['$scope','socket','AuthFactory','myService',function($scope,socket,AuthFactory,myService){
     $scope.rdata=myService.getServe();
 
     $scope.reportPost=function(reason){
@@ -274,7 +313,7 @@ angular.module('webApp')
         });
     }
 
-  }])
+  }]) */
 
 
   .controller('ActivityCtrl',['$scope','ActivityFac',function($scope,ActivityFac){

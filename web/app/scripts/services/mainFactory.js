@@ -26,7 +26,7 @@ angular.module('webApp')
 	}])
 
 
-	.factory('AuthFactory', ['$resource', '$http', '$localStorage', '$rootScope', '$window', '$state', 'baseURL', 'ngDialog', function($resource, $http, $localStorage, $rootScope, $window, $state, baseURL, ngDialog){
+	.factory('AuthFactory', ['$resource', '$http', '$localStorage', '$rootScope', '$window', '$state', 'baseURL', 'ngDialog',function($resource, $http, $localStorage, $rootScope, $window, $state, baseURL, ngDialog){
     
 	    var authFac = {};
 	    var TOKEN_KEY = 'Token';
@@ -85,8 +85,10 @@ angular.module('webApp')
 
 	              	if(response.message=='Administrator')
 	              		$state.go('admin');
-	              	else
+	              	else{
+	              		
 	              		$state.go('home');    
+	              	}
       			
 	           		}
 	           		else{

@@ -1,5 +1,5 @@
 'use strict';
-
+ 
 angular.module('webApp')
 
 	
@@ -115,8 +115,8 @@ angular.module('webApp')
 
 		}
 
-		 	socket.on('ReplyComment',function(msg){
-         		$rootScope.$broadcast("CommentBlog",msg);
+		 	socket.on('ReplyComment',function(newcmt){
+         		$rootScope.$broadcast("CommentBlog",newcmt);
         		});
 		return CP;
 	}])

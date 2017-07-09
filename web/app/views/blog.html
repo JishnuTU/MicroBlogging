@@ -26,25 +26,25 @@
         <p>
           <i class="fa fa-user fa-2x"></i> By <strong>John</strong>  &nbsp &nbsp
           | &nbsp &nbsp <i class="fa fa-calendar"></i> {{bg.createdAt | date:'dd/MM/yyyy @ h:mma'}}  &nbsp &nbsp
-          | &nbsp &nbsp  <i ng-click="bg.interest=changestate(bg.postId,bg.interest,1);" id="{{bg.postId}}like" 
+          | &nbsp &nbsp  <i ng-click="bg.interest=changestate(bg,bg.postId,bg.interest,1);" id="{{bg.postId}}like" 
                         ng-style="bg.interest === 0 && {'color': 'black'} ||
                   bg.interest=== 1 && {'color': 'red'}||
                   bg.interest=== 2 && {'color': 'black'}" 
-                  class="fa fa-thumbs-up fa-2x" ></i> Likes &nbsp &nbsp
+                  class="fa fa-thumbs-up fa-2x" ></i> {{bg.noLikes}} Likes &nbsp &nbsp
 | &nbsp &nbsp
-                       <i ng-click="bg.interest=changestate(bg.postId,bg.interest,0);" id="{{bg.postId}}dislike" 
+                       <i ng-click="bg.interest=changestate(bg,bg.postId,bg.interest,0);" id="{{bg.postId}}dislike" 
                          ng-style="bg.interest === 0 && {'color': 'red'} ||
                   bg.interest=== 1 && {'color': 'black'} ||
                   bg.interest=== 2 && {'color': 'black'}"
-                  class="fa fa-thumbs-down fa-2x"></i> Dislikes &nbsp &nbsp
+                  class="fa fa-thumbs-down fa-2x"></i> {{bg.noDislikes}} Dislikes &nbsp &nbsp
 
           | &nbsp &nbsp <i ng-click="triggerreport(bg.postId)" class="fa fa-exclamation-triangle fa-lg"></i>Report Abuse
             
-          <form class="form-inline" >
+          <form class="form-inline" ng-submit="submitComment(bg.postId,bg)" >
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-comment"></i></span>
                 <input type="text" class="form-control" required="true" ng-model="newComment.comment" placeholder="Your comments"></div>
-                <button type="submit"  ng-click="submitComment(bg.postId,bg)" name="sub" class="btn btn-info"><i class="fa fa-check"></i></button>
+                <button type="submit"  name="sub" class="btn btn-info"><i class="fa fa-check"></i></button>
           </form>
         </p>
         </div>
@@ -57,19 +57,19 @@
     <div class="col-md-6"  style=" max-height: 200px; overflow-y:scroll;" >
         <section class="comment-list" ng-init="(_Array = []).length = bg.comments.length;">
           <!-- First Comment -->
-          <article class="row" ng-repeat="i in _Array track by $index ">
+          <article class="row" ng-repeat="i in bg.comments | orderBy : '-createdAt'">
             <div class="col-md-2 col-sm-2 hidden-xs">
             </div>
             <div class="col-md-10 col-sm-10">
               <div class="panel panel-default arrow left">
                 <div class="panel-body">
                   <header class="text-left">
-                    <div class="comment-user"><i class="fa fa-user"></i>{{bg.comments[$index].username}}</div>
-                    <time class="comment-date" datetime="16-12-2014 01:05"><i class="fa fa-clock-o"></i>  {{bg.comments[$index].createdAt | date:'dd/MM/yyyy @ h:mma'}}</time>
+                    <div class="comment-user"><i class="fa fa-user"></i>{{i.username}}</div>
+                    <time class="comment-date" datetime="16-12-2014 01:05"><i class="fa fa-clock-o"></i>  {{i.createdAt | date:'dd/MM/yyyy @ h:mma'}}</time>
                   </header>
                   <div class="comment-post">
                     <p>
-                     {{bg.comments[$index].comment}}.
+                     {{i.comment}}.
                     </p>
                   </div>
                 </div>
