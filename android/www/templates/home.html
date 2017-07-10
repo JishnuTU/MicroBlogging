@@ -30,11 +30,11 @@
 
  
 <!-- Post template -->
-<div ng-repeat="bg in BD | orderBy : '-createdAt' | filter: { ownerId : filterObject} ">
+<div ng-repeat="bg in BD | orderBy : '-createdAt' | filter: { ownerId : filterObject} | unique :'postId' ">
   <div class="card">
     <div class="item item-divider ">
       <div class="row item-text-wrap">
-         {{bg.title  }}
+         {{bg.title  }} {{bg.slno}}
          
       </div>
       
@@ -91,7 +91,7 @@
 <!--end Post template -->
 
   <ion-infinite-scroll
-    ng-if="moreDataCanBeLoaded()"
+    ng-if="moreDataCanBeLoaded"
     on-infinite="loadMore()"
     distance="1%">
   </ion-infinite-scroll>

@@ -175,6 +175,8 @@ angular.module('mobileApp.controllers', [])
     $scope.$on("FilterOff",function(evt,data){
       $scope.filterObject='';
       $scope.BD=[];
+        $localStorage.remove('UB');
+        $localStorage.remove('LB');
       PostGathFac.refreshPost();
 
     });
@@ -189,23 +191,74 @@ $scope.$applyAsync(function () {
 
    $scope.$on("GatheredPost", function (evt, data) {
         $scope.BD.push(data);
-        console.log($scope.BD);
+
+
+        if($localStorage.get('UB',undefined)==undefined){
+           console.log("UB  intialized");
+            $localStorage.store("UB",data.slno);
+}
+        if($localStorage.get('LB',undefined)==undefined){
+          console.log("LB  intialized");
+            $localStorage.store('LB',data.slno);
+}
+        if(data.slno > $localStorage.get('UB','')){
+           console.log("UB updated");
+            $localStorage.store('UB',data.slno);
+}
+        if(data.slno < $localStorage.get('LB','')){
+          console.log("LB updated");
+            $localStorage.store('LB',data.slno); 
+          }
+
+        //console.log($scope.BD);
    });
 
 });
 
 
 $scope.doRefresh = function() {
-    PostGathFac.newPost($scope.BD[0].createdAt);
+  console.log("the current upper bound is",$localStorage.get('UB',''));
+  PostGathFac.newPost($localStorage.get('UB',''));
 };
 
 $scope.$applyAsync(function () {
-   $scope.$on("GatheredNewPost", function (evt, data) {      
-        $scope.BD.unshift(data);
-        console.log($scope.BD);
+   $scope.$on("GatheredNewPost", function (evt, data) {
+
+
+        if($localStorage.get('UB',undefined)==undefined){
+           console.log("UB  intialized");
+            $localStorage.store("UB",data.slno);
+}
+        if($localStorage.get('LB',undefined)==undefined){
+          console.log("LB  intialized");
+            $localStorage.store('LB',data.slno);
+}
+        if(data.slno > $localStorage.get('UB','')){
+           console.log("UB updated");
+            $localStorage.store('UB',data.slno);
+}
+        if(data.slno < $localStorage.get('LB','')){
+          console.log("LB updated");
+            $localStorage.store('LB',data.slno); 
+          }
+
+        $scope.BD.push(data);
+        console.log(data);
         $scope.$broadcast('scroll.refreshComplete');
     });
 });
+/*
+$scope.loadMore = function() {
+
+  PostGathFac.oldPost($localStorage.get('LB',''));
+
+  };
+
+  $scope.$on('$stateChangeSuccess', function() {
+    $scope.loadMore();
+  }); */
+
+
 
 
   /* Display post Section  Ends*/
@@ -365,4 +418,32 @@ $scope.$applyAsync(function () {
 
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
+})
+
+.filter('unique', function() {
+   // we will return a function which will take in a collection
+   // and a keyname
+   return function(collection, keyname) {
+      // we define our output and keys array;
+      var output = [], 
+          keys = [];
+      
+      // we utilize angular's foreach function
+      // this takes in our original collection and an iterator function
+      angular.forEach(collection, function(item) {
+          // we check to see whether our object exists
+          var key = item[keyname];
+          // if it's not already part of our keys array
+          if(keys.indexOf(key) === -1) {
+              // add it to our keys array
+              keys.push(key); 
+              // push this item to our final output array
+              output.push(item);
+          }
+      });
+      // return our array which should be devoid of
+      // any duplicates
+      return output;
+   };
 });
+;

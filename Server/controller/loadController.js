@@ -9,11 +9,11 @@ postgatheringBefore =function(user,onBeforeTime,callback){ // function to get al
 
 				knex('blogPost')
 					.join('bloggingUsers', 'blogPost.ownerId', '=', 'bloggingUsers.userId')
-					.select('blogPost.postId', 'blogPost.ownerId', 'bloggingUsers.name','bloggingUsers.username', 'blogPost.title','blogPost.body','blogPost.noLikes','blogPost.noDislikes','blogPost.createdAt')
-					.whereNot('blogPost.createdAt', onBeforeTime)
+					.select('blogPost.postId', 'blogPost.ownerId', 'bloggingUsers.name','bloggingUsers.username', 'blogPost.title','blogPost.body','blogPost.noLikes','blogPost.noDislikes','blogPost.createdAt','blogPost.slno')
+					.whereNot('blogPost.slno', onBeforeTime)
 					.andWhere('ownerId',fuser.followingId)
-					.andWhere('blogPost.createdAt', '>',onBeforeTime)
-					.orderBy('blogPost.createdAt', 'desc')
+					.andWhere('blogPost.slno', '>',onBeforeTime)
+					.orderBy('blogPost.slno', 'asc')
 					.then(function(posts){
 							//console.log('checking the posts',posts);
 							allposts=allposts.concat(posts);	 // posts are joined for the user to display
@@ -40,11 +40,11 @@ exports.postpackingBefore =function(user,timeBack,callback){ // function to appe
 		//console.log('in okay stage',allPost);
 		if(error)
 			return callback(true,null);
+		if(allPost.length==0)
+			callback(false,{});
 		console.log("from loadController.postpackingBefore :post",allPost);
-		allPost.sort (function (a, b){  // sorting the array by field dateTime
-       				return new Date(b.createdAt) - new Date(a.createdAt);
-					})
-		.slice(0, 2) // limiting the entry only to 5
+		allPost.sort(function(a, b){return a.slno-b.slno})
+		.slice(0, 5) // limiting the entry only to 5
 		.forEach(function(post){
 			knex('postComment')
 				.join('bloggingUsers', 'postComment.cmtById', '=', 'bloggingUsers.userId')
@@ -94,10 +94,10 @@ postgatheringAfter =function(user,onAfterTime,callback){ // function to get all 
 
 				knex('blogPost')
 					.join('bloggingUsers', 'blogPost.ownerId', '=', 'bloggingUsers.userId')
-					.select('blogPost.postId', 'blogPost.ownerId', 'bloggingUsers.name','bloggingUsers.username', 'blogPost.title','blogPost.body','blogPost.noLikes','blogPost.noDislikes','blogPost.createdAt')
+					.select('blogPost.postId', 'blogPost.ownerId', 'bloggingUsers.name','bloggingUsers.username', 'blogPost.title','blogPost.body','blogPost.noLikes','blogPost.noDislikes','blogPost.createdAt','blogPost.slno')
 					.where('ownerId',fuser.followingId)
-					.andWhere('blogPost.createdAt', '>',onAfterTime)
-					.orderBy('blogPost.createdAt', 'desc')
+					.andWhere('blogPost.slno', '<',onAfterTime)
+					.orderBy('blogPost.slno', 'desc')
 					.then(function(posts){
 							//console.log('checking the posts',posts);
 							allposts=allposts.concat(posts);	 // posts are joined for the user to display
@@ -123,13 +123,11 @@ exports.postpackingAfter =function(user,timefront,callback){ // function to appe
 		//console.log('in okay stage',allPost);
 		if(error)
 			return callback(true,null);
-
-		allPost.sort (function (a, b){  // sorting the array by field dateTime
-       				return new Date(a.createdAt) - new Date(b.createdAt);
-					});
-		allPost.slice(0, 5); // limiting the entry only to 5
-		
-		allPost.forEach(function(post){
+		if(allPost.length==0)
+			callback(false,{});
+		allPost.sort(function(a, b){return b.slno-a.slno})
+		.slice(0, 3) // limiting the entry only to 5
+		.forEach(function(post){
 			knex('postComment')
 				.join('bloggingUsers', 'postComment.cmtById', '=', 'bloggingUsers.userId')
 				.select('bloggingUsers.username', 'postComment.comment','postComment.createdAt')

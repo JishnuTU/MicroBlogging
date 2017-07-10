@@ -98,8 +98,9 @@ postgathering =function(user,callback){ // function to get all required post for
 
 				knex('blogPost')
 					.join('bloggingUsers', 'blogPost.ownerId', '=', 'bloggingUsers.userId')
-					.select('blogPost.postId', 'blogPost.ownerId', 'bloggingUsers.name','bloggingUsers.username', 'blogPost.title','blogPost.body','blogPost.noLikes','blogPost.noDislikes','blogPost.createdAt')
+					.select('blogPost.postId', 'blogPost.ownerId', 'bloggingUsers.name','bloggingUsers.username', 'blogPost.title','blogPost.body','blogPost.noLikes','blogPost.noDislikes','blogPost.createdAt','blogPost.slno')
 					.where('ownerId',fuser.followingId)
+					.orderBy('blogPost.slno', 'desc')
 					.then(function(posts){
 							//console.log('checking the posts',posts);
 							allposts=allposts.concat(posts);	 // posts are joined for the user to display
@@ -125,10 +126,10 @@ exports.postpacking =function(user,callback){ // function to append all details 
 		//console.log('in okay stage',allPost);
 		if(error)
 			return callback(true,null);
+		if(allPost.length==0)
+			callback(false,{})
 	allPost
-	.sort (function (a, b){  // sorting the array by field dateTime
-       				return new Date(b.createdAt) - new Date(a.createdAt);
-					})
+	.sort(function(a, b){return b.slno-a.slno})
 	.slice(0, 2)
 	.forEach(function(post){
 			knex('postComment')
