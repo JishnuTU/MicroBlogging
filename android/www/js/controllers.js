@@ -162,7 +162,7 @@ angular.module('mobileApp.controllers', [])
     });
 })
 
-.controller('HomeCtrl', function($localStorage,$scope,$rootScope,AuthFactory,$ionicModal,SearchFollowFac,PostBlogFac,$ionicPopup,LikeDislikeFac,CommentPostFac,ReportPostFac,PostGathFac) {
+.controller('HomeCtrl', function($localStorage,$scope,$rootScope,AuthFactory,$ionicModal,SearchFollowFac,PostBlogFac,$ionicPopup,LikeDislikeFac,CommentPostFac,ReportPostFac,PostGathFac,NotificationFac) {
   /* filtering section */
 
     $scope.filterObject="";
@@ -178,6 +178,7 @@ angular.module('mobileApp.controllers', [])
         $localStorage.remove('UB');
         $localStorage.remove('LB');
       PostGathFac.refreshPost();
+      NotificationFac.gatherNotification();
 
     });
 
@@ -186,34 +187,52 @@ angular.module('mobileApp.controllers', [])
 
   /* Display post Section */
   // $scope.BD=[];
+   $scope.moreDataCanBeLoaded=true;
+  $scope.loadMore = function() {
+      $scope.BD=[];
+       PostGathFac.refreshPost();
+       NotificationFac.gatherNotification();
+  };
+
+  $scope.$on('$stateChangeSuccess', function() {
+    $scope.loadMore();
+  });
 
 $scope.$applyAsync(function () {
 
    $scope.$on("GatheredPost", function (evt, data) {
-        $scope.BD.push(data);
 
-
+    if(Object.keys(data).length===0){
+        $scope.moreDataCanBeLoaded=false;
+        console.log("Data Finished ",$scope.moreDataCanBeLoaded);
+      }
+       
+      else {
         if($localStorage.get('UB',undefined)==undefined){
            console.log("UB  intialized");
             $localStorage.store("UB",data.slno);
-}
+        }
+
         if($localStorage.get('LB',undefined)==undefined){
           console.log("LB  intialized");
             $localStorage.store('LB',data.slno);
-}
+        }
         if(data.slno > $localStorage.get('UB','')){
            console.log("UB updated");
             $localStorage.store('UB',data.slno);
-}
+        }
         if(data.slno < $localStorage.get('LB','')){
           console.log("LB updated");
             $localStorage.store('LB',data.slno); 
-          }
+        }
+         $scope.BD.push(data);
 
-        //console.log($scope.BD);
+      //  console.log(data);
+      }
    });
 
 });
+
 
 
 $scope.doRefresh = function() {
@@ -247,22 +266,50 @@ $scope.$applyAsync(function () {
         $scope.$broadcast('scroll.refreshComplete');
     });
 });
+
 /*
-$scope.loadMore = function() {
-
-  PostGathFac.oldPost($localStorage.get('LB',''));
-
-  };
-
-  $scope.$on('$stateChangeSuccess', function() {
-    $scope.loadMore();
-  }); */
+$scope.$applyAsync(function () {
+   $scope.$on("GatheredOldPost", function (evt, data) {
 
 
+        if($localStorage.get('UB',undefined)==undefined){
+           console.log("UB  intialized");
+            $localStorage.store("UB",data.slno);
+}
+        if($localStorage.get('LB',undefined)==undefined){
+          console.log("LB  intialized");
+            $localStorage.store('LB',data.slno);
+}
+        if(data.slno > $localStorage.get('UB','')){
+           console.log("UB updated");
+            $localStorage.store('UB',data.slno);
+}
+        if(data.slno < $localStorage.get('LB','')){
+          console.log("LB updated");
+            $localStorage.store('LB',data.slno); 
+          }
 
+        $scope.BD.push(data);
+        console.log(data);
+        $scope.$broadcast('scroll.refreshComplete');
+    });
+});
+
+
+*/
 
   /* Display post Section  Ends*/
+    /* notification starts here */
 
+      $scope.NAlist=[];
+    $scope.$on("RNotificationResult",function(evt,data){
+      $scope.$applyAsync(function () {
+            $scope.NAlist.push(data);
+            console.log($scope.NAlist);
+            $scope.notificationCount=$scope.NAlist.length;
+        });
+    });
+    /*notification ends here */
 
 
   /* Post section */

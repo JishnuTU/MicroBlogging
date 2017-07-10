@@ -288,6 +288,15 @@ angular.module('mobileApp.mainFactory',[])
 	 		$rootScope.$broadcast("GatheredNewPost",data);
 	 	});
 
+	 	PG.oldPost =function(odate){
+	 			 socket.emit('gatheroldposts',{userId: AuthFactory.getUserId(),
+           		token: AuthFactory.getToken(),
+           		olddate : odate });
+	 	}
+
+	 	socket.on('gatheredOldpost',function(data){
+	 		$rootScope.$broadcast("GatheredOldPost",data);
+	 	});
      	return PG;
 
 	}])
@@ -342,6 +351,25 @@ angular.module('mobileApp.mainFactory',[])
         		});
 
 		return RP;
+	}])
+
+	.factory('NotificationFac',['$rootScope','socket','AuthFactory',function($rootScope,socket,AuthFactory){
+
+		var NA={};
+		NA.gatherNotification=function(){
+			socket.emit('OnlineNotification',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken()
+                           });
+		}
+
+
+			socket.on('ReplyNotification',function(data){
+				console.log("notifcation: ",data);
+				$rootScope.$broadcast("RNotificationResult",data);
+			});
+
+
+		return NA;
 	}])
 
 ;

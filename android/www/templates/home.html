@@ -10,7 +10,7 @@
       <button class="button button-balanced  button-full icon ion-android-create" ng-click="postmodal.show();"></button>
     </div>
       <div class="col col-50">
-     <button class="button button-calm  button-full icon ion-android-notifications-none" ng-click="postmodal.show();"></button>
+     <button class="button button-calm  button-full icon ion-android-notifications-none">{{notificationCount}}</button>
     </div>
   </div>
 
@@ -90,11 +90,13 @@
 </div>
 <!--end Post template -->
 
-  <ion-infinite-scroll
-    ng-if="moreDataCanBeLoaded"
-    on-infinite="loadMore()"
-    distance="1%">
-  </ion-infinite-scroll>
+<ion-infinite-scroll
+  ng-if="moreDataCanBeLoaded"
+  icon="ion-loading-c"
+  on-infinite="loadMoreData()">
+</ion-infinite-scroll>
+
+
 
 
    </ion-content>

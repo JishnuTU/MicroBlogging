@@ -130,7 +130,7 @@ exports.postpacking =function(user,callback){ // function to append all details 
 			callback(false,{})
 	allPost
 	.sort(function(a, b){return b.slno-a.slno})
-	.slice(0, 2)
+	//.slice(0, 2)
 	.forEach(function(post){
 			knex('postComment')
 				.join('bloggingUsers', 'postComment.cmtById', '=', 'bloggingUsers.userId')

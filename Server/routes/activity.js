@@ -97,6 +97,24 @@ var loadController =require('../controller/loadController');
     });
 
 
+    socket.on('gatheroldposts',function(data){
+      Verify.verifySocketUser(data.token,function(procced){
+        if(procced){
+                loadController.postpackingAfter(data.userId,data.olddate,function(error,allPost){
+                    if(error)
+                      return io.to(socket.id).emit("gatheredOldpost","Server Error");
+                    else
+                      return io.to(socket.id).emit("gatheredOldpost",allPost);
+                  });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
+
+
 
     socket.on('interestInsert',function(data){
       Verify.verifySocketUser(data.token,function(procced){
