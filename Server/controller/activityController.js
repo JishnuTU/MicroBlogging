@@ -125,7 +125,12 @@ exports.postpacking =function(user,callback){ // function to append all details 
 		//console.log('in okay stage',allPost);
 		if(error)
 			return callback(true,null);
-		allPost.forEach(function(post){
+	allPost
+	.sort (function (a, b){  // sorting the array by field dateTime
+       				return new Date(b.createdAt) - new Date(a.createdAt);
+					})
+	.slice(0, 2)
+	.forEach(function(post){
 			knex('postComment')
 				.join('bloggingUsers', 'postComment.cmtById', '=', 'bloggingUsers.userId')
 				.select('bloggingUsers.username', 'postComment.comment','postComment.createdAt')
@@ -145,10 +150,10 @@ exports.postpacking =function(user,callback){ // function to append all details 
 							else
 								post.interest=2;
 
-							finalPosts.push(post);
+							callback(false,post);
 
-							if(finalPosts.length==allPost.length)
-								return callback(false,finalPosts);
+							/*if(finalPosts.length==allPost.length)
+								return callback(false,finalPosts); */
 						})
 						.catch(function(){
 							return callback(true,null);

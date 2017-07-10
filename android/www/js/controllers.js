@@ -56,7 +56,6 @@ angular.module('mobileApp.controllers', [])
   $scope.timeLine =function(){
     console.log("function called");
     $rootScope.$broadcast('FilterOff',"filtering");
-    PostGathFac.refreshPost();
   };
 
   // Open the login modal
@@ -163,7 +162,7 @@ angular.module('mobileApp.controllers', [])
     });
 })
 
-.controller('HomeCtrl', function($scope,$rootScope,AuthFactory,$ionicModal,SearchFollowFac,PostBlogFac,$ionicPopup,LikeDislikeFac,CommentPostFac,ReportPostFac) {
+.controller('HomeCtrl', function($localStorage,$scope,$rootScope,AuthFactory,$ionicModal,SearchFollowFac,PostBlogFac,$ionicPopup,LikeDislikeFac,CommentPostFac,ReportPostFac,PostGathFac) {
   /* filtering section */
 
     $scope.filterObject="";
@@ -175,10 +174,41 @@ angular.module('mobileApp.controllers', [])
     });
     $scope.$on("FilterOff",function(evt,data){
       $scope.filterObject='';
+      $scope.BD=[];
+      PostGathFac.refreshPost();
+
     });
 
   /*filtering section ends here */
 
+
+  /* Display post Section */
+  // $scope.BD=[];
+
+$scope.$applyAsync(function () {
+
+   $scope.$on("GatheredPost", function (evt, data) {
+        $scope.BD.push(data);
+        console.log($scope.BD);
+   });
+
+});
+
+
+$scope.doRefresh = function() {
+    PostGathFac.newPost($scope.BD[0].createdAt);
+};
+
+$scope.$applyAsync(function () {
+   $scope.$on("GatheredNewPost", function (evt, data) {      
+        $scope.BD.unshift(data);
+        console.log($scope.BD);
+        $scope.$broadcast('scroll.refreshComplete');
+    });
+});
+
+
+  /* Display post Section  Ends*/
 
 
 
@@ -192,7 +222,6 @@ angular.module('mobileApp.controllers', [])
    // handle event
    if(!AuthFactory.isAuthenticated())
         $rootScope.$broadcast("NotLoggedIn","openlogin");
-      console.log("before enter the homectrl");
     });
 /* before enter homectrl  ends here*/
 
@@ -252,15 +281,6 @@ angular.module('mobileApp.controllers', [])
 
 
 
-  /* Display post Section */
-   $scope.BD=[];
-
-   $scope.$on("GatheredPost", function (evt, data) {
-        $scope.BD =  data;
-        console.log($scope.BD)
-    });
-
-  /* Display post Section  Ends*/
 
 /* Like and dislike */
  $scope.changestate=function(id,state,from){
@@ -300,10 +320,25 @@ angular.module('mobileApp.controllers', [])
 
 
     /* comment section */
+    $scope.newComment={'comment':"",
+                      'username':AuthFactory.getUsername(),
+                      'createdAt':""};
+    $scope.submitComment = function(pId,obj) {
+      //console.log(newComment);
 
-    $scope.submitComment = function(pId,newComment) {
-      console.log(newComment);
-         CommentPostFac.postComment(pId,newComment);
+          $scope.$applyAsync(function () {
+
+              $scope.indexCmt =$scope.BD.indexOf(obj);
+              $scope.newComment.createdAt=Date();
+              //$scope.newComment.createdAt="$scope.newComment.createdAt.toString();"
+              $scope.newComment.username=AuthFactory.getUsername();
+              $scope.BD[$scope.indexCmt].comments.push($scope.newComment);
+              $scope.newComment={};
+
+            
+            });
+
+         CommentPostFac.postComment(pId,$scope.newComment.comment);
 
     };
     /* comment section ends here */
@@ -327,6 +362,7 @@ angular.module('mobileApp.controllers', [])
 
   /* report section ends here */
 })
+
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
 });

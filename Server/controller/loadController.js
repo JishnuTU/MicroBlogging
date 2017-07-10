@@ -1,3 +1,5 @@
+const knex =require('../knex');
+
 postgatheringBefore =function(user,onBeforeTime,callback){ // function to get all old post for the authenicated user
 	var allposts =[];
 	knex('followingLink')
@@ -8,8 +10,9 @@ postgatheringBefore =function(user,onBeforeTime,callback){ // function to get al
 				knex('blogPost')
 					.join('bloggingUsers', 'blogPost.ownerId', '=', 'bloggingUsers.userId')
 					.select('blogPost.postId', 'blogPost.ownerId', 'bloggingUsers.name','bloggingUsers.username', 'blogPost.title','blogPost.body','blogPost.noLikes','blogPost.noDislikes','blogPost.createdAt')
-					.where('ownerId',fuser.followingId)
-					.andWhere('blogPost.createdAt', '<',onBeforeTime)
+					.whereNot('blogPost.createdAt', onBeforeTime)
+					.andWhere('ownerId',fuser.followingId)
+					.andWhere('blogPost.createdAt', '>',onBeforeTime)
 					.orderBy('blogPost.createdAt', 'desc')
 					.then(function(posts){
 							//console.log('checking the posts',posts);
@@ -32,17 +35,17 @@ postgatheringBefore =function(user,onBeforeTime,callback){ // function to get al
 exports.postpackingBefore =function(user,timeBack,callback){ // function to append all details to the post gathered
 	finalPosts=[];
 	var index=0;
+	console.log("from loadController.postpackingBefore :date",timeBack);
 	postgatheringBefore(user,timeBack,function(error,allPost){
 		//console.log('in okay stage',allPost);
 		if(error)
 			return callback(true,null);
-
+		console.log("from loadController.postpackingBefore :post",allPost);
 		allPost.sort (function (a, b){  // sorting the array by field dateTime
-       				return new Date(a.createdAt) - new Date(b.createdAt);
-					});
-		allPost.slice(0, 5); // limiting the entry only to 5
-
-		allPost.forEach(function(post){
+       				return new Date(b.createdAt) - new Date(a.createdAt);
+					})
+		.slice(0, 2) // limiting the entry only to 5
+		.forEach(function(post){
 			knex('postComment')
 				.join('bloggingUsers', 'postComment.cmtById', '=', 'bloggingUsers.userId')
 				.select('bloggingUsers.username', 'postComment.comment','postComment.createdAt')
@@ -122,7 +125,7 @@ exports.postpackingAfter =function(user,timefront,callback){ // function to appe
 			return callback(true,null);
 
 		allPost.sort (function (a, b){  // sorting the array by field dateTime
-       				return new Date(b.createdAt) - new Date(a.createdAt);
+       				return new Date(a.createdAt) - new Date(b.createdAt);
 					});
 		allPost.slice(0, 5); // limiting the entry only to 5
 		

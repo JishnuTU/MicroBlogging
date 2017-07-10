@@ -1,6 +1,7 @@
 <link href='http://fonts.googleapis.com/css?family=Raleway:400,200' rel='stylesheet' type='text/css'>
  <link href="./styles/login.css" rel="stylesheet">
 <div class="container">
+ <a ui-sref="app.register"  ><span class=""></span>Sign Up</a>
     <div class="row login_box">
       <div class="col-md-12 col-xs-12" align="center">
             <div class="line"><h3>Microblogging</h3></div>
@@ -21,7 +22,6 @@
                     <input type="password" ng-model="login.password" class="form-control" placeholder="Password"/>
                 </div>
                 <div align="center">
-                <a ui-sref="app.register"  ><span class="glyphicon glyphicon-log-in"></span> Logout</a>
                      <button  ng-click="loginEntry()"  class="btn btn-orange">LOGIN</button>
                 </div>
                 

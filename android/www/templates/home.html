@@ -1,34 +1,41 @@
 <ion-view cache-view="false" view-title="Timeline">
 <ion-content>
+  <ion-refresher
+    pulling-text="Pull to refresh..."
+    on-refresh="doRefresh()">
+  </ion-refresher>
 
-  <div class="item-input-inset" style="padding-top:10px">
-  <div class="row">
-    <div class="col col-10">
-      <h3> <i class="icon ion-android-create" ng-click="postmodal.show();"></i> </h3>
+  <div class="row" style="padding-top:5px">
+      <div class="col col-50">
+      <button class="button button-balanced  button-full icon ion-android-create" ng-click="postmodal.show();"></button>
     </div>
-    <div class="col col-65">
-    <label class="item-input-wrapper">
-      <i class="icon ion-ios-search placeholder-icon"></i>
-      <input type="search" required="true" ng-model="searchname" placeholder="Search">
-    </label>
+      <div class="col col-50">
+     <button class="button button-calm  button-full icon ion-android-notifications-none" ng-click="postmodal.show();"></button>
+    </div>
+  </div>
+
+    <div class="row">
+
+    <div class="col col-80" style="background-color:  #F5F5DC; padding-left: 20px; padding-top: 10px;" >
+      <input type="text" ng-model="searchname" placeholder="Search Pals" >
     </div>
       
-    <div class="col col-10">
-     <h3><i class="icon ion-ios-search" ng-click="searchFor(searchname)"></i></h3>
+    <div class="col col-20">
+     <button class="button button-positive icon ion-ios-search" ng-click="searchFor(searchname)"></button>
     </div>
-    <div class="col col-15">
-    <h3> <i class="ion-android-notifications-none"></i> </h3>
-    </div>
+
   </div>
-  </div>
+
+
 
  
 <!-- Post template -->
 <div ng-repeat="bg in BD | orderBy : '-createdAt' | filter: { ownerId : filterObject} ">
   <div class="card">
     <div class="item item-divider ">
-      <div class="row">
-         {{bg.title}}
+      <div class="row item-text-wrap">
+         {{bg.title  }}
+         
       </div>
       
       <div class="row"> 
@@ -43,7 +50,8 @@
 
       <div class="item  item-text-wrap">
           <div class="item item-input-inset">
-            <h2>{{bg.body}}</h2>
+            <p ng-text-truncate="bg.body"
+   ng-tt-chars-threshold="40" style="color : blue; font-family:Serif"></p>
           </div>
            <p>
             <a class="button button-icon icon ion-thumbsup" ng-click="bg.interest=changestate(bg.postId,bg.interest,1);" id="{{bg.postId}}like" 
@@ -62,9 +70,9 @@
 
       <div class="item item-input-inset">
         <label class="item-input-wrapper">
-          <input type="text" placeholder="comment here" ng-model="newComment" required="true">
+          <input type="text" placeholder="comment here" ng-model="newComment.comment" required="true">
         </label>
-          <button class="button button-small  button-calm icon ion-wand" ng-click="submitComment(bg.postId,newComment); newComment='';"></button>
+          <button class="button button-small  button-calm icon ion-wand" ng-click="submitComment(bg.postId,bg);"></button>
       </div>
 
 
@@ -82,6 +90,11 @@
 </div>
 <!--end Post template -->
 
+  <ion-infinite-scroll
+    ng-if="moreDataCanBeLoaded()"
+    on-infinite="loadMore()"
+    distance="1%">
+  </ion-infinite-scroll>
 
 
    </ion-content>

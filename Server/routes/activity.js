@@ -1,8 +1,8 @@
- var activityController = require('../controller/activityController');
- var notificationController =  require('../controller/notificationController');
-  var adminController =  require('../controller/adminController');
+var activityController = require('../controller/activityController');
+var notificationController =  require('../controller/notificationController');
+var adminController =  require('../controller/adminController');
 var Verify    = require('./verify');
-
+var loadController =require('../controller/loadController');
  module.exports = function(socket,io){
 
    // for search
@@ -78,6 +78,25 @@ var Verify    = require('./verify');
   			}
   		});
   	});
+
+    socket.on('gathernewposts',function(data){
+      Verify.verifySocketUser(data.token,function(procced){
+        if(procced){
+                loadController.postpackingBefore(data.userId,data.newdate,function(error,allPost){
+                    if(error)
+                      return io.to(socket.id).emit("gatheredNewpost","Server Error");
+                    else
+                      return io.to(socket.id).emit("gatheredNewpost",allPost);
+                  });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
+
+
 
     socket.on('interestInsert',function(data){
       Verify.verifySocketUser(data.token,function(procced){

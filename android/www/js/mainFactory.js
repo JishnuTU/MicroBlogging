@@ -276,6 +276,18 @@ angular.module('mobileApp.mainFactory',[])
 	 		$rootScope.$broadcast("GatheredPost",data);
      		});
 
+
+	 	PG.newPost =function(ndate){
+	 		socket.emit('gathernewposts',{userId: AuthFactory.getUserId(),
+           		token: AuthFactory.getToken(),
+           		newdate : ndate });
+
+	 	}
+
+	 	socket.on('gatheredNewpost',function(data){
+	 		$rootScope.$broadcast("GatheredNewPost",data);
+	 	});
+
      	return PG;
 
 	}])

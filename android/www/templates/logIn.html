@@ -3,22 +3,31 @@
     <h1 class="title">Login</h1>
     <div class="buttons">
       <button class="button button-clear button-positive" ng-click="openRegister()">Sign Up</button>
+       <button class="button button-clear button-positive" ng-click="closeLogin()">close</button>
     </div>
   </ion-header-bar>
-  <ion-content>
+  <ion-content style="padding-top:100px;">
     <form ng-submit="doLogin()">
-      <div class="list">
-        <label class="item item-input">
-          <span class="input-label">Username/Email</span>
-          <input type="text" name="username" required="true" ng-model="loginData.username">
-        </label>
-        <label class="item item-input">
-          <span class="input-label">Password</span>
-          <input type="password" name="password" required="true" ng-model="loginData.password">
-        </label>
-        <label class="item">
+      <div class="row" >
+        <div class="col col-20" >
+          <button class="button button-calm icon ion-person"></button>
+        </div>
+        <div class="col col-70">
+        <input type="text" name="username" placeholder="Username | Email Id" ng-model="loginData.username">
+        </div>
+        </div>
+
+        <div class="row">
+         <div class="col col-20" >
+          <button class="button button-calm icon ion-android-lock"></button>
+          </div>
+          <div class="col col-70">
+          <input type="password" name="password" placeholder="password" ng-model="loginData.password">
+       </div>
+       </div>
+        <div class="row">
           <button class="button button-block button-positive" type="submit">Log in</button>
-        </label>
+        </div>
       </div>
     </form>
   </ion-content>

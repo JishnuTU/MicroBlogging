@@ -1,6 +1,6 @@
  'use strict';
 /**
- * @ngdoc function
+ * @ngdoc function 
  * @name webApp.controller:MainCtrl
  * @description
  * # MainCtrl
@@ -174,7 +174,7 @@ angular.module('webApp')
 
    $scope.$on("GatheredPost", function (evt, data) {
      $scope.$applyAsync(function () {
-        $scope.BD =  data;
+        $scope.BD.push(data);
         console.log("post are :",$scope.BD)
     });
       });
