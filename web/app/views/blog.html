@@ -50,12 +50,12 @@
           | &nbsp &nbsp <i class="fa fa-calendar"></i> {{bg.createdAt | date:'dd/MM/yyyy @ h:mma'}}  &nbsp &nbsp
           | &nbsp &nbsp  <i ng-click="bg.interest=changestate(bg,bg.postId,bg.interest,1);" id="{{bg.postId}}like" 
                         ng-style="bg.interest === 0 && {'color': 'black'} ||
-                  bg.interest=== 1 && {'color': 'red'}||
+                  bg.interest=== 1 && {'color': 'blue'}||
                   bg.interest=== 2 && {'color': 'black'}" 
                   class="fa fa-thumbs-up fa-2x" ></i> {{bg.noLikes}} Likes &nbsp &nbsp
 | &nbsp &nbsp
                        <i ng-click="bg.interest=changestate(bg,bg.postId,bg.interest,0);" id="{{bg.postId}}dislike" 
-                         ng-style="bg.interest === 0 && {'color': 'red'} ||
+                         ng-style="bg.interest === 0 && {'color': 'blue'} ||
                   bg.interest=== 1 && {'color': 'black'} ||
                   bg.interest=== 2 && {'color': 'black'}"
                   class="fa fa-thumbs-down fa-2x"></i> {{bg.noDislikes}} Dislikes &nbsp &nbsp
@@ -65,10 +65,10 @@
 
 
             
-          <form class="form-inline" ng-submit="submitComment(bg.postId,bg)" >
+          <form class="form-inline" ng-submit="submitComment(comment,bg.postId,bg)" >
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-comment"></i></span>
-                <input type="text" class="form-control" required="true" ng-model="newComment.comment" placeholder="Your comments"></div>
+                <input type="text" class="form-control" required="true" ng-model="comment" placeholder="Your comments"></div>
                 <button type="submit"  name="sub" class="btn btn-info"><i class="fa fa-check"></i></button>
           </form>
         </p>

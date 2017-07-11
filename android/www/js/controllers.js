@@ -1,6 +1,6 @@
 angular.module('mobileApp.controllers', []) 
 
-.controller('AppCtrl', function($rootScope,$state,$ionicHistory,$timeout,$scope, $ionicModal,$ionicPopup, $timeout,AuthFactory,socket,PostBlogFac,PostGathFac) {
+.controller('AppCtrl', function($rootScope,$state,$ionicHistory,$timeout,$scope, $ionicModal,$ionicPopup, $timeout,AuthFactory,socket) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -45,7 +45,10 @@ angular.module('mobileApp.controllers', [])
 
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
+        $timeout(function(){
     $scope.loginmodal.hide();
+},0);
+    
   };
 
   // Open the register modal
@@ -117,15 +120,15 @@ angular.module('mobileApp.controllers', [])
   }
       /* access checking */
         socket.on('AuthorizationFailed',function(message){
-           
-           $ionicPopup.alert({
+            $scope.openLogin();
+         /* $ionicPopup.alert({
                 title: 'You are not Logged In'
             })
            .then(function(res) {
                 $scope.openLogin();
-            });
+            });  */
         });
-      /* access checking */   
+       /* access checking */   
 
 
   $scope.logout =function(){
@@ -143,23 +146,28 @@ angular.module('mobileApp.controllers', [])
     AuthFactory.login($scope.loginData,function(){
           if(AuthFactory.isAuthenticated()){
             $scope.closeLogin();
-            PostGathFac.refreshPost();
             $state.go('app.home'); 
           }
     });
 
   };
-
-  $scope.$on("NotLoggedIn",function(evt,data){
-    console.log("before enter the ctrl");
+/*
+ $scope.$on("NotLoggedIn",function(evt,data){
        $scope.openLogin();
   });
+*/
+
+$scope.userName=AuthFactory.getUsername();
 
   $scope.$on("$ionicView.beforeEnter", function(event, data){
    // handle event
    if(!AuthFactory.isAuthenticated())
         $scope.openLogin();
-    });
+    else
+      $scope.closeLogin();
+    }); 
+
+
 })
 
 .controller('HomeCtrl', function($localStorage,$scope,$rootScope,AuthFactory,$ionicModal,SearchFollowFac,PostBlogFac,$ionicPopup,LikeDislikeFac,CommentPostFac,ReportPostFac,PostGathFac,NotificationFac) {
@@ -175,6 +183,7 @@ angular.module('mobileApp.controllers', [])
     $scope.$on("FilterOff",function(evt,data){
       $scope.filterObject='';
       $scope.BD=[];
+      $scope.NAlist=[];
         $localStorage.remove('UB');
         $localStorage.remove('LB');
       PostGathFac.refreshPost();
@@ -189,9 +198,13 @@ angular.module('mobileApp.controllers', [])
   // $scope.BD=[];
    $scope.moreDataCanBeLoaded=true;
   $scope.loadMore = function() {
+      $scope.NAlist=[];
       $scope.BD=[];
-       PostGathFac.refreshPost();
+      if(AuthFactory.isAuthenticated()){
+        PostGathFac.refreshPost();
        NotificationFac.gatherNotification();
+      }
+
   };
 
   $scope.$on('$stateChangeSuccess', function() {
@@ -301,7 +314,7 @@ $scope.$applyAsync(function () {
   /* Display post Section  Ends*/
     /* notification starts here */
 
-      $scope.NAlist=[];
+      
     $scope.$on("RNotificationResult",function(evt,data){
       $scope.$applyAsync(function () {
             $scope.NAlist.push(data);
@@ -338,7 +351,30 @@ $scope.$applyAsync(function () {
           $ionicPopup.alert({
                 title: 'Blog Posted'
               });
-       // $scope.postmodal.hide();
+
+          $scope.$applyAsync(function () {
+        if($localStorage.get('UB',undefined)==undefined){
+           console.log("UB  intialized");
+            $localStorage.store("UB",data.slno);
+        }
+        if($localStorage.get('LB',undefined)==undefined){
+          console.log("LB  intialized");
+            $localStorage.store('LB',data.slno);
+        }
+        if(data.slno > $localStorage.get('UB','')){
+           console.log("UB updated");
+            $localStorage.store('UB',data.slno);
+        }
+        if(data.slno < $localStorage.get('LB','')){
+          console.log("LB updated");
+            $localStorage.store('LB',data.slno); 
+        }
+        $scope.BD.push(data.blog);
+        console.log(data.blog);
+      });
+
+
+       
       });
 
   /*End  Post section */
@@ -423,22 +459,23 @@ $scope.$applyAsync(function () {
     $scope.newComment={'comment':"",
                       'username':AuthFactory.getUsername(),
                       'createdAt':""};
-    $scope.submitComment = function(pId,obj) {
+    $scope.submitComment = function(cmt,pId,obj) {
       //console.log(newComment);
 
           $scope.$applyAsync(function () {
 
               $scope.indexCmt =$scope.BD.indexOf(obj);
               $scope.newComment.createdAt=Date();
-              //$scope.newComment.createdAt="$scope.newComment.createdAt.toString();"
+              $scope.newComment.comment=cmt;
               $scope.newComment.username=AuthFactory.getUsername();
+              if(cmt!=undefined){
               $scope.BD[$scope.indexCmt].comments.push($scope.newComment);
+              CommentPostFac.postComment(pId,$scope.newComment.comment);
+              }
               $scope.newComment={};
-
-            
             });
 
-         CommentPostFac.postComment(pId,$scope.newComment.comment);
+         
 
     };
     /* comment section ends here */

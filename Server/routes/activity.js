@@ -3,6 +3,7 @@ var notificationController =  require('../controller/notificationController');
 var adminController =  require('../controller/adminController');
 var Verify    = require('./verify');
 var loadController =require('../controller/loadController');
+
  module.exports = function(socket,io){
 
    // for search
@@ -51,7 +52,11 @@ var loadController =require('../controller/loadController');
   		Verify.verifySocketUser(data.token,function(procced){
   			if(procced){
   					    activityController.postblogs(data.ownerId,data.title,data.body,function(msg){
+                    
+                    io.emit("IdentifyUrself",{'code':200});
+
   					    		return io.to(socket.id).emit("replypost",msg);
+
   					    	});
   						}
   			else
@@ -60,6 +65,28 @@ var loadController =require('../controller/loadController');
   			}
   		});
   	});
+
+
+    socket.on('IamClient',function(data){
+      Verify.verifySocketUser(data.token,function(procced){
+        if(procced){
+                activityController.realTimeNotification(data.userId,data.ontime,data.update,function(update,activity,post){
+                    if(update)
+                      return io.to(socket.id).emit("gatheredNewpost",post);
+                    else
+                    return io.to(socket.id).emit("ReplyNotification",notify);
+
+                });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+      
+    });
+
+
 
 // to collect the posts
   	socket.on('gatherposts',function(data){

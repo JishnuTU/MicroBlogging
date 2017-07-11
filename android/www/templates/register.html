@@ -6,31 +6,45 @@
     </div>
   </ion-header-bar>
   <ion-content>
-    <form ng-submit="doRegister()">
+    <form ng-submit="doRegister()" name="Register">
       <div class="list">
       <label class="item item-input item-stacked-label">
-    <span class="input-label">Email</span>
-    <input type="email" placeholder="john@suhr.com" ng-model="registerdata.email" required="true" >
+    <span class="input-label"  style="font-size:15px;color:green;" >Email</span>
+    <input type="email" name="email" placeholder="john@suhr.com" ng-model="registerdata.email" required="true" >
+
+             <h5 style="color:red"  ng-show="Register.email.$error.required && !Register.email.$pristine">* Required Field </h5>
+                    <h5 style="color:red" ng-show="!Register.email.$error.required && Register.email.$invalid && !Register.email.$pristine">** Invalid Format</h5>
+
   </label>
     <label class="item item-input item-stacked-label">
-    <span class="input-label">Username</span>
-    <input type="text" placeholder="Username" ng-model="registerdata.username" required="true">
+    <span class="input-label" style="font-size:15px;color:green;" >Username</span>
+    <input type="text" placeholder="Username" name="username" ng-model="registerdata.username"  ng-pattern="/^[a-zA-Z0-9]+$/"  maxlength="15"  required="true">
+                <h5 style="color:red"  ng-show="Register.username.$error.required && !Register.username.$pristine">* Required Field </h5>
+                    <h5 style="color:red" ng-show="!Register.username.$error.required && Register.username.$error.pattern && Register.username.$invalid && !Register.username.$pristine">** Invalid Format (no special characters)</h5>
+
   </label>
   <label class="item item-input item-stacked-label">
-    <span class="input-label">Name</span>
-    <input type="text" placeholder="John" ng-model="registerdata.name" required="true">
+    <span class="input-label" style="font-size:15px;color:green;" >Name</span>
+    <input type="text" placeholder="John" name="name" ng-model="registerdata.name" required="true"  ng-pattern="/^[a-zA-Z]+$/"  maxlength="15" >
+      <h5 style="color:red"  ng-show="Register.name.$error.required && !Register.name.$pristine">* Required Field </h5>
+
+         <h5 style="color:red" ng-show="!Register.name.$error.required && Register.name.$error.pattern && Register.name.$invalid && !Register.name.$pristine">** Invalid Format (no special characters & digits)</h5>
+
   </label>
     <label class="item item-input item-stacked-label">
-    <span class="input-label">Password</span>
-    <input type="password" placeholder="Password" ng-model="registerdata.password" required="true">
+    <span class="input-label" style="font-size:15px;color:green;" >Password</span>
+    <input type="password" name="password" placeholder="Password" ng-model="registerdata.password" required="true">
+      <h5 style="color:red"  ng-show="Register.password.$error.required && !Register.password.$pristine">* Required Field </h5>
   </label>
       <label class="item item-input item-stacked-label">
-    <span class="input-label">Re-Type Password</span>
-    <input type="password" placeholder="Re-Type Password" ng-model="rpassword.ch" required="true">
+    <span class="input-label" style="font-size:15px;color:green;" >Re-Type Password</span>
+    <input type="password" name="rpassword" placeholder="Re-Type Password" ng-model="rpassword.ch" required="true">
+
+      <h5 style="color:red"  ng-show="Register.rpassword.$error.required && !Register.rpassword.$pristine">* Required Field </h5>
   </label>
 </div>
 
-          <button class="button button-block button-positive" type="submit">Create Account</button>
+          <button ng-disabled="Register.$invalid" class="button button-block button-balanced" type="submit">Create Account</button>
     </form>
   </ion-content>
 </ion-modal-view>

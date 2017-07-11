@@ -247,24 +247,26 @@ new post section
                         'username':AuthFactory.getUsername(),
                         'createdAt':""};
 
-    $scope.submitComment = function(pId,obj) {
+    $scope.submitComment = function(cmt,pId,obj) {
 
            $scope.$applyAsync(function () {
-
+              if(cmt)
               $scope.indexCmt =$scope.BD.indexOf(obj);
               $scope.newComment.createdAt=Date();
 
-              //$scope.newComment.createdAt="$scope.newComment.createdAt.toString();"
+              $scope.newComment.comment=cmt;
+              if(cmt!=undefined){
               $scope.newComment.username=AuthFactory.getUsername();
               $scope.BD[$scope.indexCmt].comments.push($scope.newComment);
+              CommentPostFac.postComment(pId,$scope.newComment.comment);
+              
+              }
               $scope.newComment={};
-
-            
             });
 
           console.log(pId,$scope.newComment.comment);
 
-         CommentPostFac.postComment(pId,$scope.newComment.comment);
+         
 
     };
     /* comment section ends here */

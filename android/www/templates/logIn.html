@@ -7,26 +7,33 @@
     </div>
   </ion-header-bar>
   <ion-content style="padding-top:100px;">
-    <form ng-submit="doLogin()">
+    <form ng-submit="doLogin()" name="Login">
       <div class="row" >
         <div class="col col-20" >
-          <button class="button button-calm icon ion-person"></button>
+          <button class="button icon ion-person"></button>
         </div>
         <div class="col col-70">
-        <input type="text" name="username" placeholder="Username | Email Id" ng-model="loginData.username">
+        <input type="text" required name="username" placeholder="Username | Email Id" ng-model="loginData.username"  ng-pattern="/^[a-zA-Z0-9@.]+$/"  maxlength="15" >
+        <h5 style="color:red"  ng-show="Login.username.$error.required && !Login.username.$pristine">* Required Field </h5>
+
+          <h5 style="color:red" ng-show="!Login.username.$error.required && Login.username.$error.pattern && Login.username.$invalid && !Login.username.$pristine">** Invalid Format (no special characters)</h5>
+
+
         </div>
         </div>
 
         <div class="row">
          <div class="col col-20" >
-          <button class="button button-calm icon ion-android-lock"></button>
+          <button class="button icon ion-android-lock"></button>
           </div>
           <div class="col col-70">
-          <input type="password" name="password" placeholder="password" ng-model="loginData.password">
+          <input type="password" required name="password" placeholder="password" ng-model="loginData.password">
+
+          <h5 style="color:red"  ng-show="Login.password.$error.required && !Login.password.$pristine">* Required Field </h5>
        </div>
        </div>
         <div class="row">
-          <button class="button button-block button-positive" type="submit">Log in</button>
+          <button ng-disabled="Login.$invalid" class="button button-block button-balanced" type="submit">Log in</button>
         </div>
       </div>
     </form>

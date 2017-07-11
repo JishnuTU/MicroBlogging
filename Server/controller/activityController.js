@@ -1,6 +1,7 @@
 const knex =require('../knex');
 const uuidv4 = require('uuid/v4');
 var mailController =require('./mailController');
+var loadController =require('./loadController');
 
 exports.searchFor=function(followerId,name,callback){
 	var searchResult ={};
@@ -311,17 +312,43 @@ exports.reportPost=function(uId,pId,rson,callback){
 			});
 }
 
-realTimeNotification =function(userId){
+exports.realTimeNotification =function(userId,slno,updateNow,callback){
 
-	knex('followingLink')
-		.join('bloggingUsers', 'followingLink.followingId', '=', 'bloggingUsers.userId')
-		.where('followingLink.followerId',userId)
-		.andWhere('bloggingUsers.stage',1)
-		.then(function(followers){ 
-			followers.forEach(function(follower,indexfollower){
-			activity.getsocketID(function(id){
+if(updateNow)
+	loadController.postpackingBefore(userId,slno,function(err,newpost){
+		callback(true,null,newpost);
+	})
 
-			})
-
-			}); //end of for each
+console.log("i am :",userId);
+		knex('followingLink')
+			.where('followerId',userId)
+			.then(function(followers){ 
+				followers.forEach(function(follower,indexfollower){
+					knex('blogPost')
+						.join('bloggingUsers', 'blogPost.ownerId', '=', 'bloggingUsers.userId')
+						.select('bloggingUsers.name','blogPost.title','blogPost.createdAt','blogPost.slno')
+						.where('ownerId',follower.followingId)
+						.andWhere('blogPost.slno', '>',slno) // all post by a follower
+							.then(function(posts){
+								//activityCollection1=[];
+								posts.forEach(function(post,indexpost){
+									actmsg={};
+									actmsg.byUser=post.name;
+									actmsg.action="posted a blog :"
+									actmsg.title=post.title;
+									actmsg.onDate=post.createdAt;
+									console.log('stage 2',actmsg);  // logical error tracking 
+									callback(false,actmsg,null);
+									/*if(posts.length-1==indexpost)
+										callback(activityCollection1);*/
+								}); //end of for each posts 
+							}) // end of select post by a follower
+							.catch(function(){
+								console.log('From activityController.realTimeNotification :Database Error in blogPost');
+							});
+						}); // end of for each follower
+				})  // end of select all followers
+				.catch(function(){
+					console.log('From activityController.realTimeNotification:Database Error in followingLink');
+				}); 
 }

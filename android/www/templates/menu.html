@@ -14,12 +14,12 @@
 
   <ion-side-menu side="left">
     <ion-header-bar class="bar-stable">
-      <h1 class="title">Navigation</h1>
+      <h1 class="title">  <i ng-style="{'color': 'green'}" class="icon ion-record"></i> {{userName}}</h1>
     </ion-header-bar>
     <ion-content>
       <ion-list>
       <ion-item menu-close ng-click="openLogin()">
-          Login
+          {{userName}}
         </ion-item>
         <ion-item menu-close ng-click="timeLine()" href="#/app/home">
         Timeline

@@ -1,31 +1,37 @@
 <ion-view cache-view="false" view-title="Timeline">
+
+
+
+<div class="tabs tabs-icon-left tabs-balanced">
+  <a class="tab-item">
+    <i class="icon ion-home"></i>
+  </a>
+  <a class="tab-item">
+    <i class="icon ion-android-notifications-none"></i>{{notificationCount}}
+  </a>
+  <a class="tab-item" ng-click="postmodal.show();">
+    <i class="icon ion-android-create"></i>
+  </a>
+</div>
+
 <ion-content>
   <ion-refresher
     pulling-text="Pull to refresh..."
     on-refresh="doRefresh()">
   </ion-refresher>
 
-  <div class="row" style="padding-top:5px">
-      <div class="col col-50">
-      <button class="button button-balanced  button-full icon ion-android-create" ng-click="postmodal.show();"></button>
-    </div>
-      <div class="col col-50">
-     <button class="button button-calm  button-full icon ion-android-notifications-none">{{notificationCount}}</button>
-    </div>
+<div class="list">
+<form name="Search">
+  <div class="item item-input-inset">
+    <label class="item-input-wrapper">
+      <input type="text"ng-model="searchname" placeholder="Search Pals" required name="searh">
+
+    </label>
+    <button ng-disabled="Search.$invalid" class="button button-small button-balanced  icon ion-ios-search" ng-click="searchFor(searchname)">
+    </button>
   </div>
-
-    <div class="row">
-
-    <div class="col col-80" style="background-color:  #F5F5DC; padding-left: 20px; padding-top: 10px;" >
-      <input type="text" ng-model="searchname" placeholder="Search Pals" >
-    </div>
-      
-    <div class="col col-20">
-     <button class="button button-positive icon ion-ios-search" ng-click="searchFor(searchname)"></button>
-    </div>
-
-  </div>
-
+</form>
+</div>
 
 
  
@@ -34,7 +40,7 @@
   <div class="card">
     <div class="item item-divider ">
       <div class="row item-text-wrap">
-         {{bg.title  }} {{bg.slno}}
+         {{bg.title  }}
          
       </div>
       
@@ -56,23 +62,24 @@
            <p>
             <a class="button button-icon icon ion-thumbsup" ng-click="bg.interest=changestate(bg.postId,bg.interest,1);" id="{{bg.postId}}like" 
                         ng-style="bg.interest === 0 && {'color': 'black'} ||
-                  bg.interest=== 1 && {'color': 'red'}||
+                  bg.interest=== 1 && {'color': 'green'}||
                   bg.interest=== 2 && {'color': 'black'}"></a>
 
             <a class="button button-icon icon ion-thumbsdown" ng-click="bg.interest=changestate(bg.postId,bg.interest,0);" id="{{bg.postId}}dislike" 
-                         ng-style="bg.interest === 0 && {'color': 'red'} ||
+                         ng-style="bg.interest === 0 && {'color': 'green'} ||
                   bg.interest=== 1 && {'color': 'black'} ||
-                  bg.interest=== 2 && {'color': 'black'}"></a>
-            <a class="button button-icon icon ion-android-warning" ng-click="reportPost(bg.postId)"></a>
+                  bg.interest=== 2 && {'color': 'black'}"></a> 
+                <a class="button button-icon ion-android-warning" ng-style="{'color': 'red','margin-left':'110px'}" ng-click="reportPost(bg.postId)"></a> 
+           
           </p>
       </div>
 
 
       <div class="item item-input-inset">
         <label class="item-input-wrapper">
-          <input type="text" placeholder="comment here" ng-model="newComment.comment" required="true">
+          <input type="text" placeholder="comment here" ng-model="comment" required="true">
         </label>
-          <button class="button button-small  button-calm icon ion-wand" ng-click="submitComment(bg.postId,bg);"></button>
+          <button class="button button-small  button-balanced icon ion-wand" ng-click="submitComment(comment,bg.postId,bg);"></button>
       </div>
 
 
