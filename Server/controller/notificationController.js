@@ -110,7 +110,7 @@ actmsg ={
 
 
 
-exports.getOnlineNotify =function(userId,callback){
+exports.getOnlineNotify =function(userId,callback) {
 	activityCollection1=[];
 activityCollection2=[];
 activityCollection3=[];
@@ -152,7 +152,14 @@ actmsg ={
 							}) // end of select post by a follower
 							.catch(function(){
 								console.log('From notification Controller.getOnlineNotify :Database Error in blogPost');
-							});  // end of catch select all posts
+							});
+						}); // end of for each follower
+				})  // end of select all followers
+				.catch(function(){
+					console.log('From notification Controller.getOnlineNotify :Database Error in followingLink');
+				});  // end of catch select all followers  // end of catch select all posts
+						
+
 
 						knex('postComment')
 							.join('blogPost', 'postComment.cmtOfId', '=', 'blogPost.postId')
@@ -171,6 +178,7 @@ actmsg ={
 													actmsg.action="commented on your blog :";
 													actmsg.title=comment.title;
 													actmsg.onDate=comment.createdAt;
+													console.log('From notification Controller.getOnlineNotify :',actmsg);
 													callback(actmsg);
 										//console.log('stage 3',actmsg);  // logical error tracking 
 										/*if(comments.length-1==indexcomment)
@@ -218,11 +226,7 @@ actmsg ={
 								console.log('From notification Controller.getOnlineNotify :Database Error in postInterest');
 							}); // end of catch select all interests
 
-					}); // end of for each follower
-				})  // end of select all followers
-				.catch(function(){
-					console.log('From notification Controller.getOnlineNotify :Database Error in followingLink');
-				});  // end of catch select all followers
+
 
 		})
 		.catch(function(){

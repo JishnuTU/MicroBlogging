@@ -120,13 +120,9 @@ angular.module('webApp')
 
   $scope.postBlog =function(){
       PostBlogFac.post($scope.postb.title,$scope.postb.body);
+              $scope.postdialog.close();
     };
-    $scope.$on("ReplyPost", function (evt, data) {
-        $scope.postdialog.close();
-        ngDialog.open({template:'\
-                  <div class="ngdialog-message">\
-                  <div><h3>Yoor Blog Posted Successfully</h3></div>',plain: 'true',});
-      });
+
 
 
     /* blog section ends here */
@@ -178,6 +174,26 @@ angular.module('webApp')
         console.log("post are :",$scope.BD)
     });
       });
+
+   /*
+new post section
+
+   */
+
+       $scope.$on("ReplyPost", function (evt, data) {
+        $scope.$applyAsync(function () {
+        $scope.BD.push(data.blog);
+       console.log("newpost :",data.blog);
+    });
+        ngDialog.open({template:'\
+                  <div class="ngdialog-message">\
+                  <div><h3>Your Blog Posted Successfully</h3></div>',plain: 'true',});
+      });
+
+
+
+
+
 
 
     /* Like and dislike */

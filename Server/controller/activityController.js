@@ -74,13 +74,30 @@ exports.postblogs =function(oId,tle,bdy,callback){
 							'body':bdy,
 							'noLikes':0,
 							'noDislikes':0})
-		.then(function(){
-			console.log("From : activityController.postblogs :New post inserted");
-			return callback("Posted Successfully");
+
+		.then(function(response){
+				knex('blogPost')
+					.join('bloggingUsers', 'blogPost.ownerId', '=', 'bloggingUsers.userId')
+					.select('blogPost.postId', 'blogPost.ownerId', 'bloggingUsers.name','bloggingUsers.username', 'blogPost.title','blogPost.body','blogPost.noLikes','blogPost.noDislikes','blogPost.createdAt','blogPost.slno')
+					.where('ownerId',oId)
+					.andWhere('title',tle)
+					.then(function(row){
+						post={};
+						post=row[0];
+						post.comments=[];
+						post.interest=2;
+						return callback({'message':"Posted Successfully",'blog':post});
+					})
+					.catch(function(){
+						console.log("From : activityController.postblogs :DB error bloggingUsers");
+					});
+			console.log("From : activityController.postblogs :New post inserted",response);
+
+			
 		})
 		.catch(function(){
 			console.log("inserted"+tle);
-			return callback("Posted unSuccessfully");
+			return callback({'message':"Posted unSuccessfully"});
 		});		
 
 }
@@ -292,4 +309,19 @@ exports.reportPost=function(uId,pId,rson,callback){
 			.catch(function(){
 				return callback("Report Not submitted")
 			});
+}
+
+realTimeNotification =function(userId){
+
+	knex('followingLink')
+		.join('bloggingUsers', 'followingLink.followingId', '=', 'bloggingUsers.userId')
+		.where('followingLink.followerId',userId)
+		.andWhere('bloggingUsers.stage',1)
+		.then(function(followers){ 
+			followers.forEach(function(follower,indexfollower){
+			activity.getsocketID(function(id){
+
+			})
+
+			}); //end of for each
 }
