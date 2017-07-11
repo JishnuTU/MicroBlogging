@@ -28,6 +28,7 @@ angular.module('mobileApp', ['ionic', 'mobileApp.controllers','mobileApp.mainFac
     .state('app', {
     url: '/app',
     abstract: true,
+    cache: false,
     templateUrl: 'templates/menu.html',
     controller: 'AppCtrl'
   })
@@ -41,7 +42,17 @@ angular.module('mobileApp', ['ionic', 'mobileApp.controllers','mobileApp.mainFac
           controller: 'HomeCtrl'
         }
       }
+    })
+    .state('app.profile', {
+      cache: false,
+      url: '/profile',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/index.html',
+          controller: 'ProfileCtrl'
+        }
+      }
     });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/home');
+  $urlRouterProvider.otherwise('/app/profile');
 });

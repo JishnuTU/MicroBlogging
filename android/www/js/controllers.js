@@ -18,7 +18,34 @@ angular.module('mobileApp.controllers', [])
  
  /*filtering section ends here */
 
-  // Form data for the login modal
+
+  $scope.timeLine =function(){
+    console.log("function called");
+    $rootScope.$broadcast('FilterOff',"filtering");
+  };
+
+
+  $scope.logout =function(){
+         $timeout(function () {
+          $ionicHistory.clearCache();
+          $ionicHistory.clearHistory();
+      },100) 
+    AuthFactory.logout();
+    $scope.showside=false;
+     $state.go('app.profile');   
+
+  }
+
+ 
+$scope.userName=AuthFactory.getUsername();
+
+
+
+})
+.controller('ProfileCtrl', function($rootScope,$state,$ionicHistory,$timeout,$scope, $ionicModal,$ionicPopup, $timeout,AuthFactory,socket) {
+
+
+   // Form data for the login modal
   $scope.loginData = {
       "username":"",
       "password" :""
@@ -55,20 +82,12 @@ angular.module('mobileApp.controllers', [])
   $scope.openRegister = function() {
     $scope.registermodal.show();
   };
-
-  $scope.timeLine =function(){
-    console.log("function called");
-    $rootScope.$broadcast('FilterOff',"filtering");
-  };
-
-  // Open the login modal
+ // Open the login modal
   $scope.openLogin = function() {
     $timeout(function(){
     $scope.loginmodal.show(); 
 },0);
   };
-
-  $scope.openLogin();
 
   $scope.registerdata={
     "userId" : "",
@@ -129,23 +148,13 @@ angular.module('mobileApp.controllers', [])
             });  */
         });
        /* access checking */   
-
-
-  $scope.logout =function(){
-         $timeout(function () {
-          $ionicHistory.clearCache();
-          $ionicHistory.clearHistory();
-      },100) 
-    AuthFactory.logout();  
-    $scope.openLogin();
-  }
-
-  // Perform the login action when the user submits the login form
+ // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
     console.log('Doing login', $scope.loginData);
     AuthFactory.login($scope.loginData,function(){
           if(AuthFactory.isAuthenticated()){
             $scope.closeLogin();
+            $scope.showside=true;
             $state.go('app.home'); 
           }
     });
@@ -157,18 +166,8 @@ angular.module('mobileApp.controllers', [])
   });
 */
 
-$scope.userName=AuthFactory.getUsername();
 
-  $scope.$on("$ionicView.beforeEnter", function(event, data){
-   // handle event
-   if(!AuthFactory.isAuthenticated())
-        $scope.openLogin();
-    else
-      $scope.closeLogin();
-    }); 
-
-
-})
+  })
 
 .controller('HomeCtrl', function($localStorage,$scope,$rootScope,AuthFactory,$ionicModal,SearchFollowFac,PostBlogFac,$ionicPopup,LikeDislikeFac,CommentPostFac,ReportPostFac,PostGathFac,NotificationFac) {
   /* filtering section */

@@ -255,18 +255,16 @@ new post section
               $scope.newComment.createdAt=Date();
 
               $scope.newComment.comment=cmt;
-              if(cmt!=undefined){
               $scope.newComment.username=AuthFactory.getUsername();
               $scope.BD[$scope.indexCmt].comments.push($scope.newComment);
-              CommentPostFac.postComment(pId,$scope.newComment.comment);
-              
-              }
               $scope.newComment={};
+
+            
             });
 
           console.log(pId,$scope.newComment.comment);
 
-         
+         CommentPostFac.postComment(pId,$scope.newComment.comment);
 
     };
     /* comment section ends here */

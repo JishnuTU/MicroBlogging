@@ -3,16 +3,16 @@
     <h1 class="title">Login</h1>
     <div class="buttons">
       <button class="button button-clear button-positive" ng-click="openRegister()">Sign Up</button>
-       <button class="button button-clear button-positive" ng-click="closeLogin()">close</button>
+       <button class="button button-clear button-positive" ng-click="closeLogin()">Close</button>
     </div>
   </ion-header-bar>
-  <ion-content style="padding-top:100px;">
+  <ion-content style="padding-top:100px; background-color:  #FFF8DC">
     <form ng-submit="doLogin()" name="Login">
       <div class="row" >
         <div class="col col-20" >
           <button class="button icon ion-person"></button>
         </div>
-        <div class="col col-70">
+        <div class="col col-80">
         <input type="text" required name="username" placeholder="Username | Email Id" ng-model="loginData.username"  ng-pattern="/^[a-zA-Z0-9@.]+$/"  maxlength="15" >
         <h5 style="color:red"  ng-show="Login.username.$error.required && !Login.username.$pristine">* Required Field </h5>
 
@@ -24,9 +24,9 @@
 
         <div class="row">
          <div class="col col-20" >
-          <button class="button icon ion-android-lock"></button>
+          <button class="button  icon ion-android-lock"></button>
           </div>
-          <div class="col col-70">
+          <div class="col col-80">
           <input type="password" required name="password" placeholder="password" ng-model="loginData.password">
 
           <h5 style="color:red"  ng-show="Login.password.$error.required && !Login.password.$pristine">* Required Field </h5>

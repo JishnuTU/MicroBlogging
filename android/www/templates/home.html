@@ -1,8 +1,7 @@
-<ion-view cache-view="false" view-title="Timeline">
+<ion-view  view-title="Timeline" style="background-color: #FFFACD ">
 
 
-
-<div class="tabs tabs-icon-left tabs-balanced">
+<div class="tabs tabs-icon-left" style="background-color:#87CEFA " >
   <a class="tab-item">
     <i class="icon ion-home"></i>
   </a>
@@ -20,7 +19,7 @@
     on-refresh="doRefresh()">
   </ion-refresher>
 
-<div class="list">
+<div class="list" style="background-color:#87CEFA ">
 <form name="Search">
   <div class="item item-input-inset">
     <label class="item-input-wrapper">
@@ -37,7 +36,7 @@
  
 <!-- Post template -->
 <div ng-repeat="bg in BD | orderBy : '-createdAt' | filter: { ownerId : filterObject} | unique :'postId' ">
-  <div class="card">
+  <div class="card" >
     <div class="item item-divider ">
       <div class="row item-text-wrap">
          {{bg.title  }}
