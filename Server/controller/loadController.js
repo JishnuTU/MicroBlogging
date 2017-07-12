@@ -15,7 +15,7 @@ postgatheringBefore =function(user,onBeforeTime,callback){ // function to get al
 					.andWhere('blogPost.slno', '>',onBeforeTime)
 					.orderBy('blogPost.slno', 'asc')
 					.then(function(posts){
-							console.log('checking the posts',posts.slno);
+							//console.log('checking the posts',posts.slno);
 							allposts=allposts.concat(posts);	 // posts are joined for the user to display
 							//console.log('in stage',allposts);
 						if(followinguser.length-1==indexf) // return when all post are gathered
@@ -125,7 +125,7 @@ exports.postpackingAfter =function(user,timefront,callback){ // function to appe
 			return callback(true,null);
 		if(allPost.length==0)
 			callback(false,{});
-		allPost.sort(function(a, b){ console.log("sorting old"); return b.slno-a.slno; })
+		allPost.sort(function(a, b){return b.slno-a.slno; })
 		.slice(0, 1) // limiting the entry only to 5
 		.forEach(function(post){
 			knex('postComment')
@@ -147,7 +147,7 @@ exports.postpackingAfter =function(user,timefront,callback){ // function to appe
 							}
 							else
 								post.interest=2;
-							console.log('checking the old posts',post.slno);
+							//console.log('checking the old posts',post.slno);
 							callback(false,post);
 /*
 							if(finalPosts.length==allPost.length)
@@ -226,7 +226,7 @@ exports.postpackingWeb =function(user,callback){ // function to append all detai
 							}
 							else
 								post.interest=2;
-							console.log('checking the posts',post.slno);
+							//console.log('checking the posts',post.slno);
 							callback(false,post);
 
 							/*if(finalPosts.length==allPost.length)

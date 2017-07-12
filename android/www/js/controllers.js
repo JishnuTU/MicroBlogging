@@ -313,16 +313,12 @@ $scope.$applyAsync(function () {
           $ionicPopup.alert({
                 title: 'Blog Posted'
               });
+          $scope.postb.title='';
+          $scope.postb.body='';
+          $scope.postmodal.hide();
 
           $scope.$applyAsync(function () {
-        if($localStorage.get('UB',undefined)==undefined){
-           console.log("UB  intialized");
-            $localStorage.store("UB",data.slno);
-        }
-        if($localStorage.get('LB',undefined)==undefined){
-          console.log("LB  intialized");
-            $localStorage.store('LB',data.slno);
-        }
+
         if(data.slno > $localStorage.get('UB','')){
            console.log("UB updated");
             $localStorage.store('UB',data.slno);

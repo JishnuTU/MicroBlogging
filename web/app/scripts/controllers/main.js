@@ -44,10 +44,7 @@ angular.module('webApp')
     {
       alert('Password mismatch');
     }
-    else if( ($scope.register.password.length<6) &&
-        ($scope.register.password.match(/.[!,@,#,$,%,^,&,*,?,_,~]/)) &&
-        ($scope.register.password.match(/[0-9]/)) )
-      alert('Atleast 6 letters for password with special character and numerical');
+
     else
     {
       console.log('register',$scope.register);
@@ -129,7 +126,8 @@ angular.module('webApp')
 
     /* notification starts here */
 
-      $scope.NAlist=[];
+    $scope.NAlist=[];
+
     $scope.$on("RNotificationResult",function(evt,data){
       $scope.$applyAsync(function () {
             $scope.NAlist.push(data);
@@ -141,28 +139,8 @@ angular.module('webApp')
   }])
 
 
-/*
-  .controller('PostCtrl',['$scope','AuthFactory','socket','ngDialog',function($scope,AuthFactory,socket,ngDialog){
 
-      socket.on('replypost',function(message){
-       console.log(AuthFactory.getUsername()+"posted");
-      });
-      
-    $scope.postBlog =function(){
-        socket.emit('postblog',{ ownerId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          title :$scope.postb.title,
-                          body :$scope.postb.body
-        });
-
-    };
-
-  }]) */
-
-
-
-
-  .controller('BlogDCtrl',['$scope','AuthFactory','ngDialog','LikeDislikeFac','CommentPostFac', 'ReportPostFac','PostGathFac','NotificationFac', function($scope,AuthFactory,ngDialog,LikeDislikeFac,CommentPostFac,ReportPostFac,PostGathFac,NotificationFac){
+  .controller('BlogDCtrl',['$scope','AuthFactory','ngDialog','LikeDislikeFac','CommentPostFac', 'ReportPostFac','PostGathFac','NotificationFac','$localStorage', function($scope,AuthFactory,ngDialog,LikeDislikeFac,CommentPostFac,ReportPostFac,PostGathFac,NotificationFac,$localStorage){
    $scope.BD=[];
 
    PostGathFac.refreshPost();
@@ -170,10 +148,39 @@ angular.module('webApp')
 
    $scope.$on("GatheredPost", function (evt, data) {
      $scope.$applyAsync(function () {
-        $scope.BD.push(data);
-        console.log("post are :",$scope.BD)
+          if(Object.keys(data).length===0){
+        console.log("Current Data Finished ");
+      }
+       
+      else {
+          $localStorage.store('UB',data.slno);
+         $scope.BD.push(data);
+         console.log("Gathered post",$localStorage.get('UB',''));
+      //  console.log(data);
+      }
+
     });
       });
+
+   $scope.$applyAsync(function () {
+   
+   $scope.$on("GatheredNewPost", function (evt, data) {
+
+
+
+        if(data.slno > $localStorage.get('UB','')){
+           console.log("UB updated");
+            $localStorage.store('UB',data.slno);
+      }
+
+        $scope.BD.push(data);
+        console.log("Gathered new post",data.postId);
+  
+
+    });
+});
+
+
 
    /*
 new post section
@@ -189,11 +196,6 @@ new post section
                   <div class="ngdialog-message">\
                   <div><h3>Your Blog Posted Successfully</h3></div>',plain: 'true',});
       });
-
-
-       $scope.loadMore =function(){
-          console.log("loaded more");
-       };
 
 
     /* Like and dislike */

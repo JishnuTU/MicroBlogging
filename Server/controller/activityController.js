@@ -68,7 +68,7 @@ exports.unfollowHim =function(fId,fgId){
 }
 
 exports.postblogs =function(oId,tle,bdy,callback){
-	console.log("From : activityController.postblogs :",oId,tle,bdy);
+	//console.log("From : activityController.postblogs :",oId,tle,bdy);
 	knex('blogPost').insert({'postId': uuidv4(),
 							'ownerId':oId,
 							'title':tle,
@@ -92,7 +92,7 @@ exports.postblogs =function(oId,tle,bdy,callback){
 					.catch(function(){
 						console.log("From : activityController.postblogs :DB error bloggingUsers");
 					});
-			console.log("From : activityController.postblogs :New post inserted",response);
+			console.log("From : activityController.postblogs :New post inserted");
 
 			
 		})
@@ -148,7 +148,7 @@ exports.postpacking =function(user,callback){ // function to append all details 
 		if(allPost.length==0)
 			callback(false,{})
 	allPost
-	.sort(function(a, b){console.log("sorting old"); return b.slno - a.slno;})
+	.sort(function(a, b){return b.slno - a.slno;})
 	.slice(0, 5)
 	.forEach(function(post){
 			knex('postComment')
@@ -325,6 +325,7 @@ console.log("i am :",userId);
 			.where('followerId',userId)
 			.then(function(followers){ 
 				followers.forEach(function(follower,indexfollower){
+					console.log('From activityController.realTimeNotification :followers :',follower.followingId);
 					knex('blogPost')
 						.join('bloggingUsers', 'blogPost.ownerId', '=', 'bloggingUsers.userId')
 						.select('bloggingUsers.name','blogPost.title','blogPost.createdAt','blogPost.slno')

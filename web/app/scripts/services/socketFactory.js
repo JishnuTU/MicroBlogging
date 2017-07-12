@@ -76,13 +76,17 @@ angular.module('webApp')
 
 
 		PG.refreshPost =function(){
-			socket.emit('gatherposts',{userId: AuthFactory.getUserId(),
+			socket.emit('gatherwebposts',{userId: AuthFactory.getUserId(),
            					token: AuthFactory.getToken() });
 			}
 			
-	 		socket.on('gatheredpost',function(data){
+	 		socket.on('gatheredwebpost',function(data){
 	 		$rootScope.$broadcast("GatheredPost",data);
      		});
+
+     		socket.on('gatheredNewpost',function(data){
+	 		$rootScope.$broadcast("GatheredNewPost",data);
+	 	});
 
      	return PG;
 
@@ -140,7 +144,7 @@ angular.module('webApp')
 		return RP;
 	}])
 
-	.factory('NotificationFac',['$rootScope','socket','AuthFactory',function($rootScope,socket,AuthFactory){
+	.factory('NotificationFac',['$rootScope','socket','AuthFactory','$localStorage',function($rootScope,socket,AuthFactory,$localStorage){
 
 		var NA={};
 		NA.gatherNotification=function(){
@@ -155,6 +159,13 @@ angular.module('webApp')
 				$rootScope.$broadcast("RNotificationResult",data);
 			});
 
+			socket.on('IdentifyUrself',function(data){
+						socket.emit('IamClient',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          update:true,
+                          ontime:$localStorage.get('UB',0)
+                           });
+			});
 
 		return NA;
 	}])

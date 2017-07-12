@@ -28,7 +28,7 @@ actmsg ={
 							actmsg.action="posted a blog :"
 							actmsg.title=post.title;
 							actmsg.onDate=post.createdAt;
-							console.log('stage 2',actmsg);  // logical error tracking 
+							//console.log('stage 2',actmsg);  // logical error tracking 
 							activityCollection1.push(actmsg);
 							if(posts.length-1==indexpost)
 								callback(activityCollection1);
@@ -52,7 +52,7 @@ actmsg ={
 								actmsg.title=comment.title;
 								actmsg.onDate=comment.createdAt;
 								activityCollection2.push(actmsg);
-								console.log('stage 3',actmsg);  // logical error tracking 
+								//console.log('stage 3',actmsg);  // logical error tracking 
 								if(comments.length-1==indexcomment)
 									callback(activityCollection2);
 							});
@@ -78,7 +78,7 @@ actmsg ={
 									actmsg.action="disliked your blog :";
 								actmsg.title=interest.title;
 								actmsg.onDate=interest.updatedAt;
-								console.log('stage 4',actmsg);  // logical error tracking 
+								//console.log('stage 4',actmsg);  // logical error tracking 
 								activityCollection3.push(actmsg);
 								if(interests.length-1==indexinterest)
 									callback(activityCollection3);
@@ -94,7 +94,7 @@ actmsg ={
 						flagfollower=true;
 			console.log(flagfollower,flagpost,flagpost,flagcomment);
 			if(flagfollower && flagpost && flaginterest && flagcomment){
-				console.log('stage 5',activityCollection);  // logical error tracking 
+				//console.log('stage 5',activityCollection);  // logical error tracking 
 				return callback(activityCollection);
 			}
 			}); // end of for each follower
@@ -144,7 +144,7 @@ actmsg ={
 									actmsg.action="posted a blog :"
 									actmsg.title=post.title;
 									actmsg.onDate=post.createdAt;
-									console.log('stage 2',actmsg);  // logical error tracking 
+								//	console.log('stage 2',actmsg);  // logical error tracking 
 									callback(actmsg);
 									/*if(posts.length-1==indexpost)
 										callback(activityCollection1);*/
@@ -178,7 +178,7 @@ actmsg ={
 													actmsg.action="commented on your blog :";
 													actmsg.title=comment.title;
 													actmsg.onDate=comment.createdAt;
-													console.log('From notification Controller.getOnlineNotify :',actmsg);
+												//	console.log('From notification Controller.getOnlineNotify :',actmsg);
 													callback(actmsg);
 										//console.log('stage 3',actmsg);  // logical error tracking 
 										/*if(comments.length-1==indexcomment)
@@ -214,8 +214,8 @@ actmsg ={
 											actmsg.action="disliked your blog :";
 										actmsg.title=interest.title;
 										actmsg.onDate=interest.updatedAt;
-										console.log('stage 4',indexinterest);
-										console.log('stage 4',actmsg);  // logical error tracking 
+									//	console.log('stage 4',indexinterest);
+									//	console.log('stage 4',actmsg);  // logical error tracking 
 										callback(actmsg);
 									/*	if(interests.length-1==indexinterest)
 											callback(activityCollection3);*/

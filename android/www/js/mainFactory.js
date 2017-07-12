@@ -335,7 +335,7 @@ angular.module('mobileApp.mainFactory',[])
 		return RP;
 	}])
 
-	.factory('NotificationFac',['$rootScope','socket','AuthFactory',function($rootScope,socket,AuthFactory){
+	.factory('NotificationFac',['$rootScope','socket','AuthFactory','$localStorage',function($rootScope,socket,AuthFactory,$localStorage){
 
 		var NA={};
 		NA.gatherNotification=function(){
@@ -349,6 +349,15 @@ angular.module('mobileApp.mainFactory',[])
 				console.log("notifcation: ",data);
 				$rootScope.$broadcast("RNotificationResult",data);
 			});
+
+
+			socket.on('IdentifyUrself',function(data){
+						socket.emit('IamClient',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          update:false,
+                          ontime:$localStorage.get('UB',0)
+                           });
+			});			
 
 
 		return NA;

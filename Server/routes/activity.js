@@ -70,11 +70,16 @@ var loadController =require('../controller/loadController');
     socket.on('IamClient',function(data){
       Verify.verifySocketUser(data.token,function(procced){
         if(procced){
+                console.log("Recieved event IamClient",data.ontime,data.update);
                 activityController.realTimeNotification(data.userId,data.ontime,data.update,function(update,activity,post){
-                    if(update)
-                      return io.to(socket.id).emit("gatheredNewpost",post);
-                    else
-                    return io.to(socket.id).emit("ReplyNotification",notify);
+                    if(update){
+                       io.to(socket.id).emit("gatheredNewpost",post);
+                        console.log("emited new post",post);
+                    }
+                    else{
+                    console.log("emited new post",activity);
+                    return io.to(socket.id).emit("ReplyNotification",activity);
+                  }
 
                 });
               }
@@ -105,6 +110,26 @@ var loadController =require('../controller/loadController');
   			}
   		});
   	});
+
+
+// to collect the posts
+    socket.on('gatherwebposts',function(data){
+      Verify.verifySocketUser(data.token,function(procced){
+        if(procced){
+                loadController.postpackingWeb(data.userId,function(error,allPost){
+                    if(error)
+                      return io.to(socket.id).emit("gatheredwebpost","Server Error");
+                    else
+                      return io.to(socket.id).emit("gatheredwebpost",allPost);
+                  });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
+
 
     socket.on('gathernewposts',function(data){
       Verify.verifySocketUser(data.token,function(procced){

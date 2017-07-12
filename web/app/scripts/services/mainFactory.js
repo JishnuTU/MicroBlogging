@@ -197,24 +197,7 @@ angular.module('webApp')
 		  };
 		}])
 
-	.factory('myService',['$rootScope',function($rootScope){
-	var serve;
-	var service = {
-		setServe:setServe,
-		getServe:getServe
-	};
- 
-	return service;
 
-	function setServe(data){
-		serve=data;
-	}
-	
-	function getServe(){
-		return serve;
-	}
-
-}])
 
 	.factory('ActivityFac',['$rootScope','socket','AuthFactory',function($rootScope,socket,AuthFactory){
 
