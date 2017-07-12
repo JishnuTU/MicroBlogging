@@ -9,7 +9,7 @@
  * Main module of the application.
  */
 
-angular.module('webApp', ['ui.router','ngResource','ngDialog','ngDropover'])
+angular.module('webApp', ['ui.router','ngResource','ngDialog','ngDropover','infinite-scroll'])
 .config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
             // route for the home page
@@ -76,4 +76,6 @@ angular.module('webApp', ['ui.router','ngResource','ngDialog','ngDropover'])
     
         $urlRouterProvider.otherwise('/');
     })
+
+
 ;

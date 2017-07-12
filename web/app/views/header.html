@@ -30,7 +30,7 @@
               <div ng-dropover-contents class="arrowed">
                     <ul class="list-group" ng-repeat="RA in NAlist | orderBy : '-onDate'">
     <li class="list-group-item">
-    <p style="color:#3a87ad">{{RA.byUser}} <i class="fa fa-calendar"></i> {{RA.onDate | date:'dd/MM/yyyy @ h:mma' }} |  
+    <p style="color:#3a87ad">{{RA.byUser}} <i class="fa fa-calendar"></i> {{RA.onDate | date:'medium' }} |  
       {{RA.action}} {{RA.title}} </p>
       
     </li>

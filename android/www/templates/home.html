@@ -2,10 +2,10 @@
 
 
 <div class="tabs tabs-icon-left" style="background-color:#87CEFA " >
-  <a class="tab-item">
+  <a class="tab-item active">
     <i class="icon ion-home"></i>
   </a>
-  <a class="tab-item">
+  <a class="tab-item" ng-click="openNotify()">
     <i class="icon ion-android-notifications-none"></i>{{notificationCount}}
   </a>
   <a class="tab-item" ng-click="postmodal.show();">
@@ -35,7 +35,7 @@
 
  
 <!-- Post template -->
-<div ng-repeat="bg in BD | orderBy : '-createdAt' | filter: { ownerId : filterObject} | unique :'postId' ">
+<div ng-repeat="bg in BD | orderBy : '-createdAt' | filter: { ownerId : filterObject} | unique :'postId' | limitTo : numberOfItemsToDisplay ">
   <div class="card" >
     <div class="item item-divider ">
       <div class="row item-text-wrap">
@@ -97,9 +97,8 @@
 <!--end Post template -->
 
 <ion-infinite-scroll
-  ng-if="moreDataCanBeLoaded"
-  icon="ion-loading-c"
-  on-infinite="loadMoreData()">
+  on-infinite="loadMoreData()"
+  distance=5%>
 </ion-infinite-scroll>
 
 

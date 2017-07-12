@@ -1,6 +1,6 @@
 angular.module('mobileApp.controllers', []) 
 
-.controller('AppCtrl', function($rootScope,$state,$ionicHistory,$timeout,$scope, $ionicModal,$ionicPopup, $timeout,AuthFactory,socket) {
+.controller('AppCtrl', function($rootScope,$state,$ionicHistory,$timeout,$scope, $ionicModal,$ionicPopup, $timeout,AuthFactory,$localStorage) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -29,21 +29,18 @@ angular.module('mobileApp.controllers', [])
          $timeout(function () {
           $ionicHistory.clearCache();
           $ionicHistory.clearHistory();
-      },100) 
+      },0) 
+    $localStorage.remove('UB');
+    $localStorage.remove('LB');
     AuthFactory.logout();
-    $scope.showside=false;
      $state.go('app.profile');   
-
   }
-
- 
-$scope.userName=AuthFactory.getUsername();
-
-
+  $scope.$on("Username",function(evt,data){
+   $scope.userName=data;
+  });
 
 })
-.controller('ProfileCtrl', function($rootScope,$state,$ionicHistory,$timeout,$scope, $ionicModal,$ionicPopup, $timeout,AuthFactory,socket) {
-
+.controller('ProfileCtrl', function($rootScope,$state,$ionicHistory,$timeout,$scope, $ionicModal,$ionicPopup, $timeout,AuthFactory, PostGathFac,NotificationFac) {
 
    // Form data for the login modal
   $scope.loginData = {
@@ -68,7 +65,6 @@ $scope.userName=AuthFactory.getUsername();
   $scope.closeRegister = function() {
     $scope.registermodal.hide();
   };
-
 
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
@@ -123,38 +119,22 @@ $scope.userName=AuthFactory.getUsername();
       template: 'Password Mismatch'
         });
     }
-    else if( ($scope.registerdata.password.length<6) &&
-        ($scope.registerdata.password.match(/.[!,@,#,$,%,^,&,*,?,_,~]/)) &&
-        ($scope.registerdata.password.match(/[0-9]/)) )
-            $ionicPopup.alert({
-      title: 'Alert',
-      template: 'Wrong Pasword'
-        });
     else
     {
-      console.log('register',$scope.registerdata);
+      console.log('Registering with data: ',$scope.registerdata);
       AuthFactory.register($scope.registerdata);
     }
 
   }
-      /* access checking */
-        socket.on('AuthorizationFailed',function(message){
-            $scope.openLogin();
-         /* $ionicPopup.alert({
-                title: 'You are not Logged In'
-            })
-           .then(function(res) {
-                $scope.openLogin();
-            });  */
-        });
-       /* access checking */   
+  
  // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
     console.log('Doing login', $scope.loginData);
     AuthFactory.login($scope.loginData,function(){
           if(AuthFactory.isAuthenticated()){
             $scope.closeLogin();
-            $scope.showside=true;
+             $rootScope.$broadcast('Username',AuthFactory.getUsername());
+              NotificationFac.gatherNotification();
             $state.go('app.home'); 
           }
     });
@@ -181,64 +161,73 @@ $scope.userName=AuthFactory.getUsername();
     });
     $scope.$on("FilterOff",function(evt,data){
       $scope.filterObject='';
-      $scope.BD=[];
-      $scope.NAlist=[];
-        $localStorage.remove('UB');
-        $localStorage.remove('LB');
-      PostGathFac.refreshPost();
-      NotificationFac.gatherNotification();
+      //PostGathFac.refreshPost();
+      //NotificationFac.gatherNotification();
 
     });
 
   /*filtering section ends here */
+$scope.$on("$ionicView.beforeEnter", function(event, data){
+   // handle event
+console.log("State Params: ", data.stateParams);
+      $scope.NAlist=[];
+      $scope.BD=[];
+      console.log("Before enter the view");
+      $scope.numberOfItemsToDisplay=2;
+  });
+$scope.$on("$ionicView.beforeLeave", function(event, data){
+   // handle event
+
+console.log("Before leave the view");
+      $scope.NAlist=[];
+      $scope.BD=[];
+      $localStorage.remove('UB');
+      $localStorage.remove('LB');
+  });
 
 
   /* Display post Section */
   // $scope.BD=[];
-   $scope.moreDataCanBeLoaded=true;
-  $scope.loadMore = function() {
-      $scope.NAlist=[];
-      $scope.BD=[];
-      if(AuthFactory.isAuthenticated()){
-        PostGathFac.refreshPost();
-       NotificationFac.gatherNotification();
-      }
+  $scope.loadMoreData = function() {
+
+  console.log("number of items : ",$scope.numberOfItemsToDisplay);
+  if($localStorage.get('LB',undefined)==undefined)
+   PostGathFac.refreshPost();
+
+  if($localStorage.get('LB',undefined)!=undefined)
+      PostGathFac.oldPost($localStorage.get('LB',''));
+   
+   if ($scope.BD.length > $scope.numberOfItemsToDisplay){
+        $scope.numberOfItemsToDisplay +=1;
+  }
+   $scope.$broadcast('scroll.infiniteScrollComplete');
 
   };
-
+/*
   $scope.$on('$stateChangeSuccess', function() {
     $scope.loadMore();
-  });
+  }); */
+$scope.doRefresh = function() {
+  console.log("the current upper bound is",$localStorage.get('UB',''));
+  PostGathFac.newPost($localStorage.get('UB',''));
+};
+
+
 
 $scope.$applyAsync(function () {
 
    $scope.$on("GatheredPost", function (evt, data) {
 
     if(Object.keys(data).length===0){
-        $scope.moreDataCanBeLoaded=false;
-        console.log("Data Finished ",$scope.moreDataCanBeLoaded);
+        console.log("Current Data Finished ");
       }
        
       else {
-        if($localStorage.get('UB',undefined)==undefined){
-           console.log("UB  intialized");
-            $localStorage.store("UB",data.slno);
-        }
 
-        if($localStorage.get('LB',undefined)==undefined){
-          console.log("LB  intialized");
-            $localStorage.store('LB',data.slno);
-        }
-        if(data.slno > $localStorage.get('UB','')){
-           console.log("UB updated");
             $localStorage.store('UB',data.slno);
-        }
-        if(data.slno < $localStorage.get('LB','')){
-          console.log("LB updated");
             $localStorage.store('LB',data.slno); 
-        }
          $scope.BD.push(data);
-
+         console.log("Gathered post",$localStorage.get('LB',''));
       //  console.log(data);
       }
    });
@@ -246,82 +235,56 @@ $scope.$applyAsync(function () {
 });
 
 
-
-$scope.doRefresh = function() {
-  console.log("the current upper bound is",$localStorage.get('UB',''));
-  PostGathFac.newPost($localStorage.get('UB',''));
-};
-
 $scope.$applyAsync(function () {
    $scope.$on("GatheredNewPost", function (evt, data) {
 
+    if(Object.keys(data).length===0){
+        console.log("Data Finished ");
+      }
+      else{
 
-        if($localStorage.get('UB',undefined)==undefined){
-           console.log("UB  intialized");
-            $localStorage.store("UB",data.slno);
-}
-        if($localStorage.get('LB',undefined)==undefined){
-          console.log("LB  intialized");
-            $localStorage.store('LB',data.slno);
-}
         if(data.slno > $localStorage.get('UB','')){
            console.log("UB updated");
             $localStorage.store('UB',data.slno);
-}
+      }
         if(data.slno < $localStorage.get('LB','')){
           console.log("LB updated");
             $localStorage.store('LB',data.slno); 
-          }
+      }
 
         $scope.BD.push(data);
-        console.log(data);
-        $scope.$broadcast('scroll.refreshComplete');
+        console.log("Gathered new post",data.postId);
+  }
+
     });
 });
 
-/*
+
 $scope.$applyAsync(function () {
    $scope.$on("GatheredOldPost", function (evt, data) {
+            if(Object.keys(data).length===0){
+        console.log("Old Data Finished ");
+      }
+      else{
 
-
-        if($localStorage.get('UB',undefined)==undefined){
-           console.log("UB  intialized");
-            $localStorage.store("UB",data.slno);
-}
-        if($localStorage.get('LB',undefined)==undefined){
-          console.log("LB  intialized");
-            $localStorage.store('LB',data.slno);
-}
         if(data.slno > $localStorage.get('UB','')){
            console.log("UB updated");
             $localStorage.store('UB',data.slno);
-}
+        }
         if(data.slno < $localStorage.get('LB','')){
           console.log("LB updated");
             $localStorage.store('LB',data.slno); 
           }
-
         $scope.BD.push(data);
-        console.log(data);
-        $scope.$broadcast('scroll.refreshComplete');
+        console.log("Gathered old post LB is ",$localStorage.get('LB',''));
+    }
     });
 });
 
 
-*/
 
   /* Display post Section  Ends*/
-    /* notification starts here */
 
-      
-    $scope.$on("RNotificationResult",function(evt,data){
-      $scope.$applyAsync(function () {
-            $scope.NAlist.push(data);
-            console.log($scope.NAlist);
-            $scope.notificationCount=$scope.NAlist.length;
-        });
-    });
-    /*notification ends here */
 
 
   /* Post section */
@@ -499,9 +462,6 @@ $scope.$applyAsync(function () {
   /* report section ends here */
 })
 
-
-.controller('PlaylistCtrl', function($scope, $stateParams) {
-})
 
 .filter('unique', function() {
    // we will return a function which will take in a collection

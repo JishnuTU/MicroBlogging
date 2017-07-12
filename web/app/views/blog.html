@@ -2,6 +2,8 @@
 <div class="container" ng-controller="BlogDCtrl" style="padding-top: 50px">
   
 <!--blog template -->
+
+
   <div class="modal-content" ng-repeat="bg in BD | orderBy : '-createdAt' " >
   <br>
   <br>
@@ -12,7 +14,9 @@
                 <span class="testimonials-name"> <div class="comment-user"><i class="fa fa-user fa-3x"></i> {{bg.name}}</div></span>
                 <p></p>
                 <h3 align=center  style="color: blue">{{bg.title}}</h3>
-                <blockquote><p> {{bg.body}}</p></blockquote>
+                <blockquote><p ng-init="lsize =90; showmore=true;"> {{bg.body | limitTo:lsize}}  </p><a ng-click="lsize=''; showmore=false;" ng-show="showmore">...show more</a>
+                <a ng-click=" lsize=90; showmore=true;" ng-show="!showmore">...show less</a> 
+                </blockquote>
 
             </div>
           </div>
@@ -65,7 +69,7 @@
 
 
             
-          <form class="form-inline" ng-submit="submitComment(comment,bg.postId,bg)" >
+          <form class="form-inline" ng-submit="submitComment(comment,bg.postId,bg); comment ='';" >
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-comment"></i></span>
                 <input type="text" class="form-control" required="true" ng-model="comment" placeholder="Your comments"></div>
@@ -75,12 +79,12 @@
         </div>
       </div>
       
-  <div class="row">
+  <div class="row" ng-show="bg.comments.length">
   <div class="col-md-4">
   <i class="fa fa-comments fa-5x" style="padding-left: 200px; padding-top: 40px" aria-hidden="true"></i>
   </div>
     <div class="col-md-6"  style=" max-height: 200px; overflow-y:scroll;" >
-        <section class="comment-list" ng-init="(_Array = []).length = bg.comments.length;">
+        <section class="comment-list">
           <!-- First Comment -->
           <article class="row" ng-repeat="i in bg.comments | orderBy : '-createdAt'">
             <div class="col-md-2 col-sm-2 hidden-xs">

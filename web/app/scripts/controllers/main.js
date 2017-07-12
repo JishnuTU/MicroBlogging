@@ -191,9 +191,9 @@ new post section
       });
 
 
-
-
-
+       $scope.loadMore =function(){
+          console.log("loaded more");
+       };
 
 
     /* Like and dislike */
@@ -286,56 +286,6 @@ new post section
   
 
   }])
-
-  /*.controller('CommentCtrl',['$state','$scope','socket','AuthFactory','ngDialog',function($state,$scope,socket,AuthFactory,ngDialog){
-    
-    $scope.newComment={ 'comment':"",
-                        'username':AuthFactory.getUsername(),
-                        'createdAt':""};
-    $scope.showcomment=false;
-
-    $scope.submitComment = function(pId,obj) {
-      console.log("i am called");
-
-        socket.emit('NewComment',{userId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          postId:pId,
-                          comment:$scope.newComment.comment });
-        console.log($scope.BD.indexOf(obj));
-        $scope.newComment.createdAt=Date.now();
-
-        console.log($scope.newComment);
-        $scope.ind =$scope.BD.indexOf(obj);
-        console.log($scope.BD[$scope.ind]);
-
-        $scope.BD[$scope.ind].comments.push($scope.newComment);
-
-
-        socket.on('ReplyComment',function(msg){
-          
-          //$state.go($state.current, {}, {reload: true});
-        });
-
-    };
-  }]) */
-
-  /*.controller('ReportCtrl',['$scope','socket','AuthFactory','myService',function($scope,socket,AuthFactory,myService){
-    $scope.rdata=myService.getServe();
-
-    $scope.reportPost=function(reason){
-      $scope.rdata.dg.close();
-      console.log(reason+$scope.rdata.Id);
-      socket.emit('reportPost',{userId:AuthFactory.getUserId(),
-                          token:AuthFactory.getToken(),
-                          postId:$scope.rdata.Id,
-                          reason:reason });
-
-      socket.on('ReplyReport',function(msg){
-          
-        });
-    }
-
-  }]) */
 
 
   .controller('ActivityCtrl',['$scope','ActivityFac',function($scope,ActivityFac){

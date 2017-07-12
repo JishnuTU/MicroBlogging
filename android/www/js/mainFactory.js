@@ -3,6 +3,18 @@
 angular.module('mobileApp.mainFactory',[])
 	.constant("baseURL","https://localhost:3443/")
 
+	.factory('socket', ['$rootScope', function($rootScope) {
+		  var socket = io.connect('http://localhost:3000/');
+
+		  return {
+		    on: function(eventName, callback){
+		      socket.on(eventName, callback);
+		    },
+		    emit: function(eventName, data) {
+		      socket.emit(eventName, data);
+		    }
+		  };
+	}])
 
 	.factory('$localStorage', ['$window', function ($window) {
     return {
@@ -102,6 +114,18 @@ angular.module('mobileApp.mainFactory',[])
 
 	    }; 
 	    
+	    /* access checking */
+    	socket.on('AuthorizationFailed',function(message){
+          	$ionicPopup.alert({
+                title: 'You are not Logged In'
+            	})
+           	.then(function(res) {
+                $state.go('app.profile'); 
+            });  
+        });
+  /* access checking */ 
+
+
 	    authFac.logout = function() {
 	        $http({
 	        		method: 'POST',
@@ -162,37 +186,6 @@ angular.module('mobileApp.mainFactory',[])
 	}])
 
 	
-	.factory('socket', ['$rootScope', function($rootScope) {
-		  var socket = io.connect('http://localhost:3000/');
-
-		  return {
-		    on: function(eventName, callback){
-		      socket.on(eventName, callback);
-		    },
-		    emit: function(eventName, data) {
-		      socket.emit(eventName, data);
-		    }
-		  };
-		}])
-
-	.factory('myService',['$rootScope',function($rootScope){
-	var serve;
-	var service = {
-		setServe:setServe,
-		getServe:getServe
-	};
- 
-	return service;
-
-	function setServe(data){
-		serve=data;
-	}
-	
-	function getServe(){
-		return serve;
-	}
-
-}])
 
 	.factory('SearchFollowFac',['socket','AuthFactory','$rootScope',function(socket,AuthFactory,$rootScope){
 
@@ -240,13 +233,7 @@ angular.module('mobileApp.mainFactory',[])
                           body :body
         		});
 
-        		
-
 			}
-
-
-
-
 
 			socket.on('replypost',function(message){
        			console.log(AuthFactory.getUsername()+"posted");
@@ -254,10 +241,6 @@ angular.module('mobileApp.mainFactory',[])
        			$rootScope.$broadcast("ReplyPost",message);
 
       		});
-
-
-
-
 	    	
 		return PB;
 
@@ -302,7 +285,6 @@ angular.module('mobileApp.mainFactory',[])
 	}])
 
 	.factory('LikeDislikeFac',['socket','AuthFactory',function(socket,AuthFactory){
-
 		var LD={};
 
 		LD.emitInterest =function(event,id,intrst){

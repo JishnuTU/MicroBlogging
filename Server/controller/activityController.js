@@ -119,6 +119,7 @@ postgathering =function(user,callback){ // function to get all required post for
 					.select('blogPost.postId', 'blogPost.ownerId', 'bloggingUsers.name','bloggingUsers.username', 'blogPost.title','blogPost.body','blogPost.noLikes','blogPost.noDislikes','blogPost.createdAt','blogPost.slno')
 					.where('ownerId',fuser.followingId)
 					.orderBy('blogPost.slno', 'desc')
+					.limit(1)
 					.then(function(posts){
 							//console.log('checking the posts',posts);
 							allposts=allposts.concat(posts);	 // posts are joined for the user to display
@@ -147,8 +148,8 @@ exports.postpacking =function(user,callback){ // function to append all details 
 		if(allPost.length==0)
 			callback(false,{})
 	allPost
-	.sort(function(a, b){return b.slno-a.slno})
-	//.slice(0, 2)
+	.sort(function(a, b){console.log("sorting old"); return b.slno - a.slno;})
+	.slice(0, 5)
 	.forEach(function(post){
 			knex('postComment')
 				.join('bloggingUsers', 'postComment.cmtById', '=', 'bloggingUsers.userId')
@@ -168,7 +169,7 @@ exports.postpacking =function(user,callback){ // function to append all details 
 							}
 							else
 								post.interest=2;
-
+							console.log('checking the posts',post.slno);
 							callback(false,post);
 
 							/*if(finalPosts.length==allPost.length)
