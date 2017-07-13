@@ -11,20 +11,26 @@
 
         
         <div class="col-md-12 col-xs-12 login_control">
-                
+               <form ng-submit="loginEntry()" name="Login">  
                 <div class="control">
                     <div class="label"></div>
-                    <input type="text" class="form-control" ng-model="login.username"  placeholder="Username or Email"/>
+                    <input type="text" class="form-control" ng-model="login.username" required  name="username" maxlength="25" placeholder="Username or Email" ng-pattern="/^[a-zA-Z0-9@.]+$/">
+
+                     <h5 style="color:red"  ng-show="Login.username.$error.required && !Login.username.$pristine">* Required Field </h5>
+
+                      <h5 style="color:red" ng-show="!Login.username.$error.required && Login.username.$error.pattern && Login.username.$invalid && !Login.username.$pristine">** Invalid Format (no special characters)</h5>
+
                 </div>
                 
                 <div class="control">
                      <div class="label"></div>
-                    <input type="password" ng-model="login.password" class="form-control" placeholder="Password"/>
+                    <input type="password" ng-model="login.password" required name="password" class="form-control" maxlength="25" placeholder="Password"/>
+                     <h5 style="color:red"  ng-show="Login.password.$error.required && !Login.password.$pristine">* Required Field </h5>
                 </div>
                 <div align="center">
-                     <button  ng-click="loginEntry()"  class="btn btn-orange">LOGIN</button>
+                      <button ng-disabled="Login.$invalid" class="btn btn-orange" type="submit">Log in</button>
                 </div>
-                
+                    </form>
         </div>
         
         

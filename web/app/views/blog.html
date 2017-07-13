@@ -1,5 +1,5 @@
 <link href="./styles/blog.css" rel="stylesheet">
-<div class="container" ng-controller="BlogDCtrl" style="padding-top: 50px">
+<div class="container" ng-controller="BlogDCtrl" style="padding-top: 50px;">
   
 <!--blog template -->
 
@@ -7,7 +7,7 @@
   <div class="modal-content" ng-repeat="bg in BD | orderBy : '-createdAt' " >
   <br>
   <br>
-    <div class="row">
+    <div class="row" >
       <div class="col-md-8 col-md-offset-1">
         <div class="testimonials">
             <div class="pull-left">
@@ -72,7 +72,7 @@
           <form class="form-inline" ng-submit="submitComment(comment,bg.postId,bg); comment ='';" >
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-comment"></i></span>
-                <input type="text" class="form-control" required="true" ng-model="comment" placeholder="Your comments"></div>
+                <input type="text" maxlength="50" class="form-control" required="true" ng-model="comment" placeholder="Your comments"></div>
                 <button type="submit"  name="sub" class="btn btn-info"><i class="fa fa-check"></i></button>
           </form>
         </p>

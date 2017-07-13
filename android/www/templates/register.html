@@ -25,7 +25,7 @@
   </label>
   <label class="item item-input item-stacked-label">
     <span class="input-label" style="font-size:15px;color:green;" >Name</span>
-    <input type="text" placeholder="John" name="name" ng-model="registerdata.name" required="true"  ng-pattern="/^[a-zA-Z]+$/"  maxlength="15" >
+    <input type="text" placeholder="John" name="name" ng-model="registerdata.name" required="true"  ng-pattern="/^[a-zA-Z ]+$/"  maxlength="15" >
       <h5 style="color:red"  ng-show="Register.name.$error.required && !Register.name.$pristine">* Required Field </h5>
 
          <h5 style="color:red" ng-show="!Register.name.$error.required && Register.name.$error.pattern && Register.name.$invalid && !Register.name.$pristine">** Invalid Format (no special characters & digits)</h5>

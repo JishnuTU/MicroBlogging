@@ -23,13 +23,15 @@ angular.module('mobileApp.controllers', [])
     console.log("function called");
     $rootScope.$broadcast('FilterOff',"filtering");
   };
-
+  
+  $scope.hidesidemenu=false;
 
   $scope.logout =function(){
          $timeout(function () {
           $ionicHistory.clearCache();
           $ionicHistory.clearHistory();
       },0) 
+     $scope.hidesidemenu=false;
     $localStorage.remove('UB');
     $localStorage.remove('LB');
     AuthFactory.logout();
@@ -37,6 +39,7 @@ angular.module('mobileApp.controllers', [])
   }
   $scope.$on("Username",function(evt,data){
    $scope.userName=data;
+   $scope.hidesidemenu=true;
   });
 
 })
@@ -130,8 +133,8 @@ angular.module('mobileApp.controllers', [])
  // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
     console.log('Doing login', $scope.loginData);
-    AuthFactory.login($scope.loginData,function(){
-          if(AuthFactory.isAuthenticated()){
+    AuthFactory.login($scope.loginData,function(procced){
+          if(procced){
             $scope.closeLogin();
              $rootScope.$broadcast('Username',AuthFactory.getUsername());
               NotificationFac.gatherNotification();
@@ -184,7 +187,28 @@ console.log("Before leave the view");
       $localStorage.remove('UB');
       $localStorage.remove('LB');
   });
+    /*notification starts here */
 
+  $ionicModal.fromTemplateUrl('templates/notify.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.notifymodal = modal;
+  });
+
+
+  $scope.openNotify =function(){
+    $scope.notifymodal.show();
+
+  }
+
+
+    $scope.$on("RNotificationResult",function(evt,data){
+      $scope.$applyAsync(function () {
+            $scope.NAlist.push(data);
+            $scope.notificationCount=$scope.NAlist.length;
+        });
+    });
+    /*notification ends here */
 
   /* Display post Section */
   // $scope.BD=[];
@@ -319,14 +343,6 @@ $scope.$applyAsync(function () {
 
           $scope.$applyAsync(function () {
 
-        if(data.slno > $localStorage.get('UB','')){
-           console.log("UB updated");
-            $localStorage.store('UB',data.slno);
-        }
-        if(data.slno < $localStorage.get('LB','')){
-          console.log("LB updated");
-            $localStorage.store('LB',data.slno); 
-        }
         $scope.BD.push(data.blog);
         console.log(data.blog);
       });
@@ -377,19 +393,25 @@ $scope.$applyAsync(function () {
 
 
 /* Like and dislike */
- $scope.changestate=function(id,state,from){
+ $scope.changestate=function(obj,id,state,from){
+ $scope.indexObj=$scope.BD.indexOf(obj);
+      
       if(from==1)
           {
             if(state==2){
               LikeDislikeFac.emitInterest('interestInsert',id,1);
+               $scope.BD[$scope.indexObj].noLikes=$scope.BD[$scope.indexObj].noLikes+1;
                 return 1; // null->liked  :insert 
             }
             if(state==0){
                LikeDislikeFac.emitInterest('interestUpdate',id,1);
+                $scope.BD[$scope.indexObj].noLikes=$scope.BD[$scope.indexObj].noLikes+1;
+                $scope.BD[$scope.indexObj].noDislikes=$scope.BD[$scope.indexObj].noDislikes-1;
                 return 1; // disliked ->liked update
             }
             if(state==1){ 
                LikeDislikeFac.emitInterest('interestDelete',id,1);
+               $scope.BD[$scope.indexObj].noLikes=$scope.BD[$scope.indexObj].noLikes-1;
                 return 2
             } //liked -> null delete
           }
@@ -397,14 +419,18 @@ $scope.$applyAsync(function () {
           {
             if(state==2){
                LikeDislikeFac.emitInterest('interestInsert',id,0);
+               $scope.BD[$scope.indexObj].noDislikes=$scope.BD[$scope.indexObj].noDislikes+1;
                 return 0; // null -> dislike insert
             }
             if(state==1){
                LikeDislikeFac.emitInterest('interestUpdate',id,0);
+               $scope.BD[$scope.indexObj].noLikes=$scope.BD[$scope.indexObj].noLikes-1;
+                $scope.BD[$scope.indexObj].noDislikes=$scope.BD[$scope.indexObj].noDislikes+1;
                 return 0; //like -> dislike update
             }
             if(state==0){
                LikeDislikeFac.emitInterest('interestDelete',id,0);
+               $scope.BD[$scope.indexObj].noDislikes=$scope.BD[$scope.indexObj].noDislikes-1;
                 return 2; //dislike ->null delete
             }
           }

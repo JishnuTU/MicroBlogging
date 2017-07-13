@@ -76,7 +76,8 @@ angular.module('webApp')
                $scope.SR =  data;
                   console.log($scope.SR);
               if(Object.keys($scope.SR).length==0)
-                  $scope.SR=false;
+                  $scope.SR=0;
+                console.log($scope.SR);
                   var dialog = ngDialog.open({
                   template: '/views/search.html',
                   scope: $scope,
@@ -125,8 +126,6 @@ angular.module('webApp')
     /* blog section ends here */
 
     /* notification starts here */
-
-    $scope.NAlist=[];
 
     $scope.$on("RNotificationResult",function(evt,data){
       $scope.$applyAsync(function () {

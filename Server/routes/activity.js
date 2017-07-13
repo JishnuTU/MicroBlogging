@@ -74,10 +74,10 @@ var loadController =require('../controller/loadController');
                 activityController.realTimeNotification(data.userId,data.ontime,data.update,function(update,activity,post){
                     if(update){
                        io.to(socket.id).emit("gatheredNewpost",post);
-                        console.log("emited new post",post);
+                        //console.log("emited new post",post);
                     }
                     else{
-                    console.log("emited new post",activity);
+                   // console.log("emited new post",activity);
                     return io.to(socket.id).emit("ReplyNotification",activity);
                   }
 
@@ -255,7 +255,7 @@ var loadController =require('../controller/loadController');
     });
 
       socket.on('ReportedPost',function(data){
-        console.log("in here");
+
       Verify.verifyAdmin(data.token,data.userId,function(procced){
         if(procced){
                 adminController.gatherReports(function(err,allpost,allusers){
@@ -285,7 +285,7 @@ var loadController =require('../controller/loadController');
     });
 
       socket.on('BlockUser',function(data){
-        console.log("From activity.blockUser");
+
       Verify.verifyAdmin(data.token,data.userId,function(procced){
         if(procced){
                 adminController.blockUser(data.buserId,function(err){

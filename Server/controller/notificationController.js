@@ -35,7 +35,7 @@ actmsg ={
 						}); //end of for each posts 
 					}) // end of select post by a follower
 					.catch(function(){
-						console.log("Database Error 1");
+						console.log("NotificatonController.getRecentActivity : Database Error 1");
 					});  // end of catch select all posts
 
 				knex('postComment')
@@ -59,7 +59,7 @@ actmsg ={
 						}); //end of for each comments 
 					})
 					.catch(function(){
-						console.log("Database Error 2");
+						console.log("NotificatonController.getRecentActivity : Database Error 2");
 					}); // end of catch select all comments
 
 				knex('postInterest')
@@ -86,7 +86,7 @@ actmsg ={
 						}); //end of for each interests
 					})
 					.catch(function(){
-						console.log("Database Error 3");
+						console.log("NotificatonController.getRecentActivity :  Database Error 3");
 					}); // end of catch select all interests
 
 
@@ -100,7 +100,7 @@ actmsg ={
 			}); // end of for each follower
 		})  // end of select all followers
 		.catch(function(){
-			console.log("Database Error 4");
+			console.log("NotificatonController.getRecentActivity :  Database Error 4");
 		});  // end of catch select all followers
 }
 

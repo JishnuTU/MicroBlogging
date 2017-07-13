@@ -214,6 +214,9 @@ angular.module('webApp')
 				$rootScope.$broadcast("RActiviyResult",data);
 			});
 
+			socket.on('disconnect', function () {
+				    console.log('Server disconnected');
+				  });
 
 		return RA;
 	}])

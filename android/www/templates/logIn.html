@@ -1,3 +1,13 @@
+<style type="text/css">
+   .inputbox{
+   width: 100%;
+    background-color:#1de9b6;
+    color: white;
+    margin: 8px 0;
+    border: none;
+    border-radius: 6px;
+  }
+</style>
 <ion-modal-view>
   <ion-header-bar>
     <h1 class="title">Login</h1>
@@ -6,14 +16,14 @@
        <button class="button button-clear button-positive" ng-click="closeLogin()">Close</button>
     </div>
   </ion-header-bar>
-  <ion-content style="padding-top:100px; background-color:  #FFF8DC">
+  <ion-content style="padding-top:100px; background-color:  #9fa8da;">
     <form ng-submit="doLogin()" name="Login">
       <div class="row" >
         <div class="col col-20" >
-          <button class="button icon ion-person"></button>
+          <button class="button  icon ion-person"></button>
         </div>
         <div class="col col-80">
-        <input type="text" required name="username" placeholder="Username | Email Id" ng-model="loginData.username"  ng-pattern="/^[a-zA-Z0-9@.]+$/"  maxlength="15" >
+        <input type="text" class ="inputbox" required name="username" placeholder="Username | Email Id" ng-model="loginData.username"  ng-pattern="/^[a-zA-Z0-9@.]+$/"  maxlength="15" >
         <h5 style="color:red"  ng-show="Login.username.$error.required && !Login.username.$pristine">* Required Field </h5>
 
           <h5 style="color:red" ng-show="!Login.username.$error.required && Login.username.$error.pattern && Login.username.$invalid && !Login.username.$pristine">** Invalid Format (no special characters)</h5>
@@ -27,13 +37,13 @@
           <button class="button  icon ion-android-lock"></button>
           </div>
           <div class="col col-80">
-          <input type="password" required name="password" placeholder="password" ng-model="loginData.password">
+          <input type="password" class ="inputbox" required name="password" placeholder="password" ng-model="loginData.password">
 
           <h5 style="color:red"  ng-show="Login.password.$error.required && !Login.password.$pristine">* Required Field </h5>
        </div>
        </div>
         <div class="row">
-          <button ng-disabled="Login.$invalid" class="button button-block button-balanced" type="submit">Log in</button>
+          <button ng-disabled="Login.$invalid" class="button button-block button-assertive" type="submit">Log in</button>
         </div>
       </div>
     </form>

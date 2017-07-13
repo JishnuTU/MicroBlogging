@@ -35,13 +35,13 @@ exports.gatherReports = function(callback){
 									.select('username','state')
 									.where('state',3)
 									.then(function(rows){
-										console.log("From AdminController.gatherRepots :",rows);
+										console.log("From AdminController.gatherReports : blocked user");
 										reportedUsers=reportedUsers.concat(rows);
 										//console.log("From AdminController.gatherRepots :",reportedUsers,reportedallpost);
 										return callback(false,reportedallpost,reportedUsers);	
 									})
 									.catch(function(){
-										console.log("From AdminController.gatherRepots : Database error in bloggingUsers");
+										console.log("From AdminController.gatherReports : Database error in bloggingUsers");
 									});
 
 								

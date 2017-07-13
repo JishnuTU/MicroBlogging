@@ -1,9 +1,9 @@
-<ion-view  view-title="Timeline" style="background-color: #FFFACD ">
+<ion-view  view-title="<i class='ion-android-globe'></i> Timeline" style="background-color:#9fa8da  ">
 
 
 <div class="tabs tabs-icon-left" style="background-color:#87CEFA " >
   <a class="tab-item active">
-    <i class="icon ion-home"></i>
+    <i class="icon ion-home" ng-click="timelinenew();"></i>
   </a>
   <a class="tab-item" ng-click="openNotify()">
     <i class="icon ion-android-notifications-none"></i>{{notificationCount}}
@@ -59,16 +59,16 @@
    ng-tt-chars-threshold="40" style="color : blue; font-family:Serif"></p>
           </div>
            <p>
-            <a class="button button-icon icon ion-thumbsup" ng-click="bg.interest=changestate(bg.postId,bg.interest,1);" id="{{bg.postId}}like" 
+            <a class="button button-icon icon ion-thumbsup" ng-click="bg.interest=changestate(bg,bg.postId,bg.interest,1);" id="{{bg.postId}}like" 
                         ng-style="bg.interest === 0 && {'color': 'black'} ||
                   bg.interest=== 1 && {'color': 'green'}||
-                  bg.interest=== 2 && {'color': 'black'}"></a>
+                  bg.interest=== 2 && {'color': 'black'}"><font size="1pt">{{bg.noLikes}}Likes</font></a>
 
-            <a class="button button-icon icon ion-thumbsdown" ng-click="bg.interest=changestate(bg.postId,bg.interest,0);" id="{{bg.postId}}dislike" 
+            <a class="button button-icon icon ion-thumbsdown" ng-click="bg.interest=changestate(bg,bg.postId,bg.interest,0);" id="{{bg.postId}}dislike" 
                          ng-style="bg.interest === 0 && {'color': 'green'} ||
                   bg.interest=== 1 && {'color': 'black'} ||
-                  bg.interest=== 2 && {'color': 'black'}"></a> 
-                <a class="button button-icon ion-android-warning" ng-style="{'color': 'red','margin-left':'110px'}" ng-click="reportPost(bg.postId)"></a> 
+                  bg.interest=== 2 && {'color': 'black'}"><font size="1pt">{{bg.noDislikes}}DisLikes</font></a> 
+                <a class="button button-icon ion-android-warning" ng-style="{'color': 'red','margin-left':'10px'}" ng-click="reportPost(bg.postId)"></a> 
            
           </p>
       </div>
@@ -76,9 +76,9 @@
 
       <div class="item item-input-inset">
         <label class="item-input-wrapper">
-          <input type="text" placeholder="comment here" ng-model="comment" required="true">
+          <input type="text" placeholder="comment here"   maxlength="50"  ng-model="comment" required="true">
         </label>
-          <button class="button button-small  button-balanced icon ion-wand" ng-click="submitComment(comment,bg.postId,bg);"></button>
+          <button class="button button-small  button-balanced icon ion-wand" ng-click="submitComment(comment,bg.postId,bg); comment='';"></button>
       </div>
 
 

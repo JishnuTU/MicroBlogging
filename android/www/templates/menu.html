@@ -1,34 +1,39 @@
-<ion-side-menus enable-menu-with-back-views="true">
+<ion-side-menus enable-menu-with-back-views="true" >
   <ion-side-menu-content>
     <ion-nav-bar class="bar-stable">
       <ion-nav-buttons side="left" >
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
         </button>
       </ion-nav-buttons>
+      
     </ion-nav-bar>
     <ion-nav-view name="menuContent"></ion-nav-view>
   </ion-side-menu-content>
 
-  <ion-side-menu side="left">
+ <h1 ng-show="!hidesidemenu"> About App </h1> <p ng-show="!hidesidemenu">
+A social networking service <br>Users can post  blogs
+<br> Follow other users <br>View their blogs.<br> like, dislike, comment against blogs.</p>
+
+  <ion-side-menu side="left" ng-show="hidesidemenu">
     <ion-header-bar class="bar-stable">
       <h1 class="title">  <i ng-style="{'color': 'green'}" class="icon ion-record"></i> {{userName}}</h1>
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item menu-close  ng-click="timeLine()" href="#/app/home">
-        Timeline
+        <ion-item menu-close  ng-click="timeLine()">
+        <i class="ion-android-globe"></i> Timeline
         </ion-item>
         
         <ion-item menu-close ng-click="filterOff()">
-          Followers Posts
+          <i class="ion-ios-color-filter"></i> Followers Posts
         </ion-item>
 
         <ion-item menu-close  ng-click="filterOn()">
-          Your Posts
+           <i class="ion-ios-color-filter-outline"></i> Your Posts
         </ion-item>
 
         <ion-item menu-close ng-click="logout()">
-          Logout
+          <i class="ion-log-out"></i> Logout
         </ion-item>
       </ion-list>
     </ion-content>

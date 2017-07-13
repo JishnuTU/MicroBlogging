@@ -13,12 +13,12 @@
                 <form ng-submit="postBlog()">
                     <div class="input-group">
   <span class="input-group-addon"><i class="fa fa-text-width"></i></span>
-  <input type="text" ng-model="postb.title"  class="form-control" placeholder="Your blog title">
+  <input type="text" ng-model="postb.title" maxlength="50" class="form-control" placeholder="Your blog title">
   </div>
   <br>
           <div class="input-group">
                          <span class="input-group-addon"><i class="fa fa-quote-left"></i></span>
-                         <textarea class="form-control" required="true"  ng-model="postb.body" cols ="10" rows="7" ng-model="postb.body"  id="comment"></textarea>
+                         <textarea class="form-control" maxlength="700" required="true"  ng-model="postb.body" cols ="10" rows="7" ng-model="postb.body"  id="comment"></textarea>
                           <span class="input-group-addon"><i class="fa fa-quote-right"></i></span>
   
   

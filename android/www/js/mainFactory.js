@@ -1,10 +1,12 @@
  'use strict';
 
 angular.module('mobileApp.mainFactory',[])
+	//.constant("baseURL","https://192.168.100.104:3443/")
 	.constant("baseURL","https://localhost:3443/")
 
 	.factory('socket', ['$rootScope', function($rootScope) {
-		  var socket = io.connect('http://localhost:3000/');
+		//  var socket = io.connect('http://192.168.100.104:3000/');
+		   var socket = io.connect('http://localhost:3000/');
 
 		  return {
 		    on: function(eventName, callback){
@@ -93,7 +95,7 @@ angular.module('mobileApp.mainFactory',[])
 	              				storeUserCredentials({username:loginData.username,
 	              							userId:response.data.userId,
 	              							token: response.data.token});
-	              				return callback();
+	              				return callback(true);
 	           					}
 	           		else {
 
@@ -101,6 +103,7 @@ angular.module('mobileApp.mainFactory',[])
      								title: 'Alert ',
      								template: '<h3>'+response.data.message+'</h3>'
   									});
+	           			
 	           		}
 
   					}, function error(response) {
@@ -110,7 +113,7 @@ angular.module('mobileApp.mainFactory',[])
   									});
  	           			console.log("failure");
 	           		});
-	        return callback();
+	        
 
 	    }; 
 	    

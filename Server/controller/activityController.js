@@ -36,13 +36,13 @@ exports.searchFor=function(followerId,name,callback){
 						}
 				})
 				.catch(function(){
-					console.log("From : activityController.searchFor : Database Error in FollowingLink");
+					console.log("activityController.searchFor : Database Error in FollowingLink");
 				});
 		});
 
 	})
 	.catch(function(){
-		console.log("From : activityController.searchFor : Database Error in bloggingUsers");
+		console.log("activityController.searchFor : Database Error in bloggingUsers");
 	}); 
 		//end of select
 }
@@ -87,6 +87,7 @@ exports.postblogs =function(oId,tle,bdy,callback){
 						post=row[0];
 						post.comments=[];
 						post.interest=2;
+						console.log("From : activityController.postblogs :Post inserted and sent the response");
 						return callback({'message':"Posted Successfully",'blog':post});
 					})
 					.catch(function(){
@@ -97,7 +98,7 @@ exports.postblogs =function(oId,tle,bdy,callback){
 			
 		})
 		.catch(function(){
-			console.log("inserted"+tle);
+			console.log("From : activityController.postblogs :New post inserted failed");
 			return callback({'message':"Posted unSuccessfully"});
 		});		
 
@@ -169,18 +170,20 @@ exports.postpacking =function(user,callback){ // function to append all details 
 							}
 							else
 								post.interest=2;
-							console.log('checking the posts',post.slno);
+							console.log('activityController.postpacking: post sent');
 							callback(false,post);
 
 							/*if(finalPosts.length==allPost.length)
 								return callback(false,finalPosts); */
 						})
 						.catch(function(){
+							console.log('activityController.postpacking: Db error postInterest');
 							return callback(true,null);
 						}); // end of select interests
 
 				})
 				.catch(function(){
+					console.log('activityController.postpacking: Db error postComment');
 					return callback(true,null);
 				}); // end of select comments
 
@@ -339,7 +342,7 @@ console.log("i am :",userId);
 									actmsg.action="posted a blog :"
 									actmsg.title=post.title;
 									actmsg.onDate=post.createdAt;
-									console.log('stage 2',actmsg);  // logical error tracking 
+									//console.log('stage 2',actmsg);  // logical error tracking 
 									callback(false,actmsg,null);
 									/*if(posts.length-1==indexpost)
 										callback(activityCollection1);*/
