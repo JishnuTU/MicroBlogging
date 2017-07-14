@@ -252,6 +252,12 @@ angular.module('webApp')
                            });
 		}
 
+		AP.removecomplaint =function(pId){
+			socket.emit('RemoveComplaint',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          rId:pId
+                           });
+		}
 
 		socket.on('ReplyReportedPost',function(data){
 			console.log(data);

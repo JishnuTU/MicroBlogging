@@ -3,22 +3,25 @@
     <h1 class="title">Post a Blog</h1>
 
     <div class="buttons">
-      <button class="button button-clear button-positive" ng-click="postmodal.hide()">Close</button>
+      <button class="button button-clear button-positive" ng-click="postmodal.hide()"><i class="ion-ios-close-outline"></i> Close</button>
     </div>
   </ion-header-bar>
   <ion-content>
+  <form ng-submit="postBlog()" name="Login">
   	<div class="list">
   <label class="item item-input item-stacked-label">
     <span class="input-label">Title</span>
-    <input type="text" ng-model="postb.title" placeholder="Topic">
+    <input type="text"  name="username" required ng-model="postb.title" placeholder="Topic"  maxlength="150">
+     <h5 style="color:red"  ng-show="Login.username.$error.required && !Login.username.$pristine">* Required Field </h5>
   </label>
   <label class="item item-input item-stacked-label">
     <span class="input-label">Status</span>
-   <textarea placeholder="Hi" ng-model="postb.body" rows="4" cols="5">
+   <textarea placeholder="Hi"  name="name" required  maxlength="900" ng-model="postb.body" rows="4" cols="5">
 	</textarea>
+   <h5 style="color:red"  ng-show="Login.name.$error.required && !Login.name.$pristine">* Required Field </h5>
   </label>
   <label class="item item-input item-stacked-label">
-  <button class="button button-balanced button-full" ng-click="postBlog()">
+  <button ng-disabled="Login.$invalid" class="button button-balanced button-full" type="submit">
  Post
 </button>
 </label>

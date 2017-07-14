@@ -55,7 +55,7 @@
         <th>Post Owner <i ng-click="ordercol='ofUser'" class="fa  fa-sort"></i></th>
         <th>Reported On</th>
         <th>Remove Blog</th>
-
+        <th></th>
         
       </tr>
     </thead>
@@ -73,7 +73,9 @@
         <td>{{rp.byUser}}</td>
         <td>{{rp.ofUser}}</td>
         <td>{{rp.onDate  | date:'dd/MM/yyyy @ h:mma'}}</td>
-        <td><a class="trash" ng-click="removePost(rp.postId)" ><span class="glyphicon glyphicon-trash"></span></a></td>
+        <td><a class="trash"  ng-click="removePost(rp.postId)" ><span class="glyphicon glyphicon-trash"></span></a>
+        </td>
+        <td><a  class="trash" ng-click="removecomplaint(rp.postId);" ><span class="fa fa-times-circle fa-2x"></span></a></td>
       </tr>
       
     </tbody>

@@ -152,7 +152,7 @@ angular.module('mobileApp.controllers', [])
 
   })
 
-.controller('HomeCtrl', function($localStorage,$scope,$rootScope,AuthFactory,$ionicModal,SearchFollowFac,PostBlogFac,$ionicPopup,LikeDislikeFac,CommentPostFac,ReportPostFac,PostGathFac,NotificationFac) {
+.controller('HomeCtrl', function($state,$localStorage,$scope,$rootScope,AuthFactory,$ionicModal,SearchFollowFac,PostBlogFac,$ionicPopup,LikeDislikeFac,CommentPostFac,ReportPostFac,PostGathFac,NotificationFac) {
   /* filtering section */
 
     $scope.filterObject="";
@@ -168,6 +168,10 @@ angular.module('mobileApp.controllers', [])
       //NotificationFac.gatherNotification();
 
     });
+
+    $scope.timelinenew =function(){
+           // $state.go($state.current, {}, {reload: true});
+    }
 
   /*filtering section ends here */
 $scope.$on("$ionicView.beforeEnter", function(event, data){

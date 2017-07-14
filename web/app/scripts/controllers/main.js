@@ -126,7 +126,7 @@ angular.module('webApp')
     /* blog section ends here */
 
     /* notification starts here */
-
+    $scope.NAlist =[];
     $scope.$on("RNotificationResult",function(evt,data){
       $scope.$applyAsync(function () {
             $scope.NAlist.push(data);
@@ -332,13 +332,30 @@ new post section
       AdminFac.removeBlog(pId);
 
       $scope.RPlist.forEach(function(pt,index){
-          if(pt.postId==pId)
+          if(pt.postId==pId){
+            $scope.$applyAsync(function () {
             $scope.RPlist.splice(index,1);
+            });
+          }
       });
 
-
-
     }
+
+  $scope.removecomplaint =function(pId){
+        console.log("response received");
+        AdminFac.removecomplaint(pId);
+      $scope.$applyAsync(function () {
+      $scope.RPlist.forEach(function(pt,index){
+          if(pt.postId==pId){
+            
+            $scope.RPlist.splice(index,1);
+        
+          }
+              });
+      });
+
+      }
+
   }])
 
   .filter('unique', function() {
@@ -367,6 +384,7 @@ new post section
       return output;
    };
 });
+
 
 ;
 

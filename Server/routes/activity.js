@@ -313,7 +313,19 @@ var loadController =require('../controller/loadController');
       });
     });
 
-
+      socket.on('RemoveComplaint',function(data){
+      Verify.verifyAdmin(data.token,data.userId,function(procced){
+        if(procced){
+                adminController.removeReport(data.rId,function(){
+                   
+                });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
 // notification
 
 
