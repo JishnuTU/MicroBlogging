@@ -1,24 +1,50 @@
+<style type="text/css">
+   .inputbox{
+   width: 100%;
+    background-color:#1de9b6;
+    color: white;
+    margin: 8px 0;
+    border: none;
+    border-radius: 6px;
+  }
+</style>
 <ion-modal-view>
   <ion-header-bar>
     <h1 class="title">Login</h1>
     <div class="buttons">
       <button class="button button-clear button-positive" ng-click="openRegister()">Sign Up</button>
+       <button class="button button-clear button-positive" ng-click="closeLogin()"><i class="ion-ios-close-outline"></i> Close</button>
     </div>
   </ion-header-bar>
-  <ion-content>
-    <form ng-submit="doLogin()">
-      <div class="list">
-        <label class="item item-input">
-          <span class="input-label">Username/Email</span>
-          <input type="text" name="username" required="true" ng-model="loginData.username">
-        </label>
-        <label class="item item-input">
-          <span class="input-label">Password</span>
-          <input type="password" name="password" required="true" ng-model="loginData.password">
-        </label>
-        <label class="item">
-          <button class="button button-block button-positive" type="submit">Log in</button>
-        </label>
+  <ion-content style="padding-top:100px; background-color:  #9fa8da;">
+    <form ng-submit="doLogin()" name="Login">
+      <div class="row" >
+        <div class="col col-20" >
+          <button class="button  icon ion-person"></button>
+        </div>
+        <div class="col col-80">
+        <input type="text" class ="inputbox" required name="username" placeholder="Username | Email Id" ng-model="loginData.username"  ng-pattern="/^[a-zA-Z0-9@.]+$/"  maxlength="15" >
+        <h5 style="color:red"  ng-show="Login.username.$error.required && !Login.username.$pristine">* Required Field </h5>
+
+          <h5 style="color:red" ng-show="!Login.username.$error.required && Login.username.$error.pattern && Login.username.$invalid && !Login.username.$pristine">** Invalid Format (no special characters)</h5>
+
+
+        </div>
+        </div>
+
+        <div class="row">
+         <div class="col col-20" >
+          <button class="button  icon ion-android-lock"></button>
+          </div>
+          <div class="col col-80">
+          <input type="password" class ="inputbox" required name="password" placeholder="password" ng-model="loginData.password">
+
+          <h5 style="color:red"  ng-show="Login.password.$error.required && !Login.password.$pristine">* Required Field </h5>
+       </div>
+       </div>
+        <div class="row">
+          <button ng-disabled="Login.$invalid" class="button button-block button-assertive" type="submit">Log in</button>
+        </div>
       </div>
     </form>
   </ion-content>

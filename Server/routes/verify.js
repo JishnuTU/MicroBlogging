@@ -1,5 +1,6 @@
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('../config.js');
+const knex =require('../knex');
 
 exports.getToken = function (user) {
     return jwt.sign(user, config.secretKey, {
@@ -45,6 +46,35 @@ exports.verifySocketUser = function (token,callback){
             } else {
                 // if everything is good, save to request for use in other routes
                 return callback(true);
+            }
+        });
+    } else {
+        // if there is no token
+        // return an error
+        return callback(false);
+    }
+
+};
+
+
+
+exports.verifyAdmin = function (token,id,callback){
+    
+    if (token) {
+        // verifies secret and checks exp c
+        jwt.verify(token, config.secretKey, function (err, decoded) {
+            if (err) {
+                return callback(false);
+            } else {
+                knex('bloggingUsers')
+                    .where({'userId':id,'state':99})
+                    .then(function(user){
+                        if(user.length==1)
+                            return callback(true);
+                    })
+                    .catch(function(){
+                        return callback(false);
+                    });
             }
         });
     } else {

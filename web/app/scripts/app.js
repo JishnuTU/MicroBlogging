@@ -9,22 +9,16 @@
  * Main module of the application.
  */
 
-angular.module('webApp', ['ui.router','ngResource','ngDialog'])
+angular.module('webApp', ['ui.router','ngResource','ngDialog','ngDropover'])
 .config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
             // route for the home page
             .state('app', {
                 url:'/',
                 views: {
-                    'header': {
-                        templateUrl : 'views/fheader.html'
-                    },
                     'content': {
                         templateUrl : 'views/login.html',
                         controller  : 'LoginCtrl'
-                    },
-                    'footer': {
-                        templateUrl : 'views/footer.html',
                     }
                 }
 
@@ -47,7 +41,7 @@ angular.module('webApp', ['ui.router','ngResource','ngDialog'])
                         templateUrl : 'views/header.html',
                     },
                     'content': {
-                        templateUrl : 'views/home.html',
+                        templateUrl : 'views/blog.html',
                     },
                     'footer': {
                         templateUrl : 'views/footer.html',
@@ -82,4 +76,6 @@ angular.module('webApp', ['ui.router','ngResource','ngDialog'])
     
         $urlRouterProvider.otherwise('/');
     })
+
+
 ;

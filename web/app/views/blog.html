@@ -1,0 +1,114 @@
+<link href="./styles/blog.css" rel="stylesheet">
+<div class="container" ng-controller="BlogDCtrl" style="padding-top: 50px;">
+  
+<!--blog template -->
+
+
+  <div class="modal-content" ng-repeat="bg in BD | orderBy : '-createdAt'  " >
+  <br>
+  <br>
+    <div class="row" >
+      <div class="col-md-8 col-md-offset-1">
+        <div class="testimonials">
+            <div class="pull-left">
+                <span class="testimonials-name"> <div class="comment-user"><i class="fa fa-user fa-3x"></i> {{bg.name}}</div></span>
+                <p></p>
+                <h3 align=center  style="color: blue">{{bg.title}}</h3>
+                <blockquote><p ng-init="lsize =90; showmore=true;"> {{bg.body | limitTo:lsize}}  </p><a ng-click="lsize=''; showmore=false;" ng-show="showmore">...show more</a>
+                <a ng-click=" lsize=90; showmore=true;" ng-show="!showmore">...show less</a> 
+                </blockquote>
+
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2" ng-init="flag=true">
+
+        <div ng-dropover ng-dropover-options="{'targetId': 'dropOne' ,'triggerEvent':'click', 'verticalOffset': 10,'closeOnClickOff': true }">
+           <i class="fa fa-exclamation-triangle"></i> <font size="1pt" color="red"> Report Abuse</font> 
+
+              <div ng-dropover-contents class="arrowed">
+              <p ng-show="!flag">Abuse Reported</p>
+                     <form ng-submit="reportPost(bg.postId,resn); flag=false">
+    <div class="form-group">
+      <label ng-show="flag" for="comment">Reason:</label>
+      <textarea required ="true" ng-show="flag" class="form-control" rows="3" ng-model="resn"id="comment"></textarea>
+      <br>
+        
+          <button ng-show="flag" class="btn btn-default">Submit</button>
+
+    </div>
+  </form>
+              </div>
+        </div>
+
+
+        </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-8 col-md-offset-1">
+        <p></p>
+        <p>
+          <i class="fa fa-user fa-2x"></i> By User : <strong>{{bg.username}}</strong>  &nbsp &nbsp
+          | &nbsp &nbsp <i class="fa fa-calendar"></i> {{bg.createdAt | date:'dd/MM/yyyy @ h:mma'}}  &nbsp &nbsp
+          | &nbsp &nbsp  <i ng-click="bg.interest=changestate(bg,bg.postId,bg.interest,1);" id="{{bg.postId}}like" 
+                        ng-style="bg.interest === 0 && {'color': 'black'} ||
+                  bg.interest=== 1 && {'color': 'blue'}||
+                  bg.interest=== 2 && {'color': 'black'}" 
+                  class="fa fa-thumbs-up fa-2x" ></i> {{bg.noLikes}} Likes &nbsp &nbsp
+| &nbsp &nbsp
+                       <i ng-click="bg.interest=changestate(bg,bg.postId,bg.interest,0);" id="{{bg.postId}}dislike" 
+                         ng-style="bg.interest === 0 && {'color': 'blue'} ||
+                  bg.interest=== 1 && {'color': 'black'} ||
+                  bg.interest=== 2 && {'color': 'black'}"
+                  class="fa fa-thumbs-down fa-2x"></i> {{bg.noDislikes}} Dislikes &nbsp &nbsp
+
+
+
+
+
+            
+          <form class="form-inline" ng-submit="submitComment(comment,bg.postId,bg); comment ='';" >
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-comment"></i></span>
+                <input type="text" maxlength="50" class="form-control" required="true" ng-model="comment" placeholder="Your comments"></div>
+                <button type="submit"  name="sub" class="btn btn-info"><i class="fa fa-check"></i></button>
+          </form>
+        </p>
+        </div>
+      </div>
+      
+  <div class="row" ng-show="bg.comments.length">
+  <div class="col-md-4">
+  <i class="fa fa-comments fa-5x" style="padding-left: 200px; padding-top: 40px" aria-hidden="true"></i>
+  </div>
+    <div class="col-md-6"  style=" max-height: 200px; overflow-y:scroll;" >
+        <section class="comment-list">
+          <!-- First Comment -->
+          <article class="row" ng-repeat="i in bg.comments | orderBy : '-createdAt'">
+            <div class="col-md-2 col-sm-2 hidden-xs">
+            </div>
+            <div class="col-md-10 col-sm-10">
+              <div class="panel panel-default arrow left">
+                <div class="panel-body">
+                  <header class="text-left">
+                    <div class="comment-user"><i class="fa fa-user"></i>{{i.username}}</div>
+                    <time class="comment-date" datetime="16-12-2014 01:05"><i class="fa fa-clock-o"></i>  {{i.createdAt | date:'dd/MM/yyyy @ h:mma'}}</time>
+                  </header>
+                  <div class="comment-post">
+                    <p>
+                     {{i.comment}}.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>  
+        </section>
+    </div>
+  </div>
+  <br>
+  <br>
+</div>
+</div>

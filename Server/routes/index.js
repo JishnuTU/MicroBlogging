@@ -30,7 +30,26 @@ passport.use(new LocalStrategy(
                 bcrypt.compare(password,user[0].password, function(err, res) {
                       if(res)
                       {
-                        return done(null, user[0],{ message: 'User authencated' });//password is correct procced
+                        console.log("userId :",user[0].userId);
+                        knex('bloggingUsers')
+                            .where({'userId':user[0].userId,'state':99})
+                            .then(function(usr){
+                              console.log(usr);
+                              if(usr.length==1)
+                              {
+                                  return done(null, user[0],{ message: 'Administrator' });//password is correct procced
+                              }
+                              else
+                              {
+                                  knex('bloggingUsers').where('userId',user[0].userId).update('state', 1)
+                                    .then(function(){
+                                           return done(null, user[0],{ message: 'User authenicated' });//password is correct procced
+                                          })
+                                    .catch(function(){
+                                           return done(null, false, { message: 'Server Error.' });//password is Incorrect
+                                          });
+                              }
+                            });
                       }
                       else
                       {
@@ -68,6 +87,7 @@ passport.deserializeUser(function(id, done) {
 
 
 router.post('/login', function(req, res, next) {
+  console.log("Server side login");
    passport.authenticate('local', function(err, user, info) {
     if (err) { return next(err); }
 
@@ -79,6 +99,7 @@ router.post('/login', function(req, res, next) {
       res.status(200).json({
         status: 'Login successful',
         userId : user.userId,
+        message:info.message,
         success: true,
         token: token,
       });
@@ -88,11 +109,21 @@ router.post('/login', function(req, res, next) {
 
 });
 
-router.get('/logout', function(req, res) {
-    req.logout();
-  res.status(200).json({
-    status: true
-  });
+router.post('/logout', function(req, res) {
+  console.log(req.body.userId);
+    knex('bloggingUsers').where({'userId':req.body.userId,'state':1}).update({'state': 0,'activityAt':knex.fn.now()})
+    .then(function(){
+          req.logout();
+          res.status(200).json({
+          status: true
+        });
+    })
+    .catch(function(){
+          res.status(500).json({
+          status: false
+        });
+    });
+
 });
 
 router.post('/register', function(req, res, next) {

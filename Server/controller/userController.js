@@ -21,18 +21,26 @@ exports.userRegister=function(user,callback){
 					user.password=bcrypt.hashSync(user.password);
 					knex('bloggingUsers').insert(user,'*')
 										.then(function() {
- 		 											callback("Account Created Successfully");
+													knex('followingLink').insert({followerId:user.userId,
+														followingId:user.userId})
+													.then(function(){
+														return callback("Account Created Successfully");
+													})
+													.catch(function(){
+														return callback("Account Creation failed");
+													});
+ 		 											
  	 											})
 	  									.catch(function() {
- 		 											callback("Account Creation failed");
- 	 								})
+ 		 									return callback("Account Creation failed");
+ 	 								});
 				}
 				else
-					callback("Account Creation failed (Email doesn't exists)");
+					return callback("Account Creation failed (Email doesn't exists)");
 			});
 		}
 		else
-			callback("Username Taken");
+			return callback("Username Taken");
 	})
 		
 }
@@ -92,12 +100,12 @@ function emailValidate(mail,token,username,callback){
    							text : "click here :"+"http://localhost:3000/verify/"+token+"/"+username
 							}
 			smtpTransport.sendMail(mailOptions, function(error, info){
-					console.log("success");
+					console.log("From : userController.emailvalidate : Mail send Successfully");
 					callback(true);
 			});
 			}
 		else	{
-			console.log("failed");
+			console.log("From : userController.emailValidate : Mail does not exist");
 			callback(false);		
 		}
 	});

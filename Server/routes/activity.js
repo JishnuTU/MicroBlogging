@@ -1,5 +1,8 @@
- var activityController = require('../controller/activityController');
+var activityController = require('../controller/activityController');
+var notificationController =  require('../controller/notificationController');
+var adminController =  require('../controller/adminController');
 var Verify    = require('./verify');
+var loadController =require('../controller/loadController');
 
  module.exports = function(socket,io){
 
@@ -49,7 +52,11 @@ var Verify    = require('./verify');
   		Verify.verifySocketUser(data.token,function(procced){
   			if(procced){
   					    activityController.postblogs(data.ownerId,data.title,data.body,function(msg){
+                    
+                    io.emit("IdentifyUrself",{'code':200});
+
   					    		return io.to(socket.id).emit("replypost",msg);
+
   					    	});
   						}
   			else
@@ -58,6 +65,33 @@ var Verify    = require('./verify');
   			}
   		});
   	});
+
+
+    socket.on('IamClient',function(data){
+      Verify.verifySocketUser(data.token,function(procced){
+        if(procced){
+                console.log("Recieved event IamClient",data.ontime,data.update);
+                activityController.realTimeNotification(data.userId,data.ontime,data.update,function(update,activity,post){
+                    if(update){
+                       io.to(socket.id).emit("gatheredNewpost",post);
+                        //console.log("emited new post",post);
+                    }
+                    else{
+                   // console.log("emited new post",activity);
+                    return io.to(socket.id).emit("ReplyNotification",activity);
+                  }
+
+                });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+      
+    });
+
+
 
 // to collect the posts
   	socket.on('gatherposts',function(data){
@@ -76,6 +110,63 @@ var Verify    = require('./verify');
   			}
   		});
   	});
+
+
+// to collect the posts
+    socket.on('gatherwebposts',function(data){
+      Verify.verifySocketUser(data.token,function(procced){
+        if(procced){
+                loadController.postpackingWeb(data.userId,function(error,allPost){
+                    if(error)
+                      return io.to(socket.id).emit("gatheredwebpost","Server Error");
+                    else
+                      return io.to(socket.id).emit("gatheredwebpost",allPost);
+                  });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
+
+
+    socket.on('gathernewposts',function(data){
+      Verify.verifySocketUser(data.token,function(procced){
+        if(procced){
+                loadController.postpackingBefore(data.userId,data.newdate,function(error,allPost){
+                    if(error)
+                      return io.to(socket.id).emit("gatheredNewpost","Server Error");
+                    else
+                      return io.to(socket.id).emit("gatheredNewpost",allPost);
+                  });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
+
+
+    socket.on('gatheroldposts',function(data){
+      Verify.verifySocketUser(data.token,function(procced){
+        if(procced){
+                loadController.postpackingAfter(data.userId,data.olddate,function(error,allPost){
+                    if(error)
+                      return io.to(socket.id).emit("gatheredOldpost","Server Error");
+                    else
+                      return io.to(socket.id).emit("gatheredOldpost",allPost);
+                  });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
+
+
 
     socket.on('interestInsert',function(data){
       Verify.verifySocketUser(data.token,function(procced){
@@ -137,6 +228,112 @@ var Verify    = require('./verify');
         if(procced){
                 activityController.reportPost(data.userId,data.postId,data.reason,function(msg){
                     return io.to(socket.id).emit("ReplyReport",msg);
+                });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
+
+//recent activty
+
+  
+      socket.on('recentActivity',function(data){
+      Verify.verifySocketUser(data.token,function(procced){
+        if(procced){
+                notificationController.getRecentActivity(data.userId,function(activty){
+                    return io.to(socket.id).emit("ReplyActivity",activty);
+                });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
+
+      socket.on('ReportedPost',function(data){
+
+      Verify.verifyAdmin(data.token,data.userId,function(procced){
+        if(procced){
+                adminController.gatherReports(function(err,allpost,allusers){
+                    return io.to(socket.id).emit("ReplyReportedPost",{'blogs':allpost,'users':allusers});
+                });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
+
+
+      socket.on('UnblockUser',function(data){
+      Verify.verifyAdmin(data.token,data.userId,function(procced){
+        if(procced){
+                adminController.unblockUser(data.buserId,function(err){
+  
+                });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
+
+      socket.on('BlockUser',function(data){
+
+      Verify.verifyAdmin(data.token,data.userId,function(procced){
+        if(procced){
+                adminController.blockUser(data.buserId,function(err){
+                    
+                });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
+
+      socket.on('RemoveBlog',function(data){
+      Verify.verifyAdmin(data.token,data.userId,function(procced){
+        if(procced){
+                adminController.removeBlog(data.postId,function(){
+                   
+                });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
+
+      socket.on('RemoveComplaint',function(data){
+      Verify.verifyAdmin(data.token,data.userId,function(procced){
+        if(procced){
+                adminController.removeReport(data.rId,function(){
+                   
+                });
+              }
+        else
+        {
+          return io.to(socket.id).emit("AuthorizationFailed","Authorization Failed");
+        }
+      });
+    });
+// notification
+
+
+      socket.on('OnlineNotification',function(data){
+      Verify.verifySocketUser(data.token,function(procced){
+        if(procced){
+                notificationController.getOnlineNotify(data.userId,function(notify){
+                    return io.to(socket.id).emit("ReplyNotification",notify);
                 });
               }
         else

@@ -22,11 +22,11 @@ angular.module('webApp')
             return JSON.parse($window.localStorage[key] || defaultValue);
         }
     }
-
+ 
 	}])
 
 
-	.factory('AuthFactory', ['$resource', '$http', '$localStorage', '$rootScope', '$window', '$state', 'baseURL', 'ngDialog', function($resource, $http, $localStorage, $rootScope, $window, $state, baseURL, ngDialog){
+	.factory('AuthFactory', ['$resource', '$http', '$localStorage', '$rootScope', '$window', '$state', 'baseURL', 'ngDialog',function($resource, $http, $localStorage, $rootScope, $window, $state, baseURL, ngDialog){
     
 	    var authFac = {};
 	    var TOKEN_KEY = 'Token';
@@ -75,12 +75,20 @@ angular.module('webApp')
 	           		load.close();
 	           		if(response.success)
 	           		{
+
 	              	storeUserCredentials({username:loginData.username,
 	              		userId:response.userId,
 	              		token: response.token});
 
-	              	$rootScope.$broadcast('login:Successful');	 
-	              	$state.go('home');    
+	              	//$rootScope.$broadcast('login:Successful');
+	              	console.log(response.message);
+
+	              	if(response.message=='Administrator')
+	              		$state.go('admin');
+	              	else{
+	              		
+	              		$state.go('home');    
+	              	}
       			
 	           		}
 	           		else{
@@ -108,7 +116,7 @@ angular.module('webApp')
 	    };
 	    
 	    authFac.logout = function() {
-	        $resource(baseURL + "logout").get(function(response){
+	        $resource(baseURL + "logout").save({'userId':userId},function(response){
 	        	console.log(response.status)
 	        });
 	        destroyUserCredentials();
@@ -189,23 +197,74 @@ angular.module('webApp')
 		  };
 		}])
 
-	.factory('myService',['$rootScope',function($rootScope){
-	var serve;
-	var service = {
-		setServe:setServe,
-		getServe:getServe
-	};
- 
-	return service;
 
-	function setServe(data){
-		serve=data;
-	}
-	
-	function getServe(){
-		return serve;
-	}
 
-}])
+	.factory('ActivityFac',['$rootScope','socket','AuthFactory',function($rootScope,socket,AuthFactory){
+
+		var RA={};
+		RA.gatherActivity=function(){
+			socket.emit('recentActivity',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken()
+                           });
+		}
+
+
+			socket.on('ReplyActivity',function(data){
+				//console.log(data);
+				$rootScope.$broadcast("RActiviyResult",data);
+			});
+
+			socket.on('disconnect', function () {
+				    console.log('Server disconnected');
+				  });
+
+		return RA;
+	}])
+
+	.factory('AdminFac',['$rootScope','socket','AuthFactory',function($rootScope,socket,AuthFactory){
+		var AP={};
+
+		AP.gatherreportedPost =function(){
+			socket.emit('ReportedPost',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken()
+                           });
+
+		}
+
+		AP.removeBlog =function(pId){
+			socket.emit('RemoveBlog',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          postId:pId
+                           });
+		}
+
+		AP.blockUser=function(uId){
+			socket.emit('BlockUser',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          buserId:uId
+                           });
+		}
+
+		AP.unblockUser=function(uId){
+			socket.emit('UnblockUser',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          buserId:uId
+                           });
+		}
+
+		AP.removecomplaint =function(pId){
+			socket.emit('RemoveComplaint',{userId:AuthFactory.getUserId(),
+                          token:AuthFactory.getToken(),
+                          rId:pId
+                           });
+		}
+
+		socket.on('ReplyReportedPost',function(data){
+			console.log(data);
+			$rootScope.$broadcast("RAdminResult",data);
+		});
+
+		return AP;
+	}])
 
 ;

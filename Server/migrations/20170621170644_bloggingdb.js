@@ -9,8 +9,8 @@ return Promise.all([
             table.string('password');
             table.string('name');
             table.integer('state');
-           	table.timestamp('createdAt').defaultTo(knex.fn.now());
-           	table.timestamp('activityAt');
+           	table.dateTime('createdAt').defaultTo(knex.fn.now());
+           	table.dateTime('activityAt');
         }),
 
         knex.schema.createTable('blogPost',function(table){
@@ -22,7 +22,7 @@ return Promise.all([
         	table.string('body');
         	table.integer('noLikes');
         	table.integer('noDislikes');
-        	table.timestamp('createdAt').defaultTo(knex.fn.now());
+        	table.dateTime('createdAt').defaultTo(knex.fn.now());
         }),
 
         knex.schema.createTable('postComment',function(table){
@@ -33,7 +33,7 @@ return Promise.all([
         		.references('userId')
         		.inTable('bloggingUsers');
         	table.string('comment');
-        	table.timestamp('createdAt').defaultTo(knex.fn.now());
+        	table.dateTime('createdAt').defaultTo(knex.fn.now());
         }),
 
         knex.schema.createTable('postInterest',function(table){
@@ -44,7 +44,7 @@ return Promise.all([
         		.references('userId')
         		.inTable('bloggingUsers');
         	table.integer('interest');
-        	table.timestamp('updatedAt').defaultTo(knex.fn.now());
+        	table.dateTime('updatedAt').defaultTo(knex.fn.now());
         }),
 
         knex.schema.createTable('followingLink',function(table){
@@ -54,7 +54,7 @@ return Promise.all([
         	table.uuid('followingId')
         		.references('userId')
         		.inTable('bloggingUsers');
-        	table.timestamp('createdAt').defaultTo(knex.fn.now());
+        	table.dateTime('createdAt').defaultTo(knex.fn.now());
         }),
 
         knex.schema.createTable('reportedIssue',function(table){
@@ -65,7 +65,7 @@ return Promise.all([
         		.references('postId')
         		.inTable('blogPost');
         	table.string('reason');
-        	table.timestamp('reportedAt').defaultTo(knex.fn.now());
+        	table.dateTime('reportedAt').defaultTo(knex.fn.now());
         })
 
 

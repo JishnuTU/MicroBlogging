@@ -1,43 +1,39 @@
-<ion-side-menus enable-menu-with-back-views="false">
+<ion-side-menus enable-menu-with-back-views="true" >
   <ion-side-menu-content>
     <ion-nav-bar class="bar-stable">
-      <ion-nav-back-button>
-      </ion-nav-back-button>
-
       <ion-nav-buttons side="left" >
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
         </button>
       </ion-nav-buttons>
+      
     </ion-nav-bar>
     <ion-nav-view name="menuContent"></ion-nav-view>
   </ion-side-menu-content>
 
-  <ion-side-menu side="left">
+ <h1 style="color: #9fa8da" ng-show="!hidesidemenu"> About App  </h1> <p style="color: #9fa8da"  ng-show="!hidesidemenu">
+A social networking App <br> Users can post  Blogs
+<br> Follow other Users <br> View their blogs.<br> Like, Dislike, Comment against blogs.</p>
+
+  <ion-side-menu side="left" ng-show="hidesidemenu">
     <ion-header-bar class="bar-stable">
-      <h1 class="title">Navigation</h1>
+      <h1 class="title">  <i ng-style="{'color': 'green'}" class="icon ion-record"></i> {{userName}}</h1>
     </ion-header-bar>
     <ion-content>
       <ion-list>
-      <ion-item menu-close ng-click="openLogin()">
-          Login
+        <ion-item menu-close  ng-click="timeLine()">
+        <i class="ion-android-globe"></i> Timeline
         </ion-item>
-        <ion-item menu-close href="#/app/home">
-        Timeline
-        </ion-item>
-        <ion-item menu-close  ng-click="logout()">
-        Create New Post
+        
+        <ion-item menu-close ng-click="filterOff()">
+          <i class="ion-ios-color-filter"></i> Followers Posts
         </ion-item>
 
-        <ion-item menu-close  ng-click="logout()">
-          What's New 
-        </ion-item>
-
-        <ion-item menu-close  ng-click="logout()">
-          Your Posts
+        <ion-item menu-close  ng-click="filterOn()">
+           <i class="ion-ios-color-filter-outline"></i> Your Posts
         </ion-item>
 
         <ion-item menu-close ng-click="logout()">
-          Logout
+          <i class="ion-log-out"></i> Logout
         </ion-item>
       </ion-list>
     </ion-content>

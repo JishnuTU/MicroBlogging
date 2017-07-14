@@ -1,15 +1,17 @@
 
 <div class="container">
-<div class="row">
+<div class="row" ng-controller="ActivityCtrl">
 <div class="col-sm-9 col-sm-offset-2">
-
-  <ul class="list-group">
-    <li class="list-group-item">activity
-    	<span class="badge" >date</span>
-    	<span class="badge" style="background-color:#3a87ad">user</span>
+  <ul class="list-group" ng-repeat="RA in RAlist | orderBy : '-onDate'">
+    <li class="list-group-item">
+    <h4 style="color:#3a87ad">{{RA.byUser}}</h4> <i class="fa fa-calendar"></i> {{RA.onDate | date:'dd/MM/yyyy @ h:mma' }}
+    	<p>{{RA.action}} {{RA.title}}</p>
+     
+    	
     </li>
   </ul>
 
 </div>
 </div>
 </div>
+

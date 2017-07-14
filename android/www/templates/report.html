@@ -1,0 +1,25 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Report Post</h1>
+
+    <div class="buttons">
+      <button class="button button-clear button-positive" ng-click="reportmodal.hide()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+  	<div class="list">
+
+  <label class="item item-input item-stacked-label">
+    <span class="input-label">Reason</span>
+   <textarea placeholder="Hi" ng-model="postb.body" rows="4" cols="5">
+	</textarea>
+  </label>
+  <label class="item item-input item-stacked-label">
+  <button class="button button-balanced button-full" ng-click="reportPost()">
+ Report
+</button>
+</label>
+</div>
+
+    </ion-content>
+</ion-modal-view>

@@ -1,27 +1,45 @@
-<div class="container-fluid" id ="login"  ng-controller="LoginCtrl">
-  <div class="row">
-    
-    <div class="col-sm-4 col-sm-offset-4 ">
-      <div class="panel panel-info" >
-        <div class="panel-heading"> <h2>Login</h2></div>
-        <div class="panel-body">
-          <form ng-submit="loginEntry()" method="post">
-                <div class="form-group">
-                  <label for="email">Email / Username:</label>
-                  <input type="text" class="form-control" ng-model="login.username" id="email" placeholder="Enter Email or Username" name="email" required="true">
-                </div>
-
-                <div class="form-group">
-                  <label for="pwd">Password:</label>
-                  <input type="password" class="form-control" ng-model="login.password" id="pwd" placeholder="Enter password" name="pwd" required="true">
-                </div>
-    
-            <a  ui-sref="app.register" class="btn btn-info" role="button">Register Here</a>
-            &nbsp &nbsp &nbsp
-            <button type="submit" class="btn btn-default">Submit</button> 
-          </form>
+<link href='http://fonts.googleapis.com/css?family=Raleway:400,200' rel='stylesheet' type='text/css'>
+ <link href="./styles/login.css" rel="stylesheet">
+<div class="container">
+ <a ui-sref="app.register"  ><span class=""></span>Sign Up</a>
+    <div class="row login_box">
+      <div class="col-md-12 col-xs-12" align="center">
+            <div class="line"><h3>Microblogging</h3></div>
+            <div class="outter"><img src="../images/logo.jpg" class="image-circle"/></div>   
+            <h1>Hi</h1>
       </div>
+
+        
+        <div class="col-md-12 col-xs-12 login_control">
+               <form ng-submit="loginEntry()" name="Login">  
+                <div class="control">
+                    <div class="label"></div>
+                    <input type="text" class="form-control" ng-model="login.username" required  name="username" maxlength="25" placeholder="Username or Email" ng-pattern="/^[a-zA-Z0-9@.]+$/">
+
+                     <h5 style="color:red"  ng-show="Login.username.$error.required && !Login.username.$pristine">* Required Field </h5>
+
+                      <h5 style="color:red" ng-show="!Login.username.$error.required && Login.username.$error.pattern && Login.username.$invalid && !Login.username.$pristine">** Invalid Format (no special characters)</h5>
+
+                </div>
+                
+                <div class="control">
+                     <div class="label"></div>
+                    <input type="password" ng-model="login.password" required name="password" class="form-control" maxlength="25" placeholder="Password"/>
+                     <h5 style="color:red"  ng-show="Login.password.$error.required && !Login.password.$pristine">* Required Field </h5>
+                </div>
+                <div align="center">
+                      <button ng-disabled="Login.$invalid" class="btn btn-orange" type="submit">Log in</button>
+                </div>
+                    </form>
+        </div>
+        
+        
+            
     </div>
-  </div>  
-  </div>
 </div>
+
+
+
+ 
+
+  

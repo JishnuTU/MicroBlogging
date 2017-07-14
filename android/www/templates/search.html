@@ -1,13 +1,14 @@
 <ion-modal-view>
   <ion-header-bar>
     <h1 class="title">Search Result</h1>
+
     <div class="buttons">
-      <button class="button button-clear button-positive" ng-click="searchmodal.hide()">close</button>
+      <button class="button button-clear button-positive" ng-click="searchmodal.hide()"><i class="ion-ios-close-outline"></i> Close</button>
     </div>
   </ion-header-bar>
   <ion-content>
 
-
+    <p ng-if ="!SR" align="center"><strong>Your search did not match any Users</strong></p>
 <ul class="list" ng-repeat ="x in SR">
 
     <li class="item">
