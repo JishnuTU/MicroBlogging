@@ -15,7 +15,7 @@
     "express-session": "^1.15.3",
     "jade": "~1.11.0",
     "jsonwebtoken": "^7.4.1",
-    "knex": "^0.13.0",
+    "knex": "^0.19.5",
     "morgan": "~1.8.1",
     "nodemailer": "^4.0.1",
     "passport": "^0.3.2",
