@@ -17,7 +17,7 @@
     "jsonwebtoken": "^7.4.1",
     "knex": "^0.13.0",
     "morgan": "~1.8.1",
-    "nodemailer": "^4.0.1",
+    "nodemailer": "^6.4.16",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "pg": "^6.4.0",
