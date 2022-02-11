@@ -22,7 +22,7 @@
     "gulp-watch": "^4.2.4",
     "jasmine-core": "^2.6.4",
     "jshint-stylish": "^1.0.0",
-    "karma": "^1.7.0",
+    "karma": "^6.3.14",
     "karma-jasmine": "^1.1.0",
     "karma-phantomjs-launcher": "^1.0.4",
     "lazypipe": "^0.2.4",
