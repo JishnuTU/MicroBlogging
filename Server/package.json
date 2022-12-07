@@ -11,7 +11,7 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
     "email-existence": "^0.1.5",
-    "express": "~4.15.2",
+    "express": "~4.17.3",
     "express-session": "^1.15.3",
     "jade": "~1.11.0",
     "jsonwebtoken": "^7.4.1",
